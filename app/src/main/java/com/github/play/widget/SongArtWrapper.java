@@ -46,13 +46,15 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	private static final Executor EXECUTORS = Executors.newFixedThreadPool(1);
 
+	private static final int MAX_RECENT = 50;
+
 	private static final Map<String, Bitmap> RECENT_ART = new LinkedHashMap<String, Bitmap>(
-			50, 1.0F) {
+			MAX_RECENT, 1.0F) {
 
 		private static final long serialVersionUID = -3434208982358063608L;
 
 		protected boolean removeEldestEntry(Entry<String, Bitmap> eldest) {
-			return size() >= 50;
+			return size() >= MAX_RECENT;
 		}
 	};
 
