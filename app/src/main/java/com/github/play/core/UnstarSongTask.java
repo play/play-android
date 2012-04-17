@@ -31,7 +31,7 @@ public class UnstarSongTask extends AsyncTask<Song, Void, IOException> {
 	private final AtomicReference<PlayService> service;
 
 	/**
-	 * Create task to star a song
+	 * Create task to unstar a song
 	 * 
 	 * @param service
 	 */
