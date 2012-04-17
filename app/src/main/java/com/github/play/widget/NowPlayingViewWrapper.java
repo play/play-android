@@ -65,6 +65,7 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 		songText.setText(song.name);
 		artistText.setText(song.artist);
 		albumText.setText(song.album);
+
 		starText.setTag(song);
 		if (song.starred)
 			starText.setTextColor(starText.getContext().getResources()
@@ -72,7 +73,7 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 		else
 			starText.setTextColor(starText.getContext().getResources()
 					.getColor(color.unstarred));
-		starText.requestLayout();
+
 		artWrapper.update(song);
 	}
 }

@@ -38,6 +38,8 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 
 		private final TextView songText;
 
+		private final TextView albumText;
+
 		private final TextView starText;
 
 		private final SongArtWrapper albumArt;
@@ -51,6 +53,7 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 				OnClickListener starListener) {
 			artistText = (TextView) view.findViewById(id.tv_artist);
 			songText = (TextView) view.findViewById(id.tv_song);
+			albumText = (TextView) view.findViewById(id.tv_album);
 			starText = (TextView) view.findViewById(id.tv_star);
 			starText.setOnClickListener(starListener);
 			albumArt = new SongArtWrapper(view.findViewById(id.iv_art), service);
@@ -59,6 +62,8 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 		public void update(Song song) {
 			artistText.setText(song.artist);
 			songText.setText(song.name);
+			albumText.setText(song.album);
+
 			starText.setTag(song);
 			if (song.starred)
 				starText.setTextColor(starText.getContext().getResources()
@@ -66,7 +71,7 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 			else
 				starText.setTextColor(starText.getContext().getResources()
 						.getColor(color.unstarred));
-			starText.requestLayout();
+
 			albumArt.update(song);
 		}
 	}
