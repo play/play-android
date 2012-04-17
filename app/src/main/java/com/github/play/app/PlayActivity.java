@@ -264,7 +264,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				getApplicationContext(),
 				MessageFormat.format(
 						getString(string.error_contacting_play_server),
-						e.getMessage()), Toast.LENGTH_LONG).show();
+						e.getMessage()), LENGTH_LONG).show();
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
