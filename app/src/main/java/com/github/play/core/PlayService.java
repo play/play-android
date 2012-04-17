@@ -185,4 +185,40 @@ public class PlayService {
 			return false;
 		}
 	}
+
+	/**
+	 * Star song
+	 * 
+	 * @param song
+	 * @throws IOException
+	 */
+	public void star(Song song) throws IOException {
+		try {
+			HttpRequest request = HttpRequest.post(baseUrl + "star?id="
+					+ song.id + "&login=" + login);
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
+
+	/**
+	 * Unstar song
+	 * 
+	 * @param song
+	 * @throws IOException
+	 */
+	public void unstar(Song song) throws IOException {
+		try {
+			HttpRequest request = HttpRequest.delete(baseUrl + "star?id="
+					+ song.id + "&login=" + login);
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
 }

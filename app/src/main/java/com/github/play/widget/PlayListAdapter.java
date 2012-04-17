@@ -17,8 +17,10 @@ package com.github.play.widget;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.github.play.R.color;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -33,41 +35,66 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 	private static class SongView extends ViewWrapper<Song> {
 
 		private final TextView artistText;
+
 		private final TextView songText;
+
+		private final TextView starText;
+
 		private final SongArtWrapper albumArt;
 
 		/**
 		 * @param view
 		 * @param service
+		 * @param starListener
 		 */
-		public SongView(View view, AtomicReference<PlayService> service) {
+		public SongView(View view, AtomicReference<PlayService> service,
+				OnClickListener starListener) {
 			artistText = (TextView) view.findViewById(id.tv_artist);
 			songText = (TextView) view.findViewById(id.tv_song);
+			starText = (TextView) view.findViewById(id.tv_star);
+			starText.setOnClickListener(starListener);
 			albumArt = new SongArtWrapper(view.findViewById(id.iv_art), service);
 		}
 
 		public void update(Song song) {
 			artistText.setText(song.artist);
 			songText.setText(song.name);
+			starText.setTag(song);
+			if (song.starred)
+				starText.setTextColor(starText.getContext().getResources()
+						.getColor(color.starred));
+			else
+				starText.setTextColor(starText.getContext().getResources()
+						.getColor(color.unstarred));
+			starText.requestLayout();
 			albumArt.update(song);
 		}
 	}
 
 	private final AtomicReference<PlayService> service;
 
+	private final OnClickListener starListener;
+
 	/**
 	 * @param viewId
 	 * @param inflater
 	 * @param service
+	 * @param starListener
 	 */
 	public PlayListAdapter(int viewId, LayoutInflater inflater,
-			AtomicReference<PlayService> service) {
+			AtomicReference<PlayService> service, OnClickListener starListener) {
 		super(viewId, inflater);
 
 		this.service = service;
+		this.starListener = starListener;
 	}
 
 	protected ViewWrapper<Song> createItemView(View view) {
-		return new SongView(view, service);
+		return new SongView(view, service, starListener);
+	}
+
+	@Override
+	public boolean isEnabled(int position) {
+		return false;
 	}
 }

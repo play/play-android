@@ -16,8 +16,10 @@
 package com.github.play.widget;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.github.play.R.color;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -36,6 +38,8 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 
 	private final TextView albumText;
 
+	private final TextView starText;
+
 	private SongArtWrapper artWrapper;
 
 	/**
@@ -43,12 +47,16 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 	 * 
 	 * @param view
 	 * @param service
+	 * @param starListener
 	 */
 	public NowPlayingViewWrapper(final View view,
-			final AtomicReference<PlayService> service) {
+			final AtomicReference<PlayService> service,
+			final OnClickListener starListener) {
 		songText = (TextView) view.findViewById(id.tv_song);
 		albumText = (TextView) view.findViewById(id.tv_album);
 		artistText = (TextView) view.findViewById(id.tv_artist);
+		starText = (TextView) view.findViewById(id.tv_star);
+		starText.setOnClickListener(starListener);
 		artWrapper = new SongArtWrapper(view.findViewById(id.iv_art), service);
 	}
 
@@ -57,6 +65,14 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 		songText.setText(song.name);
 		artistText.setText(song.artist);
 		albumText.setText(song.album);
+		starText.setTag(song);
+		if (song.starred)
+			starText.setTextColor(starText.getContext().getResources()
+					.getColor(color.starred));
+		else
+			starText.setTextColor(starText.getContext().getResources()
+					.getColor(color.unstarred));
+		starText.requestLayout();
 		artWrapper.update(song);
 	}
 }

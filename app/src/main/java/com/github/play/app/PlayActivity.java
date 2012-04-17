@@ -15,6 +15,8 @@
  */
 package com.github.play.app;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
 import static com.github.play.app.StatusService.UPDATE;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,11 +39,13 @@ import com.github.play.R.menu;
 import com.github.play.R.string;
 import com.github.play.core.FetchSettingsTask;
 import com.github.play.core.FetchStatusTask;
-import com.github.play.core.PlayService;
 import com.github.play.core.PlayPreferences;
+import com.github.play.core.PlayService;
 import com.github.play.core.Song;
 import com.github.play.core.SongCallback;
+import com.github.play.core.StarSongTask;
 import com.github.play.core.StatusUpdate;
+import com.github.play.core.UnstarSongTask;
 import com.github.play.widget.NowPlayingViewWrapper;
 import com.github.play.widget.PlayListAdapter;
 
@@ -86,6 +91,21 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
+	private OnClickListener starListener = new OnClickListener() {
+
+		public void onClick(View v) {
+			Object tag = v.getTag();
+			if (!(tag instanceof Song))
+				return;
+
+			Song song = (Song) tag;
+			if (song.starred)
+				unstarSong(song);
+			else
+				starSong(song);
+		}
+	};
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -111,10 +131,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		View nowPlayingView = findViewById(id.now_playing);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
-				playService);
+				playService, starListener);
 
 		playListAdapter = new PlayListAdapter(layout.queued,
-				getLayoutInflater(), playService);
+				getLayoutInflater(), playService, starListener);
 		list.setAdapter(playListAdapter);
 
 		if (savedInstanceState != null) {
@@ -256,5 +276,52 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 			return;
 		} else
 			super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void starSong(final Song song) {
+		Toast.makeText(
+				getApplicationContext(),
+				MessageFormat
+						.format(getString(string.starring_song), song.name),
+				LENGTH_SHORT).show();
+		new StarSongTask(playService) {
+
+			@Override
+			protected void onPostExecute(IOException result) {
+				super.onPostExecute(result);
+
+				if (result != null)
+					Toast.makeText(
+							getApplicationContext(),
+							MessageFormat.format(
+									getString(string.starring_failed),
+									song.name), LENGTH_LONG).show();
+				else
+					refreshSongs();
+			}
+		}.execute(song);
+	}
+
+	private void unstarSong(final Song song) {
+		Toast.makeText(
+				getApplicationContext(),
+				MessageFormat.format(getString(string.unstarring_song),
+						song.name), LENGTH_SHORT).show();
+		new UnstarSongTask(playService) {
+
+			@Override
+			protected void onPostExecute(IOException result) {
+				super.onPostExecute(result);
+
+				if (result != null)
+					Toast.makeText(
+							getApplicationContext(),
+							MessageFormat.format(
+									getString(string.unstarring_failed),
+									song.name), LENGTH_SHORT).show();
+				else
+					refreshSongs();
+			}
+		}.execute(song);
 	}
 }

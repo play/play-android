@@ -6,5 +6,7 @@
     <color name="art_border">#E6E5E2</color>
     <color name="text">#000000</color>
     <color name="text_bright">#EA36F5</color>
+    <color name="unstarred">#DDDDDD</color>
+    <color name="starred">#DC35E6</color>
 
 </resources>
