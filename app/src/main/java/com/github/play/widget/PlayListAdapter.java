@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class PlayListAdapter extends ItemListAdapter<Song> {
 
-	private static class SongView extends ViewWrapper<Song> {
+	private static class SongViewWrapper extends ViewWrapper<Song> {
 
 		private final TextView artistText;
 
@@ -49,7 +49,7 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 		 * @param service
 		 * @param starListener
 		 */
-		public SongView(View view, AtomicReference<PlayService> service,
+		public SongViewWrapper(View view, AtomicReference<PlayService> service,
 				OnClickListener starListener) {
 			artistText = (TextView) view.findViewById(id.tv_artist);
 			songText = (TextView) view.findViewById(id.tv_song);
@@ -95,7 +95,7 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 	}
 
 	protected ViewWrapper<Song> createItemView(View view) {
-		return new SongView(view, service, starListener);
+		return new SongViewWrapper(view, service, starListener);
 	}
 
 	@Override
