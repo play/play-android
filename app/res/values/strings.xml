@@ -18,5 +18,8 @@
     <string name="starring_song">Starring \'\'{0}\'\'</string>
     <string name="starring_failed">Starring \'\'{0}\'\' failed</string>
     <string name="unstarring_failed">Unstarring \'\'{0}\'\' failed</string>
+    <string name="refresh_queue">Refresh Queue</string>
+    <string name="edit_settings">Edit Settings</string>
+    <string name="save_settings">Save Settings</string>
 
 </resources>
