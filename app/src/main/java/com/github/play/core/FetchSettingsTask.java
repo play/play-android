@@ -78,8 +78,9 @@ public class FetchSettingsTask extends AsyncTask<Void, Void, PlaySettings> {
 	@Override
 	protected PlaySettings doInBackground(Void... params) {
 		try {
-			String streamUrl = service.get().getStreamUrl();
-			String applicationKey = service.get().getPusherApplicationKey();
+			PlayService playService = service.get();
+			String streamUrl = playService.getStreamUrl();
+			String applicationKey = playService.getPusherApplicationKey();
 			return new PlaySettings(streamUrl, applicationKey);
 		} catch (IOException e) {
 			return new PlaySettings(e);
