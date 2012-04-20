@@ -26,7 +26,9 @@ import com.google.gson.JsonParseException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 
 /**
  * Service class to make requests to the Play API
@@ -82,6 +84,23 @@ public class PlayService {
 			} catch (IOException ignored) {
 				// Ignored
 			}
+		}
+	}
+
+	/**
+	 * Encode value using {@link URLEncoder}
+	 * 
+	 * @param value
+	 * @return encoded value
+	 * @throws IOException
+	 */
+	protected String encode(String value) throws IOException {
+		try {
+			return URLEncoder.encode(value, "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			IOException ioException = new IOException("Encoding URL failed");
+			ioException.initCause(e);
+			throw ioException;
 		}
 	}
 
@@ -242,6 +261,30 @@ public class PlayService {
 			if (!request.ok())
 				throw new IOException("Unexpected response code of "
 						+ request.code());
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
+
+	/**
+	 * Requests some songs that match the freeform subject to be played
+	 * 
+	 * @param subject
+	 * @return non-null but possibly empty array of queued songs
+	 * @throws IOException
+	 */
+	public Song[] queueSubject(String subject) throws IOException {
+		try {
+			HttpRequest request = post("freeform?subject=" + encode(subject));
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+
+			SongWrapper wrapper = fromJson(request, SongWrapper.class);
+			if (wrapper != null && wrapper.songs != null)
+				return wrapper.songs;
+			else
+				return new Song[0];
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}

@@ -10,6 +10,7 @@
     <string name="play_token">Play Token</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
+    <string name="speak">Speak song request</string>
     <string name="error_contacting_play_server">Error contacting play server: {0}</string>
     <string name="notification_ticker">{0} by {1}</string>
     <string name="notification_content">{0} from {1}</string>
@@ -23,7 +24,11 @@
     <string name="save_settings">Save Settings</string>
     <string name="removing_song">Removing \'\'{0}\'\'</string>
     <string name="removing_song_failed">Removing \'\'{0}\'\' failed</string>
+    <string name="queueing_subject_failed">Queueing \'\'{0}\'\' failed</string>
     <string name="message_confirm_remove">Are you sure you want to remove \'\'{0}\'\' from the queue?</string>
     <string name="title_confirm_remove">Remove Song</string>
+    <string name="speech_prompt">What would you like to play?</string>
+    <string name="adding_subject_to_the_queue">Adding \'\'{0}\'\' to the queue</string>
+    <string name="speech_not_recognized">Speech not recognized</string>
 
 </resources>
