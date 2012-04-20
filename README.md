@@ -17,7 +17,7 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 ### Main interface showing what is playing and what is in the queue
 
-![](http://img.skitch.com/20120416-e1wagqcnqpw4ewy6er1fsdn5th.png)
+![](http://img.skitch.com/20120420-84h5ikgtx9uac5yxn77ubbk1t2.png)
 
 ### Notification bar showing what is currently playing
 
