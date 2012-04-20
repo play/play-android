@@ -18,14 +18,18 @@ package com.github.play.app;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.github.play.app.StatusService.UPDATE;
+import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -37,6 +41,7 @@ import com.github.play.R.id;
 import com.github.play.R.layout;
 import com.github.play.R.menu;
 import com.github.play.R.string;
+import com.github.play.core.DequeueSongTask;
 import com.github.play.core.FetchSettingsTask;
 import com.github.play.core.FetchStatusTask;
 import com.github.play.core.PlayPreferences;
@@ -103,6 +108,16 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
+	private OnItemLongClickListener dequeueListener = new OnItemLongClickListener() {
+
+		public boolean onItemLongClick(AdapterView<?> parent, View view,
+				int position, long id) {
+			Song song = (Song) parent.getItemAtPosition(position);
+			dequeueSong(song);
+			return true;
+		}
+	};
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -124,6 +139,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		setContentView(layout.main);
 
 		ListView list = (ListView) findViewById(android.R.id.list);
+		list.setOnItemLongClickListener(dequeueListener);
 
 		View nowPlayingView = findViewById(id.now_playing);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
@@ -321,5 +337,44 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 					refreshSongs();
 			}
 		}.execute(song);
+	}
+
+	private void dequeueSong(final Song song) {
+		final Builder builder = new Builder(this);
+		builder.setCancelable(true);
+		builder.setTitle(string.title_confirm_remove);
+		builder.setMessage(MessageFormat.format(
+				getString(string.message_confirm_remove), song.name));
+		builder.setNegativeButton(android.R.string.no, null);
+		builder.setPositiveButton(android.R.string.yes,
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Toast.makeText(
+								getApplicationContext(),
+								MessageFormat.format(
+										getString(string.removing_song),
+										song.name), LENGTH_SHORT).show();
+						new DequeueSongTask(playService) {
+
+							@Override
+							protected void onPostExecute(IOException result) {
+								super.onPostExecute(result);
+
+								if (result != null)
+									Toast.makeText(
+											getApplicationContext(),
+											MessageFormat
+													.format(getString(string.removing_song_failed),
+															song.name),
+											LENGTH_SHORT).show();
+								else
+									refreshSongs();
+							}
+						}.execute(song);
+					}
+				});
+		builder.show();
 	}
 }

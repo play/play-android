@@ -94,12 +94,8 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 		this.starListener = starListener;
 	}
 
+	@Override
 	protected ViewWrapper<Song> createItemView(View view) {
 		return new SongViewWrapper(view, service, starListener);
-	}
-
-	@Override
-	public boolean isEnabled(int position) {
-		return false;
 	}
 }

@@ -21,5 +21,9 @@
     <string name="refresh_queue">Refresh Queue</string>
     <string name="edit_settings">Edit Settings</string>
     <string name="save_settings">Save Settings</string>
+    <string name="removing_song">Removing \'\'{0}\'\'</string>
+    <string name="removing_song_failed">Removing \'\'{0}\'\' failed</string>
+    <string name="message_confirm_remove">Are you sure you want to remove \'\'{0}\'\' from the queue?</string>
+    <string name="title_confirm_remove">Remove Song</string>
 
 </resources>

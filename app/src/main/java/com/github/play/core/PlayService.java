@@ -229,4 +229,21 @@ public class PlayService {
 			throw e.getCause();
 		}
 	}
+
+	/**
+	 * Remove the given song from the queue
+	 * 
+	 * @param song
+	 * @throws IOException
+	 */
+	public void dequeue(Song song) throws IOException {
+		try {
+			HttpRequest request = delete("queue?id=" + song.id);
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
 }
