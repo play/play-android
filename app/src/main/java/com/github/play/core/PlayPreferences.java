@@ -26,7 +26,7 @@ public class PlayPreferences {
 
 	private static final String URL = "url";
 
-	private static final String LOGIN = "login";
+	private static final String TOKEN = "token";
 
 	private SharedPreferences preferences;
 
@@ -62,22 +62,22 @@ public class PlayPreferences {
 	}
 
 	/**
-	 * Get configured login name
+	 * Get configured token for API calls
 	 * 
 	 * @return login or null if not configured
 	 */
-	public String getLogin() {
-		return preferences.getString(LOGIN, null);
+	public String getToken() {
+		return preferences.getString(TOKEN, null);
 	}
 
 	/**
-	 * Set login name
+	 * Set token to be used for API calls
 	 * 
-	 * @param login
+	 * @param token
 	 * @return this settings instance
 	 */
-	public PlayPreferences setLogin(final String login) {
-		preferences.edit().putString(LOGIN, login.length() > 0 ? login : null)
+	public PlayPreferences setToken(final String token) {
+		preferences.edit().putString(TOKEN, token.length() > 0 ? token : null)
 				.commit();
 		return this;
 	}

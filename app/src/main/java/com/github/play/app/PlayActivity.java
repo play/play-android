@@ -45,6 +45,7 @@ import com.github.play.core.Song;
 import com.github.play.core.SongCallback;
 import com.github.play.core.StarSongTask;
 import com.github.play.core.StatusUpdate;
+import com.github.play.core.StreamingInfo;
 import com.github.play.core.UnstarSongTask;
 import com.github.play.widget.NowPlayingViewWrapper;
 import com.github.play.widget.PlayListAdapter;
@@ -60,9 +61,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private static final String TAG = "PlayActivity";
 
-	private static final String STREAM_URL = "streamUrl";
-
-	private static final String APPLICATION_KEY = "applicationKey";
+	private static final String STREAMING_INFO = "streamingInfo";
 
 	private static final int REQUEST_SETTINGS = 1;
 
@@ -78,9 +77,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private PlayPreferences settings;
 
-	private String streamUrl;
-
-	private String applicationKey;
+	private StreamingInfo streamingInfo;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -117,8 +114,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putString(STREAM_URL, streamUrl);
-		outState.putSerializable(APPLICATION_KEY, applicationKey);
+		outState.putSerializable(STREAMING_INFO, streamingInfo);
 	}
 
 	@Override
@@ -137,36 +133,19 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				getLayoutInflater(), playService, starListener);
 		list.setAdapter(playListAdapter);
 
-		if (savedInstanceState != null) {
-			streamUrl = savedInstanceState.getString(STREAM_URL);
-			applicationKey = savedInstanceState.getString(APPLICATION_KEY);
-		}
+		if (savedInstanceState != null)
+			streamingInfo = (StreamingInfo) savedInstanceState
+					.getSerializable(STREAMING_INFO);
 
 		settings = new PlayPreferences(this);
 
-		if (settings.getUrl() != null && settings.getLogin() != null) {
+		if (settings.getUrl() != null && settings.getToken() != null) {
 			playService.set(new PlayService(settings.getUrl(), settings
-					.getLogin()));
-			refreshSongs();
+					.getToken()));
+			load();
 		} else
 			startActivityForResult(new Intent(this, SettingsActivity.class),
 					REQUEST_SETTINGS);
-
-		if (streamUrl == null || applicationKey == null)
-			new FetchSettingsTask(playService) {
-
-				protected void onPostExecute(PlaySettings result) {
-					if (result.streamUrl != null) {
-						streamUrl = result.streamUrl;
-						applicationKey = result.applicationKey;
-						startStream();
-					} else
-						onError(result.exception);
-				}
-
-			}.execute();
-		else
-			startStream();
 
 		registerReceiver(receiver, new IntentFilter(UPDATE));
 	}
@@ -180,10 +159,29 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 
 		Context context = getApplicationContext();
-		MusicStreamService.start(context, streamUrl);
-		StatusService.start(context, applicationKey);
+		MusicStreamService.start(context, streamingInfo.streamUrl);
+		StatusService.start(context, streamingInfo.pusherKey);
 
 		streaming = true;
+	}
+
+	private void load() {
+		if (streamingInfo == null)
+			new FetchSettingsTask(playService) {
+
+				protected void onPostExecute(PlaySettings result) {
+					if (result.streamingInfo != null) {
+						streamingInfo = result.streamingInfo;
+						load();
+					} else
+						onError(result.exception);
+				}
+
+			}.execute();
+		else {
+			refreshSongs();
+			startStream();
+		}
 	}
 
 	private void stopStream() {
@@ -223,7 +221,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case id.m_pause:
-			if (settings.getUrl() != null && settings.getLogin() != null)
+			if (settings.getUrl() != null && settings.getToken() != null)
 				if (streaming)
 					stopStream();
 				else
@@ -270,9 +268,9 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_SETTINGS && resultCode == RESULT_OK) {
 			playService.set(new PlayService(settings.getUrl(), settings
-					.getLogin()));
-			startStream();
-			refreshSongs();
+					.getToken()));
+			streamingInfo = null;
+			load();
 			return;
 		} else
 			super.onActivityResult(requestCode, resultCode, data);

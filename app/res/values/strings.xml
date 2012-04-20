@@ -7,7 +7,7 @@
     <string name="from">from</string>
     <string name="album_art">Album Art</string>
     <string name="play_server_url">Play Server URL</string>
-    <string name="login">Login</string>
+    <string name="play_token">Play Token</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
     <string name="error_contacting_play_server">Error contacting play server: {0}</string>

@@ -34,7 +34,7 @@ public class SettingsActivity extends SherlockActivity {
 
 	private PlayPreferences settings;
 
-	private EditText loginText;
+	private EditText tokenText;
 
 	private EditText urlText;
 
@@ -46,10 +46,10 @@ public class SettingsActivity extends SherlockActivity {
 
 		settings = new PlayPreferences(this);
 
-		loginText = (EditText) findViewById(id.et_login);
-		String login = settings.getLogin();
-		if (login != null)
-			loginText.setText(login);
+		tokenText = (EditText) findViewById(id.et_token);
+		String token = settings.getToken();
+		if (token != null)
+			tokenText.setText(token);
 
 		urlText = (EditText) findViewById(id.et_url);
 		String url = settings.getUrl();
@@ -67,10 +67,10 @@ public class SettingsActivity extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case id.m_save:
-			String login = loginText.getText().toString().trim();
+			String token = tokenText.getText().toString().trim();
 			String url = urlText.getText().toString().trim();
-			if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(url)) {
-				settings.setLogin(login).setUrl(url);
+			if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(url)) {
+				settings.setToken(token).setUrl(url);
 				setResult(RESULT_OK);
 				finish();
 			}

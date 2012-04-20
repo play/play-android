@@ -34,33 +34,27 @@ public class FetchSettingsTask extends AsyncTask<Void, Void, PlaySettings> {
 	public static class PlaySettings {
 
 		/**
-		 * Streaming URL
+		 * Streaming info
 		 */
-		public final String streamUrl;
-
-		/**
-		 * Pusher application key
-		 */
-		public final String applicationKey;
+		public final StreamingInfo streamingInfo;
 
 		/**
 		 * Exception that occurred retrieving streaming URL
 		 */
 		public final IOException exception;
 
-		private PlaySettings(final String streamUrl,
-				final String applicationKey, final IOException exception) {
-			this.streamUrl = streamUrl;
-			this.applicationKey = applicationKey;
+		private PlaySettings(final StreamingInfo streamingInfo,
+				final IOException exception) {
+			this.streamingInfo = streamingInfo;
 			this.exception = exception;
 		}
 
-		private PlaySettings(final String streamUrl, final String applicationKey) {
-			this(streamUrl, applicationKey, null);
+		private PlaySettings(final StreamingInfo streamingInfo) {
+			this(streamingInfo, null);
 		}
 
 		private PlaySettings(final IOException exception) {
-			this(null, null, exception);
+			this(null, exception);
 		}
 	}
 
@@ -78,10 +72,8 @@ public class FetchSettingsTask extends AsyncTask<Void, Void, PlaySettings> {
 	@Override
 	protected PlaySettings doInBackground(Void... params) {
 		try {
-			PlayService playService = service.get();
-			String streamUrl = playService.getStreamUrl();
-			String applicationKey = playService.getPusherApplicationKey();
-			return new PlaySettings(streamUrl, applicationKey);
+			StreamingInfo streamingInfo = service.get().getStreamingInfo();
+			return new PlaySettings(streamingInfo);
 		} catch (IOException e) {
 			return new PlaySettings(e);
 		}

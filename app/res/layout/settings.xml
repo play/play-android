@@ -30,14 +30,14 @@
             android:paddingBottom="5dp"
             android:paddingLeft="10dp"
             android:paddingTop="15dp"
-            android:text="@string/login"
+            android:text="@string/play_token"
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/et_login"
+            android:id="@+id/et_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text|textNoSuggestions" />
     </LinearLayout>
 
 </ScrollView>
