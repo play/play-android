@@ -156,6 +156,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		setContentView(layout.main);
 
 		ListView list = (ListView) findViewById(android.R.id.list);
+		list.setFastScrollEnabled(true);
 		list.setOnItemLongClickListener(dequeueListener);
 
 		View nowPlayingView = findViewById(id.now_playing);
