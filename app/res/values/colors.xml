@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="background_light">#FFFFFF</color>
+    <color name="background_dark_end">#282828</color>
+    <color name="background_dark_start">#515252</color>
+    <color name="background_light">#E4E3E0</color>
     <color name="background_dark">#000000</color>
-    <color name="art_border">#E6E5E2</color>
+    <color name="art_border">#CCCCCC</color>
     <color name="text">#000000</color>
+    <color name="text_cursor">#AAAAAA</color>
+    <color name="text_light">#FFFFFF</color>
     <color name="text_bright">#EA36F5</color>
-    <color name="unstarred">#DDDDDD</color>
+    <color name="unstarred">#CCCCCC</color>
     <color name="starred">#DC35E6</color>
+    <color name="shadow_text_light">#FFFFFF</color>
+    <color name="shadow_text_dark">#000000</color>
+    <color name="divider">#CCCCCC</color>
 
 </resources>

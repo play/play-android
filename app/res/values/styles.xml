@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="shadow_text">
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+
+    <style name="shadow_text_light" parent="shadow_text">
+        <item name="android:shadowColor">@color/shadow_text_light</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
+
+    <style name="shadow_text_dark" parent="shadow_text">
+        <item name="android:shadowColor">@color/shadow_text_dark</item>
+        <item name="android:textColor">@color/text_light</item>
+    </style>
+
+    <style name="edit_text">
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+</resources>

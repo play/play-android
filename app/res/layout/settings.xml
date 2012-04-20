@@ -11,6 +11,7 @@
         android:padding="10dp" >
 
         <TextView
+            style="@style/shadow_text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
@@ -20,11 +21,13 @@
 
         <EditText
             android:id="@+id/et_url"
+            style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textUri" />
 
         <TextView
+            style="@style/shadow_text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
@@ -35,6 +38,7 @@
 
         <EditText
             android:id="@+id/et_token"
+            style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text|textNoSuggestions" />

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Play" parent="@style/Theme.Sherlock.Light"></style>
+    <style name="Theme.Play" parent="@style/Theme.Sherlock">
+        <item name="actionBarStyle">@style/Theme.Play.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Theme.Play.ActionBar</item>
+    </style>
+
+    <style name="Theme.Play.ActionBar" parent="Widget.Sherlock.ActionBar.Solid">
+        <item name="background">@drawable/background_dark</item>
+        <item name="android:background">@drawable/background_dark</item>
+    </style>
 
 </resources>

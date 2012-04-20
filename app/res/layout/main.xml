@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
     android:orientation="vertical" >
 
     <include
@@ -10,21 +9,25 @@
         layout="@layout/now_playing" />
 
     <TextView
+        style="@style/shadow_text_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_dark"
+        android:background="@drawable/background_dark"
         android:includeFontPadding="false"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:text="@string/queue"
-        android:textColor="@color/text_bright"
+        android:textColor="@color/text_light"
         android:textSize="16sp" />
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/background_light"
+        android:divider="@color/divider"
+        android:dividerHeight="1dp" />
 
 </LinearLayout>

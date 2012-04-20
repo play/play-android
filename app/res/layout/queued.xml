@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/background_light"
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:paddingBottom="5dp"
@@ -43,22 +44,26 @@
             android:id="@+id/tv_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:textColor="@color/text_bright"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_song"
+            style="@style/shadow_text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_album"
+            style="@style/shadow_text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:textSize="14sp" />
+            android:singleLine="true"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>
