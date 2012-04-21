@@ -26,7 +26,6 @@ import com.google.gson.JsonParseException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
 
@@ -95,13 +94,7 @@ public class PlayService {
 	 * @throws IOException
 	 */
 	protected String encode(String value) throws IOException {
-		try {
-			return URLEncoder.encode(value, "ISO-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			IOException ioException = new IOException("Encoding URL failed");
-			ioException.initCause(e);
-			throw ioException;
-		}
+		return URLEncoder.encode(value, "US-ASCII");
 	}
 
 	/**
