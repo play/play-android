@@ -32,7 +32,7 @@ public class DequeueSongTask extends AsyncTask<Song, Void, IOException> {
 
 	/**
 	 * Create task to dequeue a song
-	 * 
+	 *
 	 * @param service
 	 */
 	public DequeueSongTask(final AtomicReference<PlayService> service) {

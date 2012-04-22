@@ -38,7 +38,7 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 
 	/**
 	 * Start service with application key
-	 * 
+	 *
 	 * @param context
 	 * @param url
 	 */
@@ -50,7 +50,7 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 
 	/**
 	 * Stop service
-	 * 
+	 *
 	 * @param context
 	 */
 	public static void stop(final Context context) {
@@ -109,7 +109,7 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 
 	/**
 	 * Prepare a connection to the given URL
-	 * 
+	 *
 	 * @param url
 	 */
 	public void prepareAsync(final String url) {

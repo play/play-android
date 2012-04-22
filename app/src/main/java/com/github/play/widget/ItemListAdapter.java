@@ -22,21 +22,21 @@ import android.widget.BaseAdapter;
 
 /**
  * List adapter for items of a specific type
- * 
+ *
  * @param <V>
  */
 public abstract class ItemListAdapter<V> extends BaseAdapter {
 
 	/**
 	 * View wrapper
-	 * 
+	 *
 	 * @param <I>
 	 */
 	public static abstract class ViewWrapper<I> {
 
 		/**
 		 * Update view for item
-		 * 
+		 *
 		 * @param item
 		 */
 		public abstract void update(I item);
@@ -50,7 +50,7 @@ public abstract class ItemListAdapter<V> extends BaseAdapter {
 
 	/**
 	 * Create empty adapter
-	 * 
+	 *
 	 * @param viewId
 	 * @param inflater
 	 */
@@ -61,7 +61,7 @@ public abstract class ItemListAdapter<V> extends BaseAdapter {
 
 	/**
 	 * Create adapter
-	 * 
+	 *
 	 * @param viewId
 	 * @param inflater
 	 * @param elements
@@ -96,7 +96,7 @@ public abstract class ItemListAdapter<V> extends BaseAdapter {
 
 	/**
 	 * Set items
-	 * 
+	 *
 	 * @param items
 	 * @return items
 	 */
@@ -111,7 +111,7 @@ public abstract class ItemListAdapter<V> extends BaseAdapter {
 
 	/**
 	 * Create empty item view
-	 * 
+	 *
 	 * @param view
 	 * @return item
 	 */

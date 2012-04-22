@@ -24,7 +24,7 @@ public interface SongCallback {
 
 	/**
 	 * Currently playing or queued songs have changed
-	 * 
+	 *
 	 * @param playing
 	 * @param queued
 	 */
@@ -32,7 +32,7 @@ public interface SongCallback {
 
 	/**
 	 * Exception occurred contacting Play server
-	 * 
+	 *
 	 * @param e
 	 */
 	void onError(IOException e);

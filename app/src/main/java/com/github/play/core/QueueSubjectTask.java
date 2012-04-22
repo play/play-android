@@ -61,7 +61,7 @@ public class QueueSubjectTask extends
 
 	/**
 	 * Create task to queue up songs that match a subject
-	 * 
+	 *
 	 * @param service
 	 */
 	public QueueSubjectTask(final AtomicReference<PlayService> service) {

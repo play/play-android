@@ -62,7 +62,7 @@ public class StatusService extends Service {
 
 	/**
 	 * Start service with application key
-	 * 
+	 *
 	 * @param context
 	 * @param applicationKey
 	 */
@@ -74,7 +74,7 @@ public class StatusService extends Service {
 
 	/**
 	 * Start service with application key
-	 * 
+	 *
 	 * @param context
 	 */
 	public static void stop(final Context context) {

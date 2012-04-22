@@ -109,7 +109,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	/**
 	 * Create view wrapper to display art for a {@link Song}
-	 * 
+	 *
 	 * @param view
 	 * @param service
 	 */
@@ -124,7 +124,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	/**
 	 * Get art file for song
-	 * 
+	 *
 	 * @param song
 	 * @return file
 	 */
@@ -134,7 +134,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	/**
 	 * Is file non-null, existent and non-empty?
-	 * 
+	 *
 	 * @param file
 	 * @return true if valid, false otherwise
 	 */

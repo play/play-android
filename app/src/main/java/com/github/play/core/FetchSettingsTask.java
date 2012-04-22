@@ -62,7 +62,7 @@ public class FetchSettingsTask extends AsyncTask<Void, Void, PlaySettings> {
 
 	/**
 	 * Create task to fetch streaming URL
-	 * 
+	 *
 	 * @param service
 	 */
 	public FetchSettingsTask(final AtomicReference<PlayService> service) {

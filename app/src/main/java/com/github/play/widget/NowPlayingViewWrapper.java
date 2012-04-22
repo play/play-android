@@ -44,7 +44,7 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 
 	/**
 	 * Create item view
-	 * 
+	 *
 	 * @param view
 	 * @param service
 	 * @param starListener

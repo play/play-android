@@ -36,7 +36,7 @@ public class StatusUpdate implements Serializable {
 
 	/**
 	 * Create status update
-	 * 
+	 *
 	 * @param playing
 	 * @param queued
 	 */

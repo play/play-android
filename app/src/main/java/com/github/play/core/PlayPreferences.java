@@ -32,7 +32,7 @@ public class PlayPreferences {
 
 	/**
 	 * Create settings for context
-	 * 
+	 *
 	 * @param context
 	 */
 	public PlayPreferences(final Context context) {
@@ -42,7 +42,7 @@ public class PlayPreferences {
 
 	/**
 	 * Get Play server URL
-	 * 
+	 *
 	 * @return URL or null if not configured
 	 */
 	public String getUrl() {
@@ -51,7 +51,7 @@ public class PlayPreferences {
 
 	/**
 	 * Set Play server URL
-	 * 
+	 *
 	 * @param url
 	 * @return this settings instance
 	 */
@@ -63,7 +63,7 @@ public class PlayPreferences {
 
 	/**
 	 * Get configured token for API calls
-	 * 
+	 *
 	 * @return login or null if not configured
 	 */
 	public String getToken() {
@@ -72,7 +72,7 @@ public class PlayPreferences {
 
 	/**
 	 * Set token to be used for API calls
-	 * 
+	 *
 	 * @param token
 	 * @return this settings instance
 	 */

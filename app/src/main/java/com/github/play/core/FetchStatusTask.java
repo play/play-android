@@ -31,7 +31,7 @@ public class FetchStatusTask extends AsyncTask<Void, Void, Object[]> {
 
 	/**
 	 * Create task with callback to call from {@link #onPostExecute(Object[])}
-	 * 
+	 *
 	 * @param service
 	 * @param callback
 	 */

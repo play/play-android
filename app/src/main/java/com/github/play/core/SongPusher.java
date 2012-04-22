@@ -27,7 +27,7 @@ public class SongPusher extends Pusher {
 
 	/**
 	 * Create standard pusher
-	 * 
+	 *
 	 * @param applicationKey
 	 */
 	public SongPusher(final String applicationKey) {

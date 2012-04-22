@@ -48,7 +48,7 @@ public class PlayService {
 
 	/**
 	 * Create play service using base URL
-	 * 
+	 *
 	 * @param baseUrl
 	 * @param token
 	 */
@@ -62,7 +62,7 @@ public class PlayService {
 
 	/**
 	 * Create object of class type from content of request
-	 * 
+	 *
 	 * @param request
 	 * @param target
 	 * @return object of target class type
@@ -88,7 +88,7 @@ public class PlayService {
 
 	/**
 	 * Encode value using {@link URLEncoder}
-	 * 
+	 *
 	 * @param value
 	 * @return encoded value
 	 * @throws IOException
@@ -99,7 +99,7 @@ public class PlayService {
 
 	/**
 	 * Create a GET request for the given URL
-	 * 
+	 *
 	 * @param url
 	 * @return request
 	 */
@@ -109,7 +109,7 @@ public class PlayService {
 
 	/**
 	 * Create a POST request for the given URL
-	 * 
+	 *
 	 * @param url
 	 * @return request
 	 */
@@ -119,7 +119,7 @@ public class PlayService {
 
 	/**
 	 * Create a DELETE request for the given URL
-	 * 
+	 *
 	 * @param url
 	 * @return request
 	 */
@@ -129,7 +129,7 @@ public class PlayService {
 
 	/**
 	 * Get currently playing song
-	 * 
+	 *
 	 * @return song
 	 * @throws IOException
 	 */
@@ -148,7 +148,7 @@ public class PlayService {
 
 	/**
 	 * Get songs in the queue
-	 * 
+	 *
 	 * @return non-null but possibly empty array of songs
 	 * @throws IOException
 	 */
@@ -171,7 +171,7 @@ public class PlayService {
 
 	/**
 	 * Get {@link StreamingInfo} for Play service
-	 * 
+	 *
 	 * @return URL to music stream
 	 * @throws IOException
 	 */
@@ -190,7 +190,7 @@ public class PlayService {
 
 	/**
 	 * Download art image for {@link Song} to given file
-	 * 
+	 *
 	 * @param song
 	 * @param file
 	 * @return true if succeeded, false if failed
@@ -210,7 +210,7 @@ public class PlayService {
 
 	/**
 	 * Star song
-	 * 
+	 *
 	 * @param song
 	 * @throws IOException
 	 */
@@ -227,7 +227,7 @@ public class PlayService {
 
 	/**
 	 * Unstar song
-	 * 
+	 *
 	 * @param song
 	 * @throws IOException
 	 */
@@ -244,7 +244,7 @@ public class PlayService {
 
 	/**
 	 * Remove the given song from the queue
-	 * 
+	 *
 	 * @param song
 	 * @throws IOException
 	 */
@@ -261,7 +261,7 @@ public class PlayService {
 
 	/**
 	 * Requests some songs that match the freeform subject to be played
-	 * 
+	 *
 	 * @param subject
 	 * @return non-null but possibly empty array of queued songs
 	 * @throws IOException

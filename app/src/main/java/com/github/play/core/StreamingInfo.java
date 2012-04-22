@@ -37,7 +37,7 @@ public class StreamingInfo implements Serializable {
 
 	/**
 	 * Create streaming info with given values
-	 * 
+	 *
 	 * @param streamUrl
 	 * @param pusherKey
 	 */
