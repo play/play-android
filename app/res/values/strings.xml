@@ -10,7 +10,7 @@
     <string name="play_token">Play Token</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
-    <string name="speak">Speak song request</string>
+    <string name="speak">Speak Song Request</string>
     <string name="error_contacting_play_server">Error contacting play server: {0}</string>
     <string name="notification_ticker">{0} by {1}</string>
     <string name="notification_content">{0} from {1}</string>
