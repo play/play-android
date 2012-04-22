@@ -509,14 +509,25 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		new QueueSubjectTask(playService) {
 
 			@Override
-			protected void onPostExecute(IOException result) {
+			protected void onPostExecute(QueueSubjectResult result) {
 				super.onPostExecute(result);
-				if (result != null)
-					Toast.makeText(
-							getApplicationContext(),
-							MessageFormat.format(
-									getString(string.queueing_subject_failed),
-									subject), LENGTH_SHORT).show();
+
+				String message;
+				if (result.exception != null)
+					message = MessageFormat.format(
+							getString(string.queueing_subject_failed), subject);
+				else if (result.queued.length > 1)
+					message = MessageFormat.format(
+							getString(string.multiple_songs_queued),
+							result.queued.length);
+				else if (result.queued.length == 1)
+					message = getString(string.single_song_queued);
+				else
+					message = getString(string.no_songs_found);
+
+				Context context = getApplicationContext();
+				Toast.makeText(context, message, LENGTH_SHORT).show();
+
 				refreshSongs();
 				startStream();
 			}

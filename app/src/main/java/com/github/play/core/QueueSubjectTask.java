@@ -18,15 +18,44 @@ package com.github.play.core;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.github.play.core.QueueSubjectTask.QueueSubjectResult;
+
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Task to queue songs that match a subject
  */
-public class QueueSubjectTask extends AsyncTask<String, Void, IOException> {
+public class QueueSubjectTask extends
+		AsyncTask<String, Void, QueueSubjectResult> {
 
 	private static final String TAG = "QueueSubjectTask";
+
+	/**
+	 * Result of task
+	 */
+	public static class QueueSubjectResult {
+
+		/**
+		 * Queued songs
+		 */
+		public final Song[] queued;
+
+		/**
+		 * Failure exception
+		 */
+		public final IOException exception;
+
+		private QueueSubjectResult(Song[] songs) {
+			queued = songs;
+			exception = null;
+		}
+
+		private QueueSubjectResult(IOException error) {
+			queued = null;
+			exception = error;
+		}
+	}
 
 	private final AtomicReference<PlayService> service;
 
@@ -40,20 +69,19 @@ public class QueueSubjectTask extends AsyncTask<String, Void, IOException> {
 	}
 
 	@Override
-	protected IOException doInBackground(String... params) {
+	protected QueueSubjectResult doInBackground(String... params) {
 		try {
-			service.get().queueSubject(params[0]);
-			return null;
+			return new QueueSubjectResult(service.get().queueSubject(params[0]));
 		} catch (IOException e) {
-			return e;
+			return new QueueSubjectResult(e);
 		}
 	}
 
 	@Override
-	protected void onPostExecute(IOException result) {
+	protected void onPostExecute(QueueSubjectResult result) {
 		super.onPostExecute(result);
 
-		if (result != null)
-			Log.d(TAG, "Queueing freeform subject failed", result);
+		if (result.exception != null)
+			Log.d(TAG, "Queueing freeform subject failed", result.exception);
 	}
 }

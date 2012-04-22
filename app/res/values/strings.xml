@@ -30,5 +30,8 @@
     <string name="speech_prompt">What would you like to play?</string>
     <string name="adding_subject_to_the_queue">Adding \'\'{0}\'\' to the queue</string>
     <string name="speech_not_recognized">Speech not recognized</string>
+    <string name="multiple_songs_queued">{0} songs added to the queue</string>
+    <string name="single_song_queued">1 song added to the queue</string>
+    <string name="no_songs_found">No songs found</string>
 
 </resources>
