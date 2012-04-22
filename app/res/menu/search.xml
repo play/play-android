@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/m_search"
+        android:icon="@drawable/action_search"
+        android:showAsAction="always"
+        android:title="@string/search">
+    </item>
+    <item
+        android:id="@+id/m_add"
+        android:icon="@drawable/action_add"
+        android:showAsAction="always"
+        android:title="@string/add_to_queue">
+    </item>
+    <item
+        android:id="@+id/m_refresh"
+        android:icon="@drawable/action_refresh"
+        android:showAsAction="never"
+        android:title="@string/search_again">
+    </item>
+    <item
+        android:id="@+id/m_clear"
+        android:showAsAction="never"
+        android:title="@string/clear_history">
+    </item>
+
+</menu>

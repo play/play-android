@@ -77,6 +77,11 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class PlayActivity extends SherlockActivity implements SongCallback {
 
+	/**
+	 * Action for broadcasting that the queue has been updated
+	 */
+	public static final String ACTION_QUEUE = "com.github.play.action.QUEUE_UPDATE";
+
 	private static final String TAG = "PlayActivity";
 
 	private static final String STREAMING_INFO = "streamingInfo";
@@ -99,16 +104,30 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private MenuItem refreshItem;
 
+	private MenuItem searchItem;
+
 	private PlayPreferences settings;
 
 	private StreamingInfo streamingInfo;
 
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
+	private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
 			StatusUpdate update = (StatusUpdate) intent
 					.getSerializableExtra(EXTRA_UPDATE);
 			onUpdate(update.playing, update.queued);
+		}
+	};
+
+	private BroadcastReceiver queueReceiver = new BroadcastReceiver() {
+
+		public void onReceive(Context context, Intent intent) {
+			runOnUiThread(new Runnable() {
+
+				public void run() {
+					refreshSongs();
+				}
+			});
 		}
 	};
 
@@ -141,7 +160,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		unregisterReceiver(receiver);
+		unregisterReceiver(updateReceiver);
+		unregisterReceiver(queueReceiver);
 	}
 
 	@Override
@@ -189,7 +209,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 			startActivityForResult(new Intent(this, SettingsActivity.class),
 					REQUEST_SETTINGS);
 
-		registerReceiver(receiver, new IntentFilter(UPDATE));
+		registerReceiver(updateReceiver, new IntentFilter(UPDATE));
+		registerReceiver(queueReceiver, new IntentFilter(ACTION_QUEUE));
 	}
 
 	private void startStream() {
@@ -230,13 +251,15 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	}
 
-	private void setMenuItemsEnabled(boolean enabled) {
+	private void setMenuItemsEnabled(final boolean enabled) {
 		if (playItem != null)
 			playItem.setEnabled(enabled);
 		if (speakItem != null)
 			speakItem.setEnabled(enabled);
 		if (refreshItem != null)
 			refreshItem.setEnabled(enabled);
+		if (searchItem != null)
+			searchItem.setEnabled(enabled);
 	}
 
 	private void stopStream() {
@@ -303,6 +326,9 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		case id.m_speak:
 			promptForSpeech();
 			return true;
+		case id.m_search:
+			onSearchRequested();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -324,6 +350,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		refreshItem = optionsMenu.findItem(id.m_refresh);
 		speakItem = optionsMenu.findItem(id.m_speak);
+		searchItem = optionsMenu.findItem(id.m_search);
 
 		if (isReady())
 			setMenuItemsEnabled(true);
@@ -351,6 +378,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 						e.getMessage()), LENGTH_LONG).show();
 	}
 
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_SETTINGS && resultCode == RESULT_OK) {
 			if (hasSettings()) {

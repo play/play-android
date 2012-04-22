@@ -260,6 +260,23 @@ public class PlayService {
 	}
 
 	/**
+	 * Add the given song to the queue
+	 *
+	 * @param songId
+	 * @throws IOException
+	 */
+	public void queue(String songId) throws IOException {
+		try {
+			HttpRequest request = post("queue?id=" + songId);
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
+
+	/**
 	 * Requests some songs that match the freeform subject to be played
 	 *
 	 * @param subject
@@ -269,6 +286,30 @@ public class PlayService {
 	public Song[] queueSubject(String subject) throws IOException {
 		try {
 			HttpRequest request = post("freeform?subject=" + encode(subject));
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+
+			SongWrapper wrapper = fromJson(request, SongWrapper.class);
+			if (wrapper != null && wrapper.songs != null)
+				return wrapper.songs;
+			else
+				return new Song[0];
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
+
+	/**
+	 * Search for songs matching query
+	 *
+	 * @param query
+	 * @return non-null but possibly empty array of queued songs
+	 * @throws IOException
+	 */
+	public Song[] search(String query) throws IOException {
+		try {
+			HttpRequest request = get("search?q=" + encode(query));
 			if (!request.ok())
 				throw new IOException("Unexpected response code of "
 						+ request.code());

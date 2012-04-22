@@ -33,5 +33,17 @@
     <string name="multiple_songs_queued">{0} songs added to the queue</string>
     <string name="single_song_queued">1 song added to the queue</string>
     <string name="no_songs_found">No songs found</string>
+    <string name="search">Search</string>
+    <string name="search_music">Search Music</string>
+    <string name="clear_history">Clear History</string>
+    <string name="search_again">Search Again</string>
+    <string name="add_to_queue">Add To Queue</string>
+    <string name="queueing_failed">Adding to queue failed</string>
+    <string name="adding_song_to_queue">Adding 1 song to the queue</string>
+    <string name="adding_songs_to_queue">Adding {0} songs to the queue</string>
+    <string name="search_failed">Searching songs failed</string>
+    <string name="multiple_selected">{0} selected</string>
+    <string name="single_selected">1 selected</string>
+    <string name="symbol_check">\u2714</string>
 
 </resources>
