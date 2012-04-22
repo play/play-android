@@ -24,6 +24,7 @@ import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.github.play.app.StatusService.EXTRA_UPDATE;
 import static com.github.play.app.StatusService.UPDATE;
 import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
@@ -106,7 +107,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		public void onReceive(Context context, Intent intent) {
 			StatusUpdate update = (StatusUpdate) intent
-					.getSerializableExtra("update");
+					.getSerializableExtra(EXTRA_UPDATE);
 			onUpdate(update.playing, update.queued);
 		}
 	};
