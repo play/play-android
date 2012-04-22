@@ -34,6 +34,7 @@ import android.content.IntentFilter;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -156,12 +157,18 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		setContentView(layout.main);
 
 		ListView list = (ListView) findViewById(android.R.id.list);
+		LayoutInflater inflater = getLayoutInflater();
+
 		list.setFastScrollEnabled(true);
 		list.setOnItemLongClickListener(dequeueListener);
 
-		View nowPlayingView = findViewById(id.now_playing);
+		View nowPlayingView = inflater.inflate(layout.now_playing, null);
+		list.addHeaderView(nowPlayingView, null, false);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
 				playService, starListener);
+
+		list.addHeaderView(inflater.inflate(layout.queue_divider, null), null,
+				false);
 
 		playListAdapter = new PlayListAdapter(layout.queued,
 				getLayoutInflater(), playService, starListener);
