@@ -15,9 +15,12 @@
  */
 package com.github.play.widget;
 
+import static android.graphics.Bitmap.Config.ARGB_8888;
 import static com.github.kevinsawicki.http.HttpRequest.CHARSET_UTF8;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.Point;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -47,6 +50,8 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 	private static final Executor EXECUTORS = Executors.newFixedThreadPool(1);
 
 	private static final int MAX_RECENT = 50;
+
+	private static final int MAX_SIZE_DP = 60;
 
 	private static final Map<String, Bitmap> RECENT_ART = new LinkedHashMap<String, Bitmap>(
 			MAX_RECENT, 1.0F) {
@@ -101,11 +106,21 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		}
 	}
 
+	private static Point getSize(final File file) {
+		final Options options = new Options();
+		options.inJustDecodeBounds = true;
+
+		BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+		return new Point(options.outWidth, options.outHeight);
+	}
+
 	private final File artFolder;
 
 	private final ImageView artView;
 
 	private final AtomicReference<PlayService> service;
+
+	private final int maxSize;
 
 	/**
 	 * Create view wrapper to display art for a {@link Song}
@@ -120,6 +135,9 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		if (!artFolder.exists())
 			artFolder.mkdirs();
 		this.service = service;
+		this.maxSize = Math.round(view.getContext().getResources()
+				.getDisplayMetrics().density
+				* MAX_SIZE_DP + 0.5F);
 	}
 
 	/**
@@ -142,6 +160,31 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		return file != null && file.exists() && file.length() > 0;
 	}
 
+	/**
+	 * Decode {@link Bitmap} from given {@link File}
+	 *
+	 * @param file
+	 * @return bitmap
+	 */
+	protected Bitmap decode(final File file) {
+		Point size = getSize(file);
+		int currWidth = size.x;
+		int currHeight = size.y;
+
+		int scale = 1;
+		while (currWidth >= maxSize || currHeight >= maxSize) {
+			currWidth /= 2;
+			currHeight /= 2;
+			scale *= 2;
+		}
+
+		Options options = new Options();
+		options.inDither = false;
+		options.inSampleSize = scale;
+		options.inPreferredConfig = ARGB_8888;
+		return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+	}
+
 	public void update(final Song song) {
 		Bitmap cachedBitmap = getCachedArt(song);
 		if (cachedBitmap != null) {
@@ -160,8 +203,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 				if (bitmap == null) {
 					File artFile = getArtFile(song);
 					if (isValid(artFile) || service.get().getArt(song, artFile))
-						bitmap = BitmapFactory.decodeFile(artFile
-								.getAbsolutePath());
+						bitmap = decode(artFile);
 					putCachedArt(song, bitmap);
 				}
 
