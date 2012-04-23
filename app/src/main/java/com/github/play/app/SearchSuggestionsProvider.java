@@ -40,9 +40,10 @@ public class SearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
 	}
 
 	/**
-	 * Clear all recent suggestions in history
+	 * Add recent suggestion query to history
 	 *
 	 * @param context
+	 * @param query
 	 */
 	public static final void add(final Context context, final String query) {
 		new SearchRecentSuggestions(context, AUTHORITY, DATABASE_MODE_QUERIES)
