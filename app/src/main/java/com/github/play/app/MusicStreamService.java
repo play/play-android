@@ -112,7 +112,7 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 	 *
 	 * @param url
 	 */
-	public void prepareAsync(final String url) {
+	private void prepareAsync(final String url) {
 		Log.d(TAG, "Preparing streaming connection to: " + url);
 
 		try {
