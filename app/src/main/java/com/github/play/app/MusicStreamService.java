@@ -125,6 +125,8 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 			Log.d(TAG, "Exception configuring streaming", e);
 		} catch (IllegalStateException e) {
 			Log.d(TAG, "Exception configuring streaming", e);
+		} catch (SecurityException e) {
+			Log.d(TAG, "Exception configuring streaming", e);
 		}
 	}
 
