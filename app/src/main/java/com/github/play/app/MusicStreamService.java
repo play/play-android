@@ -74,7 +74,7 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 	public void onDestroy() {
 		super.onDestroy();
 
-		Log.d(TAG, "Destroying music service");
+		Log.d(TAG, "Destroying music stream service");
 
 		if (player != null) {
 			player.release();
@@ -86,7 +86,7 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 	public void onCreate() {
 		super.onCreate();
 
-		Log.d(TAG, "Creating music service");
+		Log.d(TAG, "Creating music stream service");
 
 		player = new MediaPlayer();
 		player.setOnPreparedListener(this);
