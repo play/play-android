@@ -64,7 +64,7 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 
 	private static final String EXTRA_URL = "url";
 
-	private static final String TAG = "MusicService";
+	private static final String TAG = "MusicStreamService";
 
 	private MediaPlayer player;
 
