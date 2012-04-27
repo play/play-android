@@ -110,7 +110,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private StreamingInfo streamingInfo;
 
-	private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver updateReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
 			StatusUpdate update = (StatusUpdate) intent
@@ -119,7 +119,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
-	private BroadcastReceiver queueReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver queueReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
 			runOnUiThread(new Runnable() {
@@ -131,7 +131,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
-	private OnClickListener starListener = new OnClickListener() {
+	private final OnClickListener starListener = new OnClickListener() {
 
 		public void onClick(View v) {
 			Object tag = v.getTag();
@@ -146,7 +146,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
-	private OnItemLongClickListener dequeueListener = new OnItemLongClickListener() {
+	private final OnItemLongClickListener dequeueListener = new OnItemLongClickListener() {
 
 		public boolean onItemLongClick(AdapterView<?> parent, View view,
 				int position, long id) {
