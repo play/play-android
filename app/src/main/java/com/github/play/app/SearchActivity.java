@@ -74,7 +74,6 @@ public class SearchActivity extends SherlockActivity implements
 
 		ListView list = (ListView) findViewById(android.R.id.list);
 		list.setOnItemClickListener(this);
-		list.setFastScrollEnabled(true);
 		adapter = new SearchListAdapter(layout.search_song,
 				getLayoutInflater(), service);
 		list.setAdapter(adapter);
