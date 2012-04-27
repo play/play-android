@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -53,12 +54,13 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	private static final int MAX_SIZE_DP = 60;
 
-	private static final Map<String, Bitmap> RECENT_ART = new LinkedHashMap<String, Bitmap>(
+	private static final Map<String, BitmapDrawable> RECENT_ART = new LinkedHashMap<String, BitmapDrawable>(
 			MAX_RECENT, 1.0F) {
 
 		private static final long serialVersionUID = -3434208982358063608L;
 
-		protected boolean removeEldestEntry(Entry<String, Bitmap> eldest) {
+		protected boolean removeEldestEntry(
+				Map.Entry<String, BitmapDrawable> eldest) {
 			return size() >= MAX_RECENT;
 		}
 	};
@@ -88,14 +90,15 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		return hashed;
 	}
 
-	private static Bitmap getCachedArt(final Song song) {
+	private static BitmapDrawable getCachedArt(final Song song) {
 		synchronized (RECENT_ART) {
 			String digest = digest(song);
 			return digest != null ? RECENT_ART.get(digest) : null;
 		}
 	}
 
-	private static void putCachedArt(final Song song, final Bitmap bitmap) {
+	private static void putCachedArt(final Song song,
+			final BitmapDrawable bitmap) {
 		if (bitmap == null)
 			return;
 		String digest = digest(song);
@@ -192,28 +195,33 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 			return;
 		}
 
-		Bitmap cachedBitmap = getCachedArt(song);
+		BitmapDrawable cachedBitmap = getCachedArt(song);
 		if (cachedBitmap != null) {
 			artView.setTag(null);
-			artView.setImageBitmap(cachedBitmap);
+			artView.setImageDrawable(cachedBitmap);
 			return;
 		}
 
 		artView.setTag(song.id);
-		artView.setImageBitmap(null);
+		artView.setImageDrawable(null);
 
 		EXECUTORS.execute(new Runnable() {
 
 			public void run() {
-				Bitmap bitmap = getCachedArt(song);
+				BitmapDrawable bitmap = getCachedArt(song);
 				if (bitmap == null) {
 					File artFile = getArtFile(song);
-					if (isValid(artFile) || service.get().getArt(song, artFile))
-						bitmap = decode(artFile);
-					putCachedArt(song, bitmap);
+					if (isValid(artFile) || service.get().getArt(song, artFile)) {
+						Bitmap loaded = decode(artFile);
+						if (loaded != null) {
+							bitmap = new BitmapDrawable(artView.getResources(),
+									loaded);
+							putCachedArt(song, bitmap);
+						}
+					}
 				}
 
-				final Bitmap viewBitmap = bitmap;
+				final BitmapDrawable viewBitmap = bitmap;
 				artView.post(new Runnable() {
 
 					public void run() {
@@ -221,7 +229,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 							return;
 
 						artView.setTag(null);
-						artView.setImageBitmap(viewBitmap);
+						artView.setImageDrawable(viewBitmap);
 					}
 				});
 			}
