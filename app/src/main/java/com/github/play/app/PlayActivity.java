@@ -22,6 +22,8 @@ import static android.speech.RecognizerIntent.EXTRA_MAX_RESULTS;
 import static android.speech.RecognizerIntent.EXTRA_PROMPT;
 import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.github.play.app.StatusService.EXTRA_UPDATE;
@@ -89,6 +91,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	private static final int REQUEST_SETTINGS = 1;
 
 	private static final int REQUEST_SPEECH = 2;
+
+	private ListView listView;
+
+	private View loadingView;
 
 	private final AtomicReference<PlayService> playService = new AtomicReference<PlayService>();
 
@@ -177,23 +183,23 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		setContentView(layout.main);
 
-		ListView list = (ListView) findViewById(android.R.id.list);
+		loadingView = findViewById(id.ll_loading);
+
+		listView = (ListView) findViewById(android.R.id.list);
+		listView.setOnItemLongClickListener(dequeueListener);
+
 		LayoutInflater inflater = getLayoutInflater();
-
-		list.setFastScrollEnabled(true);
-		list.setOnItemLongClickListener(dequeueListener);
-
 		View nowPlayingView = inflater.inflate(layout.now_playing, null);
-		list.addHeaderView(nowPlayingView, null, false);
+		listView.addHeaderView(nowPlayingView, null, false);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
 				playService, starListener);
 
-		list.addHeaderView(inflater.inflate(layout.queue_divider, null), null,
-				false);
+		listView.addHeaderView(inflater.inflate(layout.queue_divider, null),
+				null, false);
 
 		playListAdapter = new PlayListAdapter(layout.queued,
 				getLayoutInflater(), playService, starListener);
-		list.setAdapter(playListAdapter);
+		listView.setAdapter(playListAdapter);
 
 		if (savedInstanceState != null)
 			streamingInfo = (StreamingInfo) savedInstanceState
@@ -292,6 +298,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	private void updateSongs(Song playing, Song[] queued) {
 		nowPlayingItemView.update(playing);
 		playListAdapter.setItems(queued);
+		if (listView.getVisibility() == GONE) {
+			loadingView.setVisibility(GONE);
+			listView.setVisibility(VISIBLE);
+		}
 	}
 
 	private void refreshSongs() {
