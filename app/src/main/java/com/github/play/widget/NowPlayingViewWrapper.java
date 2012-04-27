@@ -62,6 +62,17 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 
 	@Override
 	public void update(final Song song) {
+		if (song == null) {
+			songText.setText(null);
+			artistText.setText(null);
+			albumText.setText(null);
+			starText.setTag(null);
+			starText.setTextColor(starText.getContext().getResources()
+					.getColor(color.unstarred));
+			artWrapper.update(song);
+			return;
+		}
+
 		songText.setText(song.name);
 		artistText.setText(song.artist);
 		albumText.setText(song.album);

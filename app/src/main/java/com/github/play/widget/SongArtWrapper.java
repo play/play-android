@@ -186,6 +186,12 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 	}
 
 	public void update(final Song song) {
+		if (song == null) {
+			artView.setTag(null);
+			artView.setImageDrawable(null);
+			return;
+		}
+
 		Bitmap cachedBitmap = getCachedArt(song);
 		if (cachedBitmap != null) {
 			artView.setTag(null);
