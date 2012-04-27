@@ -120,16 +120,15 @@ public abstract class ItemListAdapter<V> extends BaseAdapter {
 	@SuppressWarnings("unchecked")
 	public View getView(final int position, View convertView,
 			final ViewGroup parent) {
-		V item = getItem(position);
 		ViewWrapper<V> itemView = null;
 		if (convertView != null)
 			itemView = (ViewWrapper<V>) convertView.getTag();
-		else {
+		if (itemView == null) {
 			convertView = inflater.inflate(viewId, null);
 			itemView = createItemView(convertView);
 			convertView.setTag(itemView);
 		}
-		itemView.update(item);
+		itemView.update(getItem(position));
 		return convertView;
 	}
 }
