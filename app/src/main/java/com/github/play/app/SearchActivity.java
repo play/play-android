@@ -105,7 +105,7 @@ public class SearchActivity extends SherlockActivity implements
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		addItem.setEnabled(!songs.isEmpty());
+		showAddItem(!songs.isEmpty());
 		return true;
 	}
 
@@ -134,12 +134,16 @@ public class SearchActivity extends SherlockActivity implements
 		}
 	}
 
+	private void showAddItem(final boolean show) {
+		if (addItem != null)
+			addItem.setVisible(show);
+	}
+
 	private void queueSelected() {
 		if (songs.isEmpty())
 			return;
 
-		if (addItem != null)
-			addItem.setEnabled(false);
+		showAddItem(false);
 
 		String[] ids = songs.toArray(new String[songs.size()]);
 
@@ -160,8 +164,7 @@ public class SearchActivity extends SherlockActivity implements
 				if (result != null) {
 					Toast.makeText(getApplicationContext(),
 							string.queueing_failed, LENGTH_LONG).show();
-					if (addItem != null)
-						addItem.setEnabled(true);
+					showAddItem(true);
 				} else {
 					sendBroadcast(new Intent(ACTION_QUEUE));
 					setResult(RESULT_OK);
@@ -236,8 +239,7 @@ public class SearchActivity extends SherlockActivity implements
 			title = getString(string.search);
 		getSupportActionBar().setTitle(title);
 
-		if (addItem != null)
-			addItem.setEnabled(!songs.isEmpty());
+		showAddItem(!songs.isEmpty());
 
 		adapter.notifyDataSetChanged();
 	}
