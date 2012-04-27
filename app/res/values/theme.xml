@@ -4,6 +4,7 @@
     <style name="Theme.Play" parent="@style/Theme.Sherlock">
         <item name="actionBarStyle">@style/Theme.Play.ActionBar</item>
         <item name="android:actionBarStyle">@style/Theme.Play.ActionBar</item>
+        <item name="android:windowBackground">@color/background_light</item>
     </style>
 
     <style name="Theme.Play.ActionBar" parent="Widget.Sherlock.ActionBar.Solid">
