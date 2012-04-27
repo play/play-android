@@ -19,6 +19,8 @@ import static android.app.SearchManager.QUERY;
 import static android.content.Intent.ACTION_SEARCH;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.github.play.app.PlayActivity.ACTION_QUEUE;
@@ -64,6 +66,10 @@ public class SearchActivity extends SherlockActivity implements
 
 	private final Set<String> songs = new HashSet<String>();
 
+	private ListView listView;
+
+	private View loadingView;
+
 	private SearchListAdapter adapter;
 
 	@Override
@@ -72,11 +78,13 @@ public class SearchActivity extends SherlockActivity implements
 
 		setContentView(layout.search);
 
-		ListView list = (ListView) findViewById(android.R.id.list);
-		list.setOnItemClickListener(this);
+		loadingView = findViewById(id.ll_loading);
+
+		listView = (ListView) findViewById(android.R.id.list);
+		listView.setOnItemClickListener(this);
 		adapter = new SearchListAdapter(layout.search_song,
 				getLayoutInflater(), service);
-		list.setAdapter(adapter);
+		listView.setAdapter(adapter);
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setTitle(string.search);
@@ -117,6 +125,9 @@ public class SearchActivity extends SherlockActivity implements
 			return true;
 		case id.m_clear:
 			SearchSuggestionsProvider.clear(this);
+			return true;
+		case id.m_refresh:
+			search(getIntent());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -166,7 +177,9 @@ public class SearchActivity extends SherlockActivity implements
 		search(intent);
 	}
 
-	private void search(Intent intent) {
+	private void search(final Intent intent) {
+		if (intent == null)
+			return;
 		if (!ACTION_SEARCH.equals(intent.getAction()))
 			return;
 
@@ -177,6 +190,9 @@ public class SearchActivity extends SherlockActivity implements
 		getSupportActionBar().setSubtitle(query);
 
 		SearchSuggestionsProvider.add(this, query);
+
+		loadingView.setVisibility(VISIBLE);
+		listView.setVisibility(GONE);
 
 		new SearchTask(service) {
 
@@ -193,6 +209,9 @@ public class SearchActivity extends SherlockActivity implements
 					Toast.makeText(getApplicationContext(),
 							string.search_failed, LENGTH_LONG).show();
 				}
+
+				loadingView.setVisibility(GONE);
+				listView.setVisibility(VISIBLE);
 			}
 		}.execute(query);
 	}

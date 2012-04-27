@@ -2,14 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_light"
     android:orientation="vertical" >
+
+    <include layout="@layout/loading" />
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_light"
         android:divider="@color/divider"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        android:visibility="gone" />
 
 </LinearLayout>
