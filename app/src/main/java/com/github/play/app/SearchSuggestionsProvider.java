@@ -56,5 +56,4 @@ public class SearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
 	public SearchSuggestionsProvider() {
 		setupSuggestions(AUTHORITY, DATABASE_MODE_QUERIES);
 	}
-
 }
