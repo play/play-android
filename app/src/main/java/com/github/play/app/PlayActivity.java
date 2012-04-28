@@ -298,10 +298,11 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	private void updateSongs(Song playing, Song[] queued) {
 		nowPlayingItemView.update(playing);
 		playListAdapter.setItems(queued);
-		if (listView.getVisibility() == GONE) {
+
+		if (loadingView.getVisibility() == VISIBLE)
 			loadingView.setVisibility(GONE);
+		if (listView.getVisibility() == GONE)
 			listView.setVisibility(VISIBLE);
-		}
 	}
 
 	private void refreshSongs() {
@@ -380,6 +381,9 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	public void onError(IOException e) {
 		Log.d(TAG, "Play server exception", e);
+
+		if (loadingView.getVisibility() == VISIBLE)
+			loadingView.setVisibility(GONE);
 
 		Toast.makeText(
 				getApplicationContext(),
