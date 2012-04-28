@@ -306,8 +306,17 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	}
 
 	private void refreshSongs() {
-		if (isReady())
-			new FetchStatusTask(playService, this).execute();
+		if (!isReady())
+			return;
+
+		if (playListAdapter.getCount() == 0) {
+			if (loadingView.getVisibility() == GONE)
+				loadingView.setVisibility(VISIBLE);
+			if (listView.getVisibility() == VISIBLE)
+				listView.setVisibility(GONE);
+		}
+
+		new FetchStatusTask(playService, this).execute();
 	}
 
 	private boolean hasSettings() {
