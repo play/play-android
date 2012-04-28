@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Play</string>
-    <string name="queue">QUEUE</string>
+    <string name="up_next">Up Next</string>
     <string name="by">by</string>
     <string name="from">from</string>
     <string name="album_art">Album Art</string>
@@ -45,5 +45,6 @@
     <string name="multiple_selected">{0} selected</string>
     <string name="single_selected">1 selected</string>
     <string name="symbol_check">\u2714</string>
+    <string name="now_playing">Now Playing</string>
 
 </resources>

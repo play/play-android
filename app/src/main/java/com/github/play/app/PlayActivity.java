@@ -189,6 +189,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		listView.setOnItemLongClickListener(dequeueListener);
 
 		LayoutInflater inflater = getLayoutInflater();
+
+		listView.addHeaderView(
+				inflater.inflate(layout.now_playing_divider, null), null, false);
+
 		View nowPlayingView = inflater.inflate(layout.now_playing, null);
 		listView.addHeaderView(nowPlayingView, null, false);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
