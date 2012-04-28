@@ -257,7 +257,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		else if (isReady()) {
 			setMenuItemsEnabled(true);
 			refreshSongs();
-			startStream();
 		}
 	}
 
