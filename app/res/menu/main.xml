@@ -5,14 +5,14 @@
         android:id="@+id/m_pause"
         android:enabled="false"
         android:icon="@drawable/action_play"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/play">
     </item>
     <item
         android:id="@+id/m_search"
         android:enabled="false"
         android:icon="@drawable/action_search"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/search">
     </item>
     <item
