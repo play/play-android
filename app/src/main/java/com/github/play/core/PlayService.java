@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.net.URLEncoder;
 
 /**
  * Service class to make requests to the Play API
@@ -87,24 +86,14 @@ public class PlayService {
 	}
 
 	/**
-	 * Encode value using {@link URLEncoder}
-	 *
-	 * @param value
-	 * @return encoded value
-	 * @throws IOException
-	 */
-	protected String encode(String value) throws IOException {
-		return URLEncoder.encode(value, "US-ASCII");
-	}
-
-	/**
 	 * Create a GET request for the given URL
 	 *
 	 * @param url
 	 * @return request
 	 */
-	protected HttpRequest get(String url) {
-		return HttpRequest.get(baseUrl + url).authorization(token);
+	protected HttpRequest get(final String url) {
+		String encoded = HttpRequest.encode(baseUrl + url);
+		return HttpRequest.get(encoded).authorization(token);
 	}
 
 	/**
@@ -113,8 +102,9 @@ public class PlayService {
 	 * @param url
 	 * @return request
 	 */
-	protected HttpRequest post(String url) {
-		return HttpRequest.post(baseUrl + url).authorization(token);
+	protected HttpRequest post(final String url) {
+		String encoded = HttpRequest.encode(baseUrl + url);
+		return HttpRequest.post(encoded).authorization(token);
 	}
 
 	/**
@@ -123,8 +113,9 @@ public class PlayService {
 	 * @param url
 	 * @return request
 	 */
-	protected HttpRequest delete(String url) {
-		return HttpRequest.delete(baseUrl + url).authorization(token);
+	protected HttpRequest delete(final String url) {
+		String encoded = HttpRequest.encode(baseUrl + url);
+		return HttpRequest.delete(encoded).authorization(token);
 	}
 
 	/**
@@ -285,7 +276,7 @@ public class PlayService {
 	 */
 	public Song[] queueSubject(String subject) throws IOException {
 		try {
-			HttpRequest request = post("freeform?subject=" + encode(subject));
+			HttpRequest request = post("freeform?subject=" + subject);
 			if (!request.ok())
 				throw new IOException("Unexpected response code of "
 						+ request.code());
@@ -309,7 +300,7 @@ public class PlayService {
 	 */
 	public Song[] search(String query) throws IOException {
 		try {
-			HttpRequest request = get("search?q=" + encode(query));
+			HttpRequest request = get("search?q=" + query);
 			if (!request.ok())
 				throw new IOException("Unexpected response code of "
 						+ request.code());
