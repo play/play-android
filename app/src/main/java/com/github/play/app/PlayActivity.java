@@ -432,6 +432,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_SETTINGS && resultCode == RESULT_OK) {
+			stopStream();
 			if (hasSettings()) {
 				playService.set(new PlayService(settings.getUrl(), settings
 						.getToken()));
