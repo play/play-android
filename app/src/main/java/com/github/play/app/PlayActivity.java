@@ -26,8 +26,8 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.github.play.app.MusicStreamService.EXTRA_STREAMING;
 import static com.github.play.app.StatusService.EXTRA_UPDATE;
-import static com.github.play.app.StatusService.UPDATE;
 import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -137,6 +137,20 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
+	private final BroadcastReceiver streamReceiver = new BroadcastReceiver() {
+
+		public void onReceive(Context context, Intent intent) {
+			final boolean streaming = intent.getBooleanExtra(EXTRA_STREAMING,
+					false);
+			runOnUiThread(new Runnable() {
+
+				public void run() {
+					setStreaming(streaming);
+				}
+			});
+		}
+	};
+
 	private final OnClickListener starListener = new OnClickListener() {
 
 		public void onClick(View v) {
@@ -167,6 +181,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		super.onDestroy();
 
 		unregisterReceiver(updateReceiver);
+		unregisterReceiver(streamReceiver);
 		unregisterReceiver(queueReceiver);
 	}
 
@@ -219,8 +234,25 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 			startActivityForResult(new Intent(this, SettingsActivity.class),
 					REQUEST_SETTINGS);
 
-		registerReceiver(updateReceiver, new IntentFilter(UPDATE));
+		registerReceiver(updateReceiver, new IntentFilter(StatusService.UPDATE));
+		registerReceiver(streamReceiver, new IntentFilter(
+				MusicStreamService.UPDATE));
 		registerReceiver(queueReceiver, new IntentFilter(ACTION_QUEUE));
+	}
+
+	private void setStreaming(final boolean streaming) {
+		if (playItem == null)
+			return;
+
+		if (streaming) {
+			playItem.setIcon(drawable.action_pause);
+			playItem.setTitle(string.pause);
+		} else {
+			playItem.setIcon(drawable.action_play);
+			playItem.setTitle(string.play);
+		}
+
+		this.streaming = streaming;
 	}
 
 	private void startStream() {
@@ -229,16 +261,11 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		Log.d(TAG, "Starting stream");
 
-		if (playItem != null) {
-			playItem.setIcon(drawable.action_pause);
-			playItem.setTitle(string.pause);
-		}
+		setStreaming(true);
 
 		Context context = getApplicationContext();
 		MusicStreamService.start(context, streamingInfo.streamUrl);
 		StatusService.start(context, streamingInfo.pusherKey);
-
-		streaming = true;
 
 		refreshSongs();
 	}
@@ -258,6 +285,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 			}.execute();
 		else if (isReady()) {
 			setMenuItemsEnabled(true);
+			MusicStreamService.start(getApplicationContext());
 			refreshSongs();
 		}
 	}
@@ -279,16 +307,11 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		Log.d(TAG, "Stopping stream");
 
-		if (playItem != null) {
-			playItem.setIcon(drawable.action_play);
-			playItem.setTitle(string.play);
-		}
+		setStreaming(false);
 
 		Context context = getApplicationContext();
 		MusicStreamService.stop(context);
 		StatusService.stop(context);
-
-		streaming = false;
 	}
 
 	public void onUpdate(final Song playing, final Song[] queued) {

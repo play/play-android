@@ -37,15 +37,35 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 		OnErrorListener {
 
 	/**
-	 * Start service with application key
+	 * Action to use for broadcasting updates
+	 */
+	public static final String UPDATE = "com.github.play.action.STREAMING_UPDATE";
+
+	/**
+	 * Intent extra denoting whether music is currently streaming
+	 */
+	public static final String EXTRA_STREAMING = "streaming";
+
+	/**
+	 * Start streaming service to given URL
 	 *
 	 * @param context
 	 * @param url
 	 */
 	public static void start(final Context context, final String url) {
 		Intent intent = new Intent(ACTION);
-		intent.putExtra(EXTRA_URL, url);
+		if (!TextUtils.isEmpty(url))
+			intent.putExtra(EXTRA_URL, url);
 		context.startService(intent);
+	}
+
+	/**
+	 * Start streaming service
+	 *
+	 * @param context
+	 */
+	public static void start(final Context context) {
+		start(context, null);
 	}
 
 	/**
@@ -67,6 +87,8 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 	private static final String TAG = "MusicStreamService";
 
 	private MediaPlayer player;
+
+	private boolean prepared;
 
 	private String url;
 
@@ -97,14 +119,26 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 	@Override
 	public int onStartCommand(final Intent intent, final int flags,
 			final int startId) {
+		int result = super.onStartCommand(intent, flags, startId);
 
-		if (intent != null) {
-			String intentUrl = intent.getStringExtra(EXTRA_URL);
-			if (!TextUtils.isEmpty(intentUrl) && !intentUrl.equals(url))
-				prepareAsync(intentUrl);
+		if (intent == null)
+			return result;
+
+		String intentUrl = intent.getStringExtra(EXTRA_URL);
+		if (!TextUtils.isEmpty(intentUrl) && !intentUrl.equals(url)) {
+			prepareAsync(intentUrl);
+			return result;
 		}
 
-		return super.onStartCommand(intent, flags, startId);
+		broadcastStatus(prepared);
+
+		return result;
+	}
+
+	private void broadcastStatus(final boolean streaming) {
+		Intent intent = new Intent(UPDATE);
+		intent.putExtra(EXTRA_STREAMING, streaming);
+		sendBroadcast(intent);
 	}
 
 	/**
@@ -137,9 +171,10 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 
 	public void onPrepared(final MediaPlayer mp) {
 		Log.d(TAG, "Media player stream prepared");
-
 		try {
 			mp.start();
+			prepared = true;
+			broadcastStatus(true);
 		} catch (IllegalStateException e) {
 			Log.d(TAG, "Starting media player failed", e);
 		}
@@ -157,6 +192,9 @@ public class MusicStreamService extends Service implements OnPreparedListener,
 			Log.d(TAG, "Media player error: " + what + " Extra: " + extra);
 			break;
 		}
+
+		prepared = false;
+		broadcastStatus(false);
 		return false;
 	}
 }
