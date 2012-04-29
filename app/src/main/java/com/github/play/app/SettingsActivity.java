@@ -32,6 +32,10 @@ import com.github.play.core.PlayPreferences;
  */
 public class SettingsActivity extends SherlockActivity {
 
+	private static final String PREFIX_HTTP = "http://";
+
+	private static final String PREFIX_HTTPS = "https://";
+
 	private PlayPreferences settings;
 
 	private EditText tokenText;
@@ -70,6 +74,10 @@ public class SettingsActivity extends SherlockActivity {
 			String token = tokenText.getText().toString().trim();
 			String url = urlText.getText().toString().trim();
 			if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(url)) {
+				if (!url.startsWith(PREFIX_HTTP)
+						& !url.startsWith(PREFIX_HTTPS))
+					url = PREFIX_HTTPS + url;
+
 				settings.setToken(token).setUrl(url);
 				setResult(RESULT_OK);
 				finish();
