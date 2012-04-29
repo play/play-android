@@ -41,6 +41,20 @@ public class PlayPreferences {
 	}
 
 	/**
+	 * Set preference key to given value
+	 *
+	 * @param key
+	 * @param value
+	 * @return this settings instance
+	 */
+	protected PlayPreferences set(final String key, String value) {
+		if (value.length() == 0)
+			value = null;
+		preferences.edit().putString(key, value).commit();
+		return this;
+	}
+
+	/**
 	 * Get Play server URL
 	 *
 	 * @return URL or null if not configured
@@ -56,9 +70,7 @@ public class PlayPreferences {
 	 * @return this settings instance
 	 */
 	public PlayPreferences setUrl(final String url) {
-		preferences.edit().putString(URL, url.length() > 0 ? url : null)
-				.commit();
-		return this;
+		return set(URL, url);
 	}
 
 	/**
@@ -77,8 +89,6 @@ public class PlayPreferences {
 	 * @return this settings instance
 	 */
 	public PlayPreferences setToken(final String token) {
-		preferences.edit().putString(TOKEN, token.length() > 0 ? token : null)
-				.commit();
-		return this;
+		return set(TOKEN, token);
 	}
 }
