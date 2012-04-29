@@ -239,6 +239,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		StatusService.start(context, streamingInfo.pusherKey);
 
 		streaming = true;
+
+		refreshSongs();
 	}
 
 	private void load() {
