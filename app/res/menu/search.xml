@@ -4,13 +4,13 @@
     <item
         android:id="@+id/m_add"
         android:icon="@drawable/action_add"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/add_to_queue">
     </item>
     <item
         android:id="@+id/m_search"
         android:icon="@drawable/action_search"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/search">
     </item>
     <item
