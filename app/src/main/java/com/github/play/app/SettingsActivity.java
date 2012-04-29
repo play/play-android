@@ -78,8 +78,13 @@ public class SettingsActivity extends SherlockActivity {
 						& !url.startsWith(PREFIX_HTTPS))
 					url = PREFIX_HTTPS + url;
 
-				settings.setToken(token).setUrl(url);
-				setResult(RESULT_OK);
+				boolean changed = !token.equals(settings.getToken())
+						|| !url.equals(settings.getUrl());
+				if (changed) {
+					settings.setToken(token).setUrl(url);
+					setResult(RESULT_OK);
+				} else
+					setResult(RESULT_CANCELED);
 				finish();
 			}
 			return true;
