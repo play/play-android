@@ -48,5 +48,7 @@
     <string name="now_playing">Now Playing</string>
     <string name="hint_token">abc123</string>
     <string name="hint_url">play.example.com</string>
+    <string name="queueing_stars_failed">Failed to add starred songs to the queue</string>
+    <string name="play_stars">Play My \u2605s</string>
 
 </resources>

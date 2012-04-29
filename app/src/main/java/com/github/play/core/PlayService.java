@@ -268,6 +268,29 @@ public class PlayService {
 	}
 
 	/**
+	 * Add starred songs to the queue
+	 *
+	 * @return non-null but possibly empty array of queued songs
+	 * @throws IOException
+	 */
+	public Song[] queueStars() throws IOException {
+		try {
+			HttpRequest request = post("queue/stars");
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+
+			SongWrapper wrapper = fromJson(request, SongWrapper.class);
+			if (wrapper != null && wrapper.songs != null)
+				return wrapper.songs;
+			else
+				return new Song[0];
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
+
+	/**
 	 * Requests some songs that match the freeform subject to be played
 	 *
 	 * @param subject

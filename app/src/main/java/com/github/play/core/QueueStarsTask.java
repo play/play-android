@@ -22,37 +22,37 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Task to queue songs that match a subject
+ * Task to add starred songs to the queue
  */
-public class QueueSubjectTask extends AsyncTask<String, Void, SongResult> {
+public class QueueStarsTask extends AsyncTask<Void, Void, SongResult> {
 
-	private static final String TAG = "QueueSubjectTask";
+	private static final String TAG = "QueueStarsTask";
 
 	private final AtomicReference<PlayService> service;
 
 	/**
-	 * Create task to queue up songs that match a subject
+	 * Create task to add starred songs to the queue
 	 *
 	 * @param service
 	 */
-	public QueueSubjectTask(final AtomicReference<PlayService> service) {
+	public QueueStarsTask(final AtomicReference<PlayService> service) {
 		this.service = service;
 	}
 
 	@Override
-	protected SongResult doInBackground(String... params) {
+	protected SongResult doInBackground(Void... params) {
 		try {
-			return new SongResult(service.get().queueSubject(params[0]));
+			return new SongResult(service.get().queueStars());
 		} catch (IOException e) {
 			return new SongResult(e);
 		}
 	}
 
 	@Override
-	protected void onPostExecute(SongResult result) {
+	protected void onPostExecute(final SongResult result) {
 		super.onPostExecute(result);
 
 		if (result.exception != null)
-			Log.d(TAG, "Queueing freeform subject failed", result.exception);
+			Log.d(TAG, "Queueing starred songs failed", result.exception);
 	}
 }

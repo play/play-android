@@ -58,9 +58,11 @@ import com.github.play.core.FetchSettingsTask;
 import com.github.play.core.FetchStatusTask;
 import com.github.play.core.PlayPreferences;
 import com.github.play.core.PlayService;
+import com.github.play.core.QueueStarsTask;
 import com.github.play.core.QueueSubjectTask;
 import com.github.play.core.Song;
 import com.github.play.core.SongCallback;
+import com.github.play.core.SongResult;
 import com.github.play.core.StarSongTask;
 import com.github.play.core.StatusUpdate;
 import com.github.play.core.StreamingInfo;
@@ -111,6 +113,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	private MenuItem refreshItem;
 
 	private MenuItem searchItem;
+
+	private MenuItem playStarsItem;
 
 	private PlayPreferences settings;
 
@@ -299,6 +303,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 			refreshItem.setEnabled(enabled);
 		if (searchItem != null)
 			searchItem.setEnabled(enabled);
+		if (playStarsItem != null)
+			playStarsItem.setEnabled(enabled);
 	}
 
 	private void stopStream() {
@@ -377,6 +383,9 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		case id.m_search:
 			onSearchRequested();
 			return true;
+		case id.m_play_stars:
+			playStars();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -399,6 +408,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		refreshItem = optionsMenu.findItem(id.m_refresh);
 		speakItem = optionsMenu.findItem(id.m_speak);
 		searchItem = optionsMenu.findItem(id.m_search);
+		playStarsItem = optionsMenu.findItem(id.m_play_stars);
 
 		if (isReady())
 			setMenuItemsEnabled(true);
@@ -552,6 +562,36 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		builder.show();
 	}
 
+	private void playStars() {
+		if (!isReady())
+			return;
+
+		new QueueStarsTask(playService) {
+
+			@Override
+			protected void onPostExecute(SongResult result) {
+				super.onPostExecute(result);
+
+				String message;
+				if (result.exception != null)
+					message = getString(string.queueing_stars_failed);
+				else if (result.queued.length > 1)
+					message = MessageFormat.format(
+							getString(string.multiple_songs_queued),
+							result.queued.length);
+				else if (result.queued.length == 1)
+					message = getString(string.single_song_queued);
+				else
+					message = getString(string.no_songs_found);
+
+				Context context = getApplicationContext();
+				Toast.makeText(context, message, LENGTH_SHORT).show();
+
+				refreshSongs();
+			}
+		}.execute();
+	}
+
 	private void promptForSpeech() {
 		if (!isReady())
 			return;
@@ -597,7 +637,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		new QueueSubjectTask(playService) {
 
 			@Override
-			protected void onPostExecute(QueueSubjectResult result) {
+			protected void onPostExecute(SongResult result) {
 				super.onPostExecute(result);
 
 				String message;
