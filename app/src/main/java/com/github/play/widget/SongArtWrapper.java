@@ -15,6 +15,7 @@
  */
 package com.github.play.widget;
 
+import static android.graphics.Bitmap.CompressFormat.PNG;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static com.github.kevinsawicki.http.HttpRequest.CHARSET_UTF8;
 import android.graphics.Bitmap;
@@ -30,6 +31,9 @@ import com.github.play.core.Song;
 import com.github.play.widget.ItemListAdapter.ViewWrapper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -188,6 +192,31 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 	}
 
+	/**
+	 * Write {@link Bitmap} to given {@link File}
+	 *
+	 * @param bitmap
+	 * @param file
+	 * @return bitmap
+	 */
+	protected Bitmap write(final Bitmap bitmap, final File file) {
+		FileOutputStream stream = null;
+		try {
+			stream = new FileOutputStream(file);
+			bitmap.compress(PNG, 100, stream);
+			return bitmap;
+		} catch (FileNotFoundException e) {
+			return bitmap;
+		} finally {
+			if (stream != null)
+				try {
+					stream.close();
+				} catch (IOException ignored) {
+					// Ignored
+				}
+		}
+	}
+
 	public void update(final Song song) {
 		if (song == null) {
 			artView.setTag(null);
@@ -208,20 +237,27 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		EXECUTORS.execute(new Runnable() {
 
 			public void run() {
-				BitmapDrawable bitmap = getCachedArt(song);
-				if (bitmap == null) {
+				Bitmap bitmap = null;
+				BitmapDrawable drawable = getCachedArt(song);
+
+				if (drawable == null) {
 					File artFile = getArtFile(song);
-					if (isValid(artFile) || service.get().getArt(song, artFile)) {
-						Bitmap loaded = decode(artFile);
-						if (loaded != null) {
-							bitmap = new BitmapDrawable(artView.getResources(),
-									loaded);
-							putCachedArt(song, bitmap);
-						}
+					if (isValid(artFile)) {
+						bitmap = decode(artFile);
+					} else if (service.get().getArt(song, artFile)) {
+						bitmap = decode(artFile);
+						if (bitmap != null)
+							write(bitmap, artFile);
 					}
 				}
 
-				final BitmapDrawable viewBitmap = bitmap;
+				if (bitmap != null) {
+					drawable = new BitmapDrawable(artView.getResources(),
+							bitmap);
+					putCachedArt(song, drawable);
+				}
+
+				final BitmapDrawable imageDrawable = drawable;
 				artView.post(new Runnable() {
 
 					public void run() {
@@ -229,7 +265,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 							return;
 
 						artView.setTag(null);
-						artView.setImageDrawable(viewBitmap);
+						artView.setImageDrawable(imageDrawable);
 					}
 				});
 			}
