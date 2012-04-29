@@ -15,10 +15,14 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 ## Screenshots
 
-### Main interface showing what is playing and what is in the queue
+### View what's playing and what's up next
 
-![](http://img.skitch.com/20120420-84h5ikgtx9uac5yxn77ubbk1t2.png)
+![](http://img.skitch.com/20120429-rq3sgm8fbbbxwisep7rbsedj6h.png)
 
-### Notification bar showing what is currently playing
+### Search for songs and add them to the queue
 
-![](http://img.skitch.com/20120416-piytk797hrcq18ik1qepmxqkt2.png)
+![](http://img.skitch.com/20120429-p11jeqaiym321m46cynjqt622y.png)
+
+### Notification bar showing what's currently playing
+
+![](http://img.skitch.com/20120429-gaxfmpua8bmjn69qhbabhsy9nb.png)
