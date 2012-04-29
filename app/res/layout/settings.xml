@@ -24,6 +24,7 @@
             style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/hint_url"
             android:inputType="textUri" />
 
         <TextView
@@ -41,6 +42,7 @@
             style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/hint_token"
             android:inputType="text|textNoSuggestions" />
     </LinearLayout>
 
