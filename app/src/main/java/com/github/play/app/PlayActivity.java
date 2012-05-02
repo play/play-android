@@ -603,7 +603,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		intent.putExtra(EXTRA_LANGUAGE_MODEL, LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(EXTRA_MAX_RESULTS, 5);
 
-		stopStream();
 		startActivityForResult(intent, REQUEST_SPEECH);
 	}
 
@@ -657,7 +656,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				Toast.makeText(context, message, LENGTH_SHORT).show();
 
 				refreshSongs();
-				startStream();
 			}
 
 		}.execute(subject);
