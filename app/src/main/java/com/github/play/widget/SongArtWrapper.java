@@ -142,7 +142,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		if (!artFolder.exists())
 			artFolder.mkdirs();
 		this.service = service;
-		this.maxSize = Math.round(view.getContext().getResources()
+		maxSize = Math.round(view.getContext().getResources()
 				.getDisplayMetrics().density
 				* MAX_SIZE_DP + 0.5F);
 	}
