@@ -58,6 +58,18 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	private static final int MAX_SIZE_DP = 60;
 
+	private static final MessageDigest SHA1_DIGEST;
+
+	static {
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("SHA-1");
+		} catch (NoSuchAlgorithmException e) {
+			digest = null;
+		}
+		SHA1_DIGEST = digest;
+	}
+
 	private static final Map<String, BitmapDrawable> RECENT_ART = new LinkedHashMap<String, BitmapDrawable>(
 			MAX_RECENT, 1.0F) {
 
@@ -70,12 +82,8 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 	};
 
 	private static String digest(Song song) {
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance("SHA-1");
-		} catch (NoSuchAlgorithmException e) {
+		if (SHA1_DIGEST == null)
 			return null;
-		}
 
 		byte[] value;
 		try {
@@ -83,7 +91,12 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		} catch (UnsupportedEncodingException e) {
 			return null;
 		}
-		byte[] digested = digest.digest(value);
+
+		byte[] digested;
+		synchronized (SHA1_DIGEST) {
+			SHA1_DIGEST.reset();
+			digested = SHA1_DIGEST.digest(value);
+		}
 		String hashed = new BigInteger(1, digested).toString(16);
 		int padding = DIGEST_LENGTH - hashed.length();
 		if (padding > 0) {
@@ -95,22 +108,25 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 	}
 
 	private static BitmapDrawable getCachedArt(final Song song) {
-		synchronized (RECENT_ART) {
-			String digest = digest(song);
-			return digest != null ? RECENT_ART.get(digest) : null;
-		}
+		final String digest = digest(song);
+		if (digest != null)
+			synchronized (RECENT_ART) {
+				return RECENT_ART.get(digest);
+			}
+		else
+			return null;
 	}
 
 	private static void putCachedArt(final Song song,
 			final BitmapDrawable bitmap) {
 		if (bitmap == null)
 			return;
-		String digest = digest(song);
-		if (digest == null)
-			return;
-		synchronized (RECENT_ART) {
-			RECENT_ART.put(digest, bitmap);
-		}
+
+		final String digest = digest(song);
+		if (digest != null)
+			synchronized (RECENT_ART) {
+				RECENT_ART.put(digest, bitmap);
+			}
 	}
 
 	private static Point getSize(final File file) {
