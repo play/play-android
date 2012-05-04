@@ -247,18 +247,18 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	}
 
 	private void setStreaming(final boolean streaming) {
+		this.streaming = streaming;
+		updatePlayMenuItem();
+	}
+
+	private void updatePlayMenuItem() {
 		if (playItem == null)
 			return;
 
-		if (streaming) {
-			playItem.setIcon(drawable.action_pause);
-			playItem.setTitle(string.pause);
-		} else {
-			playItem.setIcon(drawable.action_play);
-			playItem.setTitle(string.play);
-		}
-
-		this.streaming = streaming;
+		if (streaming)
+			playItem.setIcon(drawable.action_pause).setTitle(string.pause);
+		else
+			playItem.setIcon(drawable.action_play).setTitle(string.play);
 	}
 
 	private void startStream() {
@@ -401,13 +401,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		getSupportMenuInflater().inflate(menu.main, optionsMenu);
 
 		playItem = optionsMenu.findItem(id.m_pause);
-		if (streaming) {
-			playItem.setIcon(drawable.action_pause);
-			playItem.setTitle(string.pause);
-		} else {
-			playItem.setIcon(drawable.action_play);
-			playItem.setTitle(string.play);
-		}
+		updatePlayMenuItem();
 
 		refreshItem = optionsMenu.findItem(id.m_refresh);
 		speakItem = optionsMenu.findItem(id.m_speak);
