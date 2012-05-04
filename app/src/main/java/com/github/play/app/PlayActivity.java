@@ -106,6 +106,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private boolean streaming = false;
 
+	private boolean queueEmpty = true;
+
 	private MenuItem playItem;
 
 	private MenuItem speakItem;
@@ -329,7 +331,9 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		});
 	}
 
-	private void updateSongs(Song playing, Song[] queued) {
+	private void updateSongs(final Song playing, final Song[] queued) {
+		queueEmpty = playing == null && (queued == null || queued.length == 0);
+
 		nowPlayingItemView.update(playing);
 		playListAdapter.setItems(queued);
 
@@ -343,7 +347,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		if (!isReady())
 			return;
 
-		if (playListAdapter.getCount() == 0) {
+		if (queueEmpty) {
 			if (loadingView.getVisibility() == GONE)
 				loadingView.setVisibility(VISIBLE);
 			if (listView.getVisibility() == VISIBLE)
