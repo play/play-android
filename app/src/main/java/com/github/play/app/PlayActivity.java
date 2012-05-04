@@ -104,7 +104,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private PlayListAdapter playListAdapter;
 
-	private boolean streaming = false;
+	private boolean streaming;
 
 	private boolean queueEmpty = true;
 
