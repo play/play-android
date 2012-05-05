@@ -24,8 +24,6 @@ import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.github.play.app.MusicStreamService.EXTRA_STREAMING;
 import static com.github.play.app.StatusService.EXTRA_UPDATE;
 import android.app.AlertDialog.Builder;
@@ -43,7 +41,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -69,6 +66,7 @@ import com.github.play.core.StreamingInfo;
 import com.github.play.core.UnstarSongTask;
 import com.github.play.widget.NowPlayingViewWrapper;
 import com.github.play.widget.PlayListAdapter;
+import com.github.play.widget.Toaster;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -430,11 +428,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		if (loadingView.getVisibility() == VISIBLE)
 			loadingView.setVisibility(GONE);
 
-		Toast.makeText(
-				getApplicationContext(),
-				MessageFormat.format(
-						getString(string.error_contacting_play_server),
-						e.getMessage()), LENGTH_LONG).show();
+		Toaster.showLong(this, string.error_contacting_play_server,
+				e.getMessage());
 	}
 
 	@Override
@@ -457,8 +452,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 			if (!results.isEmpty())
 				selectSubject(results);
 			else
-				Toast.makeText(getApplicationContext(),
-						string.speech_not_recognized, LENGTH_SHORT).show();
+				Toaster.showShort(this, string.speech_not_recognized);
 			return;
 		}
 
@@ -469,11 +463,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		if (!isReady())
 			return;
 
-		Toast.makeText(
-				getApplicationContext(),
-				MessageFormat
-						.format(getString(string.starring_song), song.name),
-				LENGTH_SHORT).show();
+		Toaster.showShort(this, string.starring_song, song.name);
+
 		new StarSongTask(playService) {
 
 			@Override
@@ -481,11 +472,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				super.onPostExecute(result);
 
 				if (result != null)
-					Toast.makeText(
-							getApplicationContext(),
-							MessageFormat.format(
-									getString(string.starring_failed),
-									song.name), LENGTH_LONG).show();
+					Toaster.showLong(PlayActivity.this, string.starring_failed,
+							song.name);
 				else
 					refreshSongs();
 			}
@@ -496,10 +484,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		if (!isReady())
 			return;
 
-		Toast.makeText(
-				getApplicationContext(),
-				MessageFormat.format(getString(string.unstarring_song),
-						song.name), LENGTH_SHORT).show();
+		Toaster.showShort(this, string.unstarring_song, song.name);
+
 		new UnstarSongTask(playService) {
 
 			@Override
@@ -507,11 +493,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				super.onPostExecute(result);
 
 				if (result != null)
-					Toast.makeText(
-							getApplicationContext(),
-							MessageFormat.format(
-									getString(string.unstarring_failed),
-									song.name), LENGTH_SHORT).show();
+					Toaster.showShort(PlayActivity.this,
+							string.unstarring_failed, song.name);
 				else
 					refreshSongs();
 			}
@@ -533,11 +516,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-						Toast.makeText(
-								getApplicationContext(),
-								MessageFormat.format(
-										getString(string.removing_song),
-										song.name), LENGTH_SHORT).show();
+						Toaster.showShort(PlayActivity.this,
+								string.removing_song, song.name);
 						new DequeueSongTask(playService) {
 
 							@Override
@@ -545,12 +525,9 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 								super.onPostExecute(result);
 
 								if (result != null)
-									Toast.makeText(
-											getApplicationContext(),
-											MessageFormat
-													.format(getString(string.removing_song_failed),
-															song.name),
-											LENGTH_SHORT).show();
+									Toaster.showShort(PlayActivity.this,
+											string.removing_song_failed,
+											song.name);
 								else
 									refreshSongs();
 							}
@@ -582,8 +559,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				else
 					message = getString(string.no_songs_found);
 
-				Context context = getApplicationContext();
-				Toast.makeText(context, message, LENGTH_SHORT).show();
+				Toaster.showShort(PlayActivity.this, message);
 
 				refreshSongs();
 			}
@@ -625,11 +601,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		if (!isReady())
 			return;
 
-		Toast.makeText(
-				getApplicationContext(),
-				MessageFormat.format(
-						getString(string.adding_subject_to_the_queue), subject),
-				LENGTH_SHORT).show();
+		Toaster.showShort(this, string.adding_subject_to_the_queue, subject);
 
 		new QueueSubjectTask(playService) {
 
@@ -650,8 +622,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				else
 					message = getString(string.no_songs_found);
 
-				Context context = getApplicationContext();
-				Toast.makeText(context, message, LENGTH_SHORT).show();
+				Toaster.showShort(PlayActivity.this, message);
 
 				refreshSongs();
 			}

@@ -16,7 +16,6 @@
 package com.github.play.app;
 
 import static android.content.Intent.ACTION_VIEW;
-import static android.widget.Toast.LENGTH_LONG;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.R.id;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -38,6 +36,7 @@ import com.github.play.R.layout;
 import com.github.play.R.menu;
 import com.github.play.R.string;
 import com.github.play.core.PlayPreferences;
+import com.github.play.widget.Toaster;
 
 import java.io.IOException;
 import java.net.URL;
@@ -104,8 +103,8 @@ public class SettingsActivity extends SherlockActivity {
 				if (valid)
 					startActivity(new Intent(ACTION_VIEW, Uri.parse(url)));
 				else
-					Toast.makeText(getApplicationContext(),
-							string.enter_play_server_url, LENGTH_LONG).show();
+					Toaster.showLong(SettingsActivity.this,
+							string.enter_play_server_url);
 			}
 		});
 	}

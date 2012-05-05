@@ -21,8 +21,6 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.github.play.app.PlayActivity.ACTION_QUEUE;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -34,7 +32,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -51,6 +48,7 @@ import com.github.play.core.SearchTask;
 import com.github.play.core.Song;
 import com.github.play.widget.SearchListAdapter;
 import com.github.play.widget.SearchListAdapter.SearchSong;
+import com.github.play.widget.Toaster;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -158,7 +156,7 @@ public class SearchActivity extends SherlockActivity implements
 					getString(string.adding_songs_to_queue), ids.length);
 		else
 			message = getString(string.adding_song_to_queue);
-		Toast.makeText(getApplicationContext(), message, LENGTH_SHORT).show();
+		Toaster.showShort(SearchActivity.this, message);
 
 		new QueueSongsTask(service) {
 
@@ -167,8 +165,8 @@ public class SearchActivity extends SherlockActivity implements
 				super.onPostExecute(result);
 
 				if (result != null) {
-					Toast.makeText(getApplicationContext(),
-							string.queueing_failed, LENGTH_LONG).show();
+					Toaster.showLong(SearchActivity.this,
+							string.queueing_failed);
 					showAddItem(true);
 				} else {
 					sendBroadcast(new Intent(ACTION_QUEUE));
@@ -213,10 +211,8 @@ public class SearchActivity extends SherlockActivity implements
 					for (int i = 0; i < searchSongs.length; i++)
 						searchSongs[i] = new SearchSong(result.songs[i]);
 					adapter.setItems(searchSongs);
-				} else {
-					Toast.makeText(getApplicationContext(),
-							string.search_failed, LENGTH_LONG).show();
-				}
+				} else
+					Toaster.showLong(SearchActivity.this, string.search_failed);
 
 				loadingView.setVisibility(GONE);
 				listView.setVisibility(VISIBLE);
@@ -291,16 +287,12 @@ public class SearchActivity extends SherlockActivity implements
 								showAddItem(true);
 
 								if (result != null)
-									Toast.makeText(getApplicationContext(),
-											string.queueing_failed, LENGTH_LONG)
-											.show();
+									Toaster.showLong(SearchActivity.this,
+											string.queueing_failed);
 								else {
-									Toast.makeText(
-											getApplicationContext(),
-											MessageFormat
-													.format(getString(string.album_added_to_queue),
-															song.album),
-											LENGTH_LONG).show();
+									Toaster.showLong(SearchActivity.this,
+											string.album_added_to_queue,
+											song.album);
 									sendBroadcast(new Intent(ACTION_QUEUE));
 								}
 							}
