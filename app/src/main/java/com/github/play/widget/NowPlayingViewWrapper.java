@@ -69,7 +69,7 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 			starText.setTag(null);
 			starText.setTextColor(starText.getContext().getResources()
 					.getColor(color.unstarred));
-			artWrapper.update(song);
+			artWrapper.update(null);
 			return;
 		}
 
