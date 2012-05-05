@@ -137,6 +137,8 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		options.inJustDecodeBounds = true;
 
 		BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+		if (options.outWidth <= 0 || options.outHeight <= 0)
+			Log.d(TAG, "Decoding bounds of " + file.getName() + " failed");
 		return new Point(options.outWidth, options.outHeight);
 	}
 
