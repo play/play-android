@@ -24,12 +24,15 @@ import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.github.play.app.PlayActivity.ACTION_QUEUE;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -45,6 +48,7 @@ import com.github.play.core.PlayPreferences;
 import com.github.play.core.PlayService;
 import com.github.play.core.QueueSongsTask;
 import com.github.play.core.SearchTask;
+import com.github.play.core.Song;
 import com.github.play.widget.SearchListAdapter;
 import com.github.play.widget.SearchListAdapter.SearchSong;
 
@@ -58,7 +62,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Activity to search for songs and add them to the queue
  */
 public class SearchActivity extends SherlockActivity implements
-		OnItemClickListener {
+		OnItemClickListener, OnItemLongClickListener {
 
 	private final AtomicReference<PlayService> service = new AtomicReference<PlayService>();
 
@@ -82,6 +86,7 @@ public class SearchActivity extends SherlockActivity implements
 
 		listView = (ListView) findViewById(android.R.id.list);
 		listView.setOnItemClickListener(this);
+		listView.setOnItemLongClickListener(this);
 		adapter = new SearchListAdapter(layout.search_song,
 				getLayoutInflater(), service);
 		listView.setAdapter(adapter);
@@ -242,5 +247,68 @@ public class SearchActivity extends SherlockActivity implements
 		showAddItem(!songs.isEmpty());
 
 		adapter.notifyDataSetChanged();
+	}
+
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		final Song song = (Song) parent.getItemAtPosition(position);
+		final Builder builder = new Builder(this);
+		builder.setCancelable(true);
+		builder.setTitle(string.title_play_album);
+		builder.setMessage(MessageFormat.format(
+				getString(string.message_play_album), song.album));
+		builder.setNegativeButton(android.R.string.no, null);
+		builder.setPositiveButton(android.R.string.yes,
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+
+						showAddItem(false);
+
+						new QueueSongsTask(service) {
+
+							@Override
+							protected IOException doInBackground(
+									String... params) {
+								String[] ids;
+								try {
+									Song[] songs = service.get().getSongs(
+											song.artist, song.album);
+									ids = new String[songs.length];
+									for (int i = 0; i < songs.length; i++)
+										ids[i] = songs[i].id;
+								} catch (IOException e) {
+									return e;
+								}
+								return super.doInBackground(ids);
+							}
+
+							@Override
+							protected void onPostExecute(IOException result) {
+								super.onPostExecute(result);
+
+								showAddItem(true);
+
+								if (result != null)
+									Toast.makeText(getApplicationContext(),
+											string.queueing_failed, LENGTH_LONG)
+											.show();
+								else {
+									Toast.makeText(
+											getApplicationContext(),
+											MessageFormat
+													.format(getString(string.album_added_to_queue),
+															song.album),
+											LENGTH_LONG).show();
+									sendBroadcast(new Intent(ACTION_QUEUE));
+								}
+							}
+
+						}.execute();
+					}
+				});
+		builder.show();
+		return true;
 	}
 }

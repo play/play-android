@@ -337,4 +337,31 @@ public class PlayService {
 			throw e.getCause();
 		}
 	}
+
+	/**
+	 * Get all songs on album by artist
+	 *
+	 * @param artist
+	 * @param album
+	 * @return non-null but possibly empty array of songs
+	 * @throws IOException
+	 */
+
+	public Song[] getSongs(final String artist, final String album)
+			throws IOException {
+		try {
+			HttpRequest request = get("artist/" + artist + "/album/" + album);
+			if (!request.ok())
+				throw new IOException("Unexpected response code of "
+						+ request.code());
+
+			SongWrapper wrapper = fromJson(request, SongWrapper.class);
+			if (wrapper != null && wrapper.songs != null)
+				return wrapper.songs;
+			else
+				return new Song[0];
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
 }
