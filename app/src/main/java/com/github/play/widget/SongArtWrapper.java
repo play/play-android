@@ -265,9 +265,9 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 				if (drawable == null) {
 					File artFile = getArtFile(song);
-					if (isValid(artFile)) {
+					if (isValid(artFile))
 						bitmap = decode(artFile);
-					} else if (service.get().getArt(song, artFile)) {
+					else if (service.get().getArt(song, artFile)) {
 						bitmap = decode(artFile);
 						if (bitmap != null)
 							write(bitmap, artFile);
