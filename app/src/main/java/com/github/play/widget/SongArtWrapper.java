@@ -226,7 +226,8 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		FileOutputStream stream = null;
 		try {
 			stream = new FileOutputStream(file);
-			bitmap.compress(PNG, 100, stream);
+			if (!bitmap.compress(PNG, 100, stream))
+				Log.d(TAG, "Compressing " + file.getName() + " failed");
 			return bitmap;
 		} catch (FileNotFoundException e) {
 			return bitmap;
