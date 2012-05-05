@@ -15,9 +15,20 @@
  */
 package com.github.play.app;
 
+import static android.content.Intent.ACTION_VIEW;
+import static android.widget.Toast.LENGTH_LONG;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.R.id;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -25,7 +36,11 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.play.R.layout;
 import com.github.play.R.menu;
+import com.github.play.R.string;
 import com.github.play.core.PlayPreferences;
+
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Activity to configure the settings for a Play server
@@ -59,6 +74,40 @@ public class SettingsActivity extends SherlockActivity {
 		String url = settings.getUrl();
 		if (url != null)
 			urlText.setText(url);
+
+		TextView tokenLink = (TextView) findViewById(id.tv_token_link);
+		SpannableString tokenText = new SpannableString(
+				getString(string.get_token));
+		tokenText.setSpan(new UnderlineSpan(), 0, tokenText.length(),
+				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tokenLink.setText(tokenText);
+		tokenLink.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				String url = urlText.getText().toString();
+				boolean valid = !TextUtils.isEmpty(url);
+				if (valid) {
+					if (!url.startsWith(PREFIX_HTTP)
+							& !url.startsWith(PREFIX_HTTPS))
+						url = PREFIX_HTTPS + url;
+					if (!url.endsWith("/"))
+						url += "/token";
+					else
+						url += "token";
+					try {
+						new URL(url);
+					} catch (IOException e) {
+						valid = false;
+					}
+				}
+
+				if (valid)
+					startActivity(new Intent(ACTION_VIEW, Uri.parse(url)));
+				else
+					Toast.makeText(getApplicationContext(),
+							string.enter_play_server_url, LENGTH_LONG).show();
+			}
+		});
 	}
 
 	@Override
