@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -49,6 +50,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * View wrapper to load and display art for a {@link Song}
  */
 public class SongArtWrapper extends ViewWrapper<Song> {
+
+	private static final String TAG = "SongArtWrapper";
 
 	private static final int DIGEST_LENGTH = 40;
 
@@ -205,7 +208,11 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		options.inDither = false;
 		options.inSampleSize = scale;
 		options.inPreferredConfig = ARGB_8888;
-		return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+		Bitmap decoded = BitmapFactory.decodeFile(file.getAbsolutePath(),
+				options);
+		if (decoded == null)
+			Log.d(TAG, "Decoding " + file.getName() + " failed");
+		return decoded;
 	}
 
 	/**
