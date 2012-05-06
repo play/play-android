@@ -55,5 +55,6 @@
     <string name="album_added_to_queue">Added \'\'{0}\'\' to the queue</string>
     <string name="enter_play_server_url">Enter a valid Play Server URL</string>
     <string name="get_token">Get Token</string>
+    <string name="settings">Settings</string>
 
 </resources>

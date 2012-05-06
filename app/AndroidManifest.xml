@@ -32,7 +32,7 @@
         <activity
             android:name=".app.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="Play Settings"
+            android:label="@string/settings"
             android:launchMode="singleTop" />
         <activity
             android:name=".app.SearchActivity"
