@@ -2,6 +2,8 @@
 
 Streams music to your Android device from a [play](https://github.com/play/play) server.
 
+[Download from the Android Market](https://play.google.com/store/apps/details?id=com.github.play)
+
 ## Dependencies
 
 * [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
