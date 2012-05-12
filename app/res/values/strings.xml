@@ -48,7 +48,7 @@
     <string name="hint_token">abc123</string>
     <string name="hint_url">play.example.com</string>
     <string name="queueing_stars_failed">Failed to add starred songs to the queue</string>
-    <string name="play_stars">Play \u2605s</string>
+    <string name="play_stars">Play Favorites</string>
     <string name="title_play_album">Play Entire Album</string>
     <string name="message_play_album">Do you want to add all songs from \'\'{0}\'\' to the queue?</string>
     <string name="album_added_to_queue">Added \'\'{0}\'\' to the queue</string>
