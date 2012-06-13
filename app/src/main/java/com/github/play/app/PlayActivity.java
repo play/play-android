@@ -296,7 +296,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private void setMenuItemsEnabled(final boolean enabled) {
 		if (playItem != null)
-			playItem.setEnabled(enabled);
+			playItem.setEnabled(enabled && streamingInfo != null);
 		if (speakItem != null)
 			speakItem.setEnabled(enabled);
 		if (refreshItem != null)
