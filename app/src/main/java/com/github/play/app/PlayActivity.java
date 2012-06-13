@@ -260,7 +260,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	}
 
 	private void startStream() {
-		if (!hasSettings())
+		if (!hasSettings() || streamingInfo == null)
 			return;
 
 		Log.d(TAG, "Starting stream");
