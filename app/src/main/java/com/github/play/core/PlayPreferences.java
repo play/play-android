@@ -18,6 +18,10 @@ package com.github.play.core;
 import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Stored settings for the configured Play server
@@ -55,12 +59,30 @@ public class PlayPreferences {
 	}
 
 	/**
+	 * Does the given URL contain syntax errors?
+	 *
+	 * @param url
+	 * @return true if no syntax errors, false otherwise
+	 */
+	protected boolean isValidUrl(final String url) {
+		if (TextUtils.isEmpty(url))
+			return false;
+		try {
+			new URI(url);
+			return true;
+		} catch (URISyntaxException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Get Play server URL
 	 *
 	 * @return URL or null if not configured
 	 */
 	public String getUrl() {
-		return preferences.getString(URL, null);
+		String url = preferences.getString(URL, null);
+		return isValidUrl(url) ? url : null;
 	}
 
 	/**
@@ -70,7 +92,7 @@ public class PlayPreferences {
 	 * @return this settings instance
 	 */
 	public PlayPreferences setUrl(final String url) {
-		return set(URL, url);
+		return isValidUrl(url) ? set(URL, url) : this;
 	}
 
 	/**
