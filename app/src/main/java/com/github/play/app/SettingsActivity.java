@@ -39,6 +39,8 @@ import com.github.play.core.PlayPreferences;
 import com.github.play.widget.Toaster;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -125,6 +127,13 @@ public class SettingsActivity extends SherlockActivity {
 				if (!url.startsWith(PREFIX_HTTP)
 						& !url.startsWith(PREFIX_HTTPS))
 					url = PREFIX_HTTPS + url;
+
+				try {
+					new URI(url);
+				} catch (URISyntaxException e) {
+					Toaster.showLong(this, string.message_invalid_server_url);
+					return true;
+				}
 
 				boolean changed = !token.equals(settings.getToken())
 						|| !url.equals(settings.getUrl());
