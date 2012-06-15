@@ -16,11 +16,11 @@
 package com.github.play.app;
 
 import static android.content.Intent.ACTION_VIEW;
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.View;
@@ -78,7 +78,7 @@ public class SettingsActivity extends SherlockActivity {
 		SpannableString tokenText = new SpannableString(
 				getString(string.get_token));
 		tokenText.setSpan(new UnderlineSpan(), 0, tokenText.length(),
-				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				SPAN_EXCLUSIVE_EXCLUSIVE);
 		tokenLink.setText(tokenText);
 		tokenLink.setOnClickListener(new OnClickListener() {
 
