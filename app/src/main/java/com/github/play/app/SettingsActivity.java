@@ -41,7 +41,6 @@ import com.github.play.widget.Toaster;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  * Activity to configure the settings for a Play server
@@ -96,8 +95,8 @@ public class SettingsActivity extends SherlockActivity {
 					else
 						url += "token";
 					try {
-						new URL(url);
-					} catch (IOException e) {
+						new URI(url);
+					} catch (URISyntaxException e) {
 						valid = false;
 					}
 				}
