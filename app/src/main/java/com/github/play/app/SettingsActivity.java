@@ -38,7 +38,6 @@ import com.github.play.R.string;
 import com.github.play.core.PlayPreferences;
 import com.github.play.widget.Toaster;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -130,7 +129,7 @@ public class SettingsActivity extends SherlockActivity {
 				try {
 					new URI(url);
 				} catch (URISyntaxException e) {
-					Toaster.showLong(this, string.message_invalid_server_url);
+					Toaster.showLong(this, string.enter_play_server_url);
 					return true;
 				}
 
