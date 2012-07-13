@@ -120,6 +120,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private StreamingInfo streamingInfo;
 
+	private Song nowPlaying;
+
 	private final BroadcastReceiver updateReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
@@ -174,8 +176,13 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		public boolean onItemLongClick(AdapterView<?> parent, View view,
 				int position, long id) {
-			Song song = (Song) parent.getItemAtPosition(position);
-			dequeueSong(song);
+			final Song song;
+			if (position == 1)
+				song = nowPlaying;
+			else
+				song = (Song) parent.getItemAtPosition(position);
+			if (song != null)
+				dequeueSong(song);
 			return true;
 		}
 	};
@@ -213,6 +220,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 				inflater.inflate(layout.now_playing_divider, null), null, false);
 
 		View nowPlayingView = inflater.inflate(layout.now_playing, null);
+		nowPlayingView.setLongClickable(true);
 		listView.addHeaderView(nowPlayingView, null, false);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
 				playService, starListener);
@@ -321,6 +329,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	}
 
 	public void onUpdate(final Song playing, final Song[] queued) {
+		nowPlaying = playing;
 		runOnUiThread(new Runnable() {
 
 			public void run() {
