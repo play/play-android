@@ -3,7 +3,7 @@
 
     <color name="background_dark_end">#282828</color>
     <color name="background_dark_start">#515252</color>
-    <color name="background_light">#E4E3E0</color>
+    <color name="background_light">#EDEDED</color>
     <color name="background_dark">#000000</color>
     <color name="art_border">#CCCCCC</color>
     <color name="text">#000000</color>
@@ -14,6 +14,7 @@
     <color name="starred">#DC35E6</color>
     <color name="shadow_text_light">#FFFFFF</color>
     <color name="shadow_text_dark">#000000</color>
-    <color name="divider">#CCCCCC</color>
+    <color name="list_divider_top">#DEDEDE</color>
+    <color name="list_divider_bottom">#F5F5F5</color>
 
 </resources>

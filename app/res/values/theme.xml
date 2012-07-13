@@ -8,8 +8,8 @@
     </style>
 
     <style name="Theme.Play.ActionBar" parent="Widget.Sherlock.ActionBar.Solid">
-        <item name="background">@drawable/background_dark</item>
-        <item name="android:background">@drawable/background_dark</item>
+        <item name="background">@drawable/actionbar</item>
+        <item name="android:background">@drawable/actionbar</item>
     </style>
 
 </resources>

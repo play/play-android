@@ -1,0 +1,19 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape>
+            <solid android:color="#070707" />
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape>
+            <solid android:color="#1C1C1C" />
+        </shape>
+    </item>
+    <item android:top="2dp">
+        <bitmap
+            android:src="@drawable/actionbar_pattern"
+            android:tileMode="repeat" />
+    </item>
+
+</layer-list>

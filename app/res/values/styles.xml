@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="shadow_text">
+    <style name="global">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="shadow_text" parent="global">
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
@@ -12,9 +17,53 @@
         <item name="android:textColor">@color/text</item>
     </style>
 
-    <style name="shadow_text_dark" parent="shadow_text">
-        <item name="android:shadowColor">@color/shadow_text_dark</item>
-        <item name="android:textColor">@color/text_light</item>
+    <style name="playing_artist" parent="shadow_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#FF00FF</item>
+        <item name="android:shadowColor">#062206</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="playing_album" parent="shadow_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#B7B7B7</item>
+        <item name="android:shadowColor">#0F0F0F</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="playing_song" parent="shadow_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:shadowColor">#080808</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="queue_artist" parent="shadow_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#FF2FFF</item>
+        <item name="android:shadowColor">#EBFFEB</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="queue_album" parent="shadow_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#595959</item>
+        <item name="android:shadowColor">#F7F7F7</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="queue_song" parent="shadow_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:shadowColor">#F7F7F7</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="edit_text">

@@ -177,7 +177,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		public boolean onItemLongClick(AdapterView<?> parent, View view,
 				int position, long id) {
 			final Song song;
-			if (position == 1)
+			if (position == 0)
 				song = nowPlaying;
 			else
 				song = (Song) parent.getItemAtPosition(position);
@@ -216,17 +216,11 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		listView.addHeaderView(
-				inflater.inflate(layout.now_playing_divider, null), null, false);
-
 		View nowPlayingView = inflater.inflate(layout.now_playing, null);
 		nowPlayingView.setLongClickable(true);
 		listView.addHeaderView(nowPlayingView, null, false);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
 				playService, starListener);
-
-		listView.addHeaderView(inflater.inflate(layout.queue_divider, null),
-				null, false);
 
 		playListAdapter = new PlayListAdapter(layout.queued,
 				getLayoutInflater(), playService, starListener);
