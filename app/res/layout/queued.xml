@@ -14,9 +14,8 @@
 
         <ImageView
             android:id="@+id/iv_art"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/art_border"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:contentDescription="@string/album_art" />
 
         <TextView

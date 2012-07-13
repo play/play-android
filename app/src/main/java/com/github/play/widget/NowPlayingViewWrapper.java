@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.github.play.R.color;
+import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -57,7 +58,8 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 		artistText = (TextView) view.findViewById(id.tv_artist);
 		starText = (TextView) view.findViewById(id.tv_star);
 		starText.setOnClickListener(starListener);
-		artWrapper = new SongArtWrapper(view.findViewById(id.iv_art), service);
+		artWrapper = new SongArtWrapper(view.findViewById(id.iv_art), service,
+				drawable.playing_cd);
 	}
 
 	@Override

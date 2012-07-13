@@ -23,10 +23,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
 import com.github.play.widget.ItemListAdapter.ViewWrapper;
@@ -73,13 +76,12 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		SHA1_DIGEST = digest;
 	}
 
-	private static final Map<String, BitmapDrawable> RECENT_ART = new LinkedHashMap<String, BitmapDrawable>(
+	private static final Map<String, Drawable> RECENT_ART = new LinkedHashMap<String, Drawable>(
 			MAX_RECENT, 1.0F) {
 
 		private static final long serialVersionUID = -3434208982358063608L;
 
-		protected boolean removeEldestEntry(
-				Map.Entry<String, BitmapDrawable> eldest) {
+		protected boolean removeEldestEntry(Map.Entry<String, Drawable> eldest) {
 			return size() >= MAX_RECENT;
 		}
 	};
@@ -110,7 +112,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		return hashed;
 	}
 
-	private static BitmapDrawable getCachedArt(final Song song) {
+	private static Drawable getCachedArt(final Song song) {
 		final String digest = digest(song);
 		if (digest != null)
 			synchronized (RECENT_ART) {
@@ -120,8 +122,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 			return null;
 	}
 
-	private static void putCachedArt(final Song song,
-			final BitmapDrawable bitmap) {
+	private static void putCachedArt(final Song song, final Drawable bitmap) {
 		if (bitmap == null)
 			return;
 
@@ -146,6 +147,8 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	private final ImageView artView;
 
+	private final int wrapper;
+
 	private final AtomicReference<PlayService> service;
 
 	private final int maxSize;
@@ -155,10 +158,12 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 	 *
 	 * @param view
 	 * @param service
+	 * @param drawable
 	 */
 	public SongArtWrapper(final View view,
-			final AtomicReference<PlayService> service) {
+			final AtomicReference<PlayService> service, final int drawable) {
 		artView = (ImageView) view;
+		wrapper = drawable;
 		artFolder = new File(view.getContext().getCacheDir(), "art");
 		if (!artFolder.exists())
 			artFolder.mkdirs();
@@ -250,7 +255,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 			return;
 		}
 
-		BitmapDrawable cachedBitmap = getCachedArt(song);
+		Drawable cachedBitmap = getCachedArt(song);
 		if (cachedBitmap != null) {
 			artView.setTag(null);
 			artView.setImageDrawable(cachedBitmap);
@@ -264,9 +269,9 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 			public void run() {
 				Bitmap bitmap = null;
-				BitmapDrawable drawable = getCachedArt(song);
+				Drawable image = getCachedArt(song);
 
-				if (drawable == null) {
+				if (image == null) {
 					File artFile = getArtFile(song);
 					if (isValid(artFile))
 						bitmap = decode(artFile);
@@ -278,12 +283,15 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 				}
 
 				if (bitmap != null) {
-					drawable = new BitmapDrawable(artView.getResources(),
-							bitmap);
-					putCachedArt(song, drawable);
+					image = new BitmapDrawable(artView.getResources(), bitmap);
+					LayerDrawable layers = (LayerDrawable) artView
+							.getResources().getDrawable(wrapper);
+					layers.setDrawableByLayerId(id.i_album_art, image);
+					image = layers;
+					putCachedArt(song, layers);
 				}
 
-				final BitmapDrawable imageDrawable = drawable;
+				final Drawable imageDrawable = image;
 				artView.post(new Runnable() {
 
 					public void run() {

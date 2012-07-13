@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.github.play.R.color;
+import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -60,7 +61,8 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 			starText = (TextView) view.findViewById(id.tv_star);
 			if (starListener != null)
 				starText.setOnClickListener(starListener);
-			albumArt = new SongArtWrapper(view.findViewById(id.iv_art), service);
+			albumArt = new SongArtWrapper(view.findViewById(id.iv_art),
+					service, drawable.queued_cd);
 		}
 
 		public void update(Song song) {
