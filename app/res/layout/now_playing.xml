@@ -19,8 +19,8 @@
 
             <ImageView
                 android:id="@+id/iv_art"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:contentDescription="@string/album_art" />
 
             <TextView
