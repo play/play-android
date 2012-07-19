@@ -103,6 +103,21 @@ public class PlayService {
 	}
 
 	/**
+	 * Verify request response code is a 200 OK and throw an exception when it
+	 * is not
+	 *
+	 * @param request
+	 * @return request
+	 * @throws IOException
+	 */
+	protected HttpRequest ok(HttpRequest request) throws IOException {
+		if (!request.ok())
+			throw new IOException("Unexpected response code of "
+					+ request.code());
+		return request;
+	}
+
+	/**
 	 * Create a GET request for the given URL
 	 *
 	 * @param url
@@ -143,12 +158,7 @@ public class PlayService {
 	 */
 	public Song getNowPlaying() throws IOException {
 		try {
-			HttpRequest request = get("now_playing");
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
-
-			return fromJson(request, Song.class);
+			return fromJson(ok(get("now_playing")), Song.class);
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -162,12 +172,7 @@ public class PlayService {
 	 */
 	public Song[] getQueue() throws IOException {
 		try {
-			HttpRequest request = get("queue");
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
-
-			return getSongs(request);
+			return getSongs(ok(get("queue")));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -181,12 +186,7 @@ public class PlayService {
 	 */
 	public StreamingInfo getStreamingInfo() throws IOException {
 		try {
-			HttpRequest request = get("streaming_info");
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
-
-			return fromJson(request, StreamingInfo.class);
+			return fromJson(ok(get("streaming_info")), StreamingInfo.class);
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -220,10 +220,7 @@ public class PlayService {
 	 */
 	public void star(Song song) throws IOException {
 		try {
-			HttpRequest request = post("star?id=" + song.id);
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
+			ok(post("star?id=" + song.id));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -237,10 +234,7 @@ public class PlayService {
 	 */
 	public void unstar(Song song) throws IOException {
 		try {
-			HttpRequest request = delete("star?id=" + song.id);
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
+			ok(delete("star?id=" + song.id));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -254,10 +248,7 @@ public class PlayService {
 	 */
 	public void dequeue(Song song) throws IOException {
 		try {
-			HttpRequest request = delete("queue?id=" + song.id);
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
+			ok(delete("queue?id=" + song.id));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -271,10 +262,7 @@ public class PlayService {
 	 */
 	public void queue(String songId) throws IOException {
 		try {
-			HttpRequest request = post("queue?id=" + songId);
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
+			ok(post("queue?id=" + songId));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -288,12 +276,7 @@ public class PlayService {
 	 */
 	public Song[] queueStars() throws IOException {
 		try {
-			HttpRequest request = post("queue/stars");
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
-
-			return getSongs(request);
+			return getSongs(ok(post("queue/stars")));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -308,12 +291,7 @@ public class PlayService {
 	 */
 	public Song[] queueSubject(String subject) throws IOException {
 		try {
-			HttpRequest request = post("freeform?subject=" + subject);
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
-
-			return getSongs(request);
+			return getSongs(ok(post("freeform?subject=" + subject)));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -328,12 +306,7 @@ public class PlayService {
 	 */
 	public Song[] search(String query) throws IOException {
 		try {
-			HttpRequest request = get("search?q=" + query);
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
-
-			return getSongs(request);
+			return getSongs(ok(get("search?q=" + query)));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -351,12 +324,7 @@ public class PlayService {
 	public Song[] getSongs(final String artist, final String album)
 			throws IOException {
 		try {
-			HttpRequest request = get("artist/" + artist + "/album/" + album);
-			if (!request.ok())
-				throw new IOException("Unexpected response code of "
-						+ request.code());
-
-			return getSongs(request);
+			return getSongs(ok(get("artist/" + artist + "/album/" + album)));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
