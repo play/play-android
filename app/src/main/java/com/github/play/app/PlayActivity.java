@@ -157,21 +157,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
-	private final OnClickListener starListener = new OnClickListener() {
-
-		public void onClick(View v) {
-			Object tag = v.getTag();
-			if (!(tag instanceof Song))
-				return;
-
-			Song song = (Song) tag;
-			if (song.starred)
-				unstarSong(song);
-			else
-				starSong(song);
-		}
-	};
-
 	private final OnItemLongClickListener dequeueListener = new OnItemLongClickListener() {
 
 		public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -220,10 +205,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		nowPlayingView.setLongClickable(true);
 		listView.addHeaderView(nowPlayingView, null, false);
 		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
-				playService, starListener);
+				playService);
 
 		playListAdapter = new PlayListAdapter(layout.queued,
-				getLayoutInflater(), playService, starListener);
+				getLayoutInflater(), playService);
 		listView.setAdapter(playListAdapter);
 
 		if (savedInstanceState != null)

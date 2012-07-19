@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.github.play.R.color;
 import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
@@ -44,8 +43,6 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 
 		private final TextView albumText;
 
-		private final TextView starText;
-
 		private final SongArtWrapper albumArt;
 
 		/**
@@ -58,9 +55,6 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 			artistText = (TextView) view.findViewById(id.tv_artist);
 			songText = (TextView) view.findViewById(id.tv_song);
 			albumText = (TextView) view.findViewById(id.tv_album);
-			starText = (TextView) view.findViewById(id.tv_star);
-			if (starListener != null)
-				starText.setOnClickListener(starListener);
 			albumArt = new SongArtWrapper(view.findViewById(id.iv_art),
 					service, drawable.queued_cd);
 		}
@@ -69,14 +63,6 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 			artistText.setText(song.artist);
 			songText.setText(song.name);
 			albumText.setText(song.album);
-
-			starText.setTag(song);
-			if (song.starred)
-				starText.setTextColor(starText.getContext().getResources()
-						.getColor(color.starred));
-			else
-				starText.setTextColor(starText.getContext().getResources()
-						.getColor(color.unstarred));
 
 			albumArt.update(song);
 		}
@@ -87,24 +73,20 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 	 */
 	protected final AtomicReference<PlayService> service;
 
-	private final OnClickListener starListener;
-
 	/**
 	 * @param viewId
 	 * @param inflater
 	 * @param service
-	 * @param starListener
 	 */
 	public PlayListAdapter(int viewId, LayoutInflater inflater,
-			AtomicReference<PlayService> service, OnClickListener starListener) {
+			AtomicReference<PlayService> service) {
 		super(viewId, inflater);
 
 		this.service = service;
-		this.starListener = starListener;
 	}
 
 	@Override
 	protected ViewWrapper<Song> createItemView(View view) {
-		return new SongViewWrapper(view, service, starListener);
+		return new SongViewWrapper(view, service);
 	}
 }
