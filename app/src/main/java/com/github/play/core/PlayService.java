@@ -33,6 +33,8 @@ import java.lang.reflect.Type;
  */
 public class PlayService {
 
+	private static final Song[] EMPTY_SONGS = new Song[0];
+
 	private static class SongWrapper {
 
 		private Song[] songs;
@@ -83,6 +85,21 @@ public class PlayService {
 				// Ignored
 			}
 		}
+	}
+
+	/**
+	 * Get songs from request response
+	 *
+	 * @param request
+	 * @return non-null but possibly empty array of songs
+	 * @throws IOException
+	 */
+	protected Song[] getSongs(final HttpRequest request) throws IOException {
+		final SongWrapper wrapper = fromJson(request, SongWrapper.class);
+		if (wrapper != null && wrapper.songs != null)
+			return wrapper.songs;
+		else
+			return EMPTY_SONGS;
 	}
 
 	/**
@@ -150,11 +167,7 @@ public class PlayService {
 				throw new IOException("Unexpected response code of "
 						+ request.code());
 
-			SongWrapper wrapper = fromJson(request, SongWrapper.class);
-			if (wrapper != null && wrapper.songs != null)
-				return wrapper.songs;
-			else
-				return new Song[0];
+			return getSongs(request);
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -280,11 +293,7 @@ public class PlayService {
 				throw new IOException("Unexpected response code of "
 						+ request.code());
 
-			SongWrapper wrapper = fromJson(request, SongWrapper.class);
-			if (wrapper != null && wrapper.songs != null)
-				return wrapper.songs;
-			else
-				return new Song[0];
+			return getSongs(request);
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -304,11 +313,7 @@ public class PlayService {
 				throw new IOException("Unexpected response code of "
 						+ request.code());
 
-			SongWrapper wrapper = fromJson(request, SongWrapper.class);
-			if (wrapper != null && wrapper.songs != null)
-				return wrapper.songs;
-			else
-				return new Song[0];
+			return getSongs(request);
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -328,11 +333,7 @@ public class PlayService {
 				throw new IOException("Unexpected response code of "
 						+ request.code());
 
-			SongWrapper wrapper = fromJson(request, SongWrapper.class);
-			if (wrapper != null && wrapper.songs != null)
-				return wrapper.songs;
-			else
-				return new Song[0];
+			return getSongs(request);
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -355,11 +356,7 @@ public class PlayService {
 				throw new IOException("Unexpected response code of "
 						+ request.code());
 
-			SongWrapper wrapper = fromJson(request, SongWrapper.class);
-			if (wrapper != null && wrapper.songs != null)
-				return wrapper.songs;
-			else
-				return new Song[0];
+			return getSongs(request);
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
