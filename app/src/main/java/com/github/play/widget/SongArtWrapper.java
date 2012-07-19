@@ -147,23 +147,21 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	private final ImageView artView;
 
-	private final int wrapper;
-
 	private final AtomicReference<PlayService> service;
 
 	private final int maxSize;
+
+	private final Drawable transparent;
 
 	/**
 	 * Create view wrapper to display art for a {@link Song}
 	 *
 	 * @param view
 	 * @param service
-	 * @param drawable
 	 */
 	public SongArtWrapper(final View view,
-			final AtomicReference<PlayService> service, final int drawable) {
+			final AtomicReference<PlayService> service) {
 		artView = (ImageView) view;
-		wrapper = drawable;
 		artFolder = new File(view.getContext().getCacheDir(), "art");
 		if (!artFolder.exists())
 			artFolder.mkdirs();
@@ -171,6 +169,8 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		maxSize = Math.round(view.getContext().getResources()
 				.getDisplayMetrics().density
 				* MAX_SIZE_DP + 0.5F);
+		transparent = view.getResources().getDrawable(
+				android.R.color.transparent);
 	}
 
 	/**
@@ -248,31 +248,40 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		}
 	}
 
+	private void update(final ImageView view, final Drawable art) {
+		view.setTag(null);
+		LayerDrawable layers = (LayerDrawable) view.getDrawable();
+		if (layers != null)
+			if (art != null)
+				layers.setDrawableByLayerId(id.i_album_art, art);
+			else
+				layers.setDrawableByLayerId(id.i_album_art, transparent);
+		view.invalidate();
+	}
+
 	public void update(final Song song) {
 		if (song == null) {
-			artView.setTag(null);
-			artView.setImageDrawable(null);
+			update(artView, null);
 			return;
 		}
 
 		Drawable cachedBitmap = getCachedArt(song);
 		if (cachedBitmap != null) {
-			artView.setTag(null);
-			artView.setImageDrawable(cachedBitmap);
+			update(artView, cachedBitmap);
 			return;
 		}
 
+		update(artView, null);
 		artView.setTag(song.id);
-		artView.setImageDrawable(null);
 
 		EXECUTORS.execute(new Runnable() {
 
 			public void run() {
-				Bitmap bitmap = null;
 				Drawable image = getCachedArt(song);
 
 				if (image == null) {
 					File artFile = getArtFile(song);
+					Bitmap bitmap = null;
 					if (isValid(artFile))
 						bitmap = decode(artFile);
 					else if (service.get().getArt(song, artFile)) {
@@ -280,26 +289,20 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 						if (bitmap != null)
 							write(bitmap, artFile);
 					}
-				}
 
-				if (bitmap != null) {
-					image = new BitmapDrawable(artView.getResources(), bitmap);
-					LayerDrawable layers = (LayerDrawable) artView
-							.getResources().getDrawable(wrapper);
-					layers.setDrawableByLayerId(id.i_album_art, image);
-					image = layers;
-					putCachedArt(song, layers);
+					if (bitmap != null) {
+						image = new BitmapDrawable(artView.getResources(),
+								bitmap);
+						putCachedArt(song, image);
+					}
 				}
 
 				final Drawable imageDrawable = image;
 				artView.post(new Runnable() {
 
 					public void run() {
-						if (!song.id.equals(artView.getTag()))
-							return;
-
-						artView.setTag(null);
-						artView.setImageDrawable(imageDrawable);
+						if (song.id.equals(artView.getTag()))
+							update(artView, imageDrawable);
 					}
 				});
 			}

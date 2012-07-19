@@ -51,8 +51,7 @@ public class NowPlayingViewWrapper extends ViewWrapper<Song> {
 		songText = (TextView) view.findViewById(id.tv_song);
 		albumText = (TextView) view.findViewById(id.tv_album);
 		artistText = (TextView) view.findViewById(id.tv_artist);
-		artWrapper = new SongArtWrapper(view.findViewById(id.iv_art), service,
-				drawable.playing_cd);
+		artWrapper = new SongArtWrapper(view.findViewById(id.iv_art), service);
 	}
 
 	@Override

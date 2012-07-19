@@ -15,8 +15,9 @@
  */
 package com.github.play.widget;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import android.view.LayoutInflater;
-import static android.view.View.*;
 import android.view.View;
 
 import com.github.play.R.id;
@@ -62,7 +63,7 @@ public class SearchListAdapter extends PlayListAdapter {
 		 */
 		public SearchSongViewWrapper(View view,
 				AtomicReference<PlayService> service) {
-			super(view, service, null);
+			super(view, service);
 
 			selectedText = view.findViewById(id.tv_check);
 		}
@@ -83,7 +84,7 @@ public class SearchListAdapter extends PlayListAdapter {
 	 */
 	public SearchListAdapter(int viewId, LayoutInflater inflater,
 			AtomicReference<PlayService> service) {
-		super(viewId, inflater, service, null);
+		super(viewId, inflater, service);
 	}
 
 	@Override

@@ -6,8 +6,7 @@
         android:drawable="@android:color/transparent"
         android:left="18px"
         android:right="1px"
-        android:top="1px">
-    </item>
+        android:top="1px"/>
     <item>
         <bitmap android:src="@drawable/cd_case" />
     </item>

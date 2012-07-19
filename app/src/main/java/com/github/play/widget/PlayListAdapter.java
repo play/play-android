@@ -17,10 +17,8 @@ package com.github.play.widget;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -48,15 +46,12 @@ public class PlayListAdapter extends ItemListAdapter<Song> {
 		/**
 		 * @param view
 		 * @param service
-		 * @param starListener
 		 */
-		public SongViewWrapper(View view, AtomicReference<PlayService> service,
-				OnClickListener starListener) {
+		public SongViewWrapper(View view, AtomicReference<PlayService> service) {
 			artistText = (TextView) view.findViewById(id.tv_artist);
 			songText = (TextView) view.findViewById(id.tv_song);
 			albumText = (TextView) view.findViewById(id.tv_album);
-			albumArt = new SongArtWrapper(view.findViewById(id.iv_art),
-					service, drawable.queued_cd);
+			albumArt = new SongArtWrapper(view.findViewById(id.iv_art), service);
 		}
 
 		public void update(Song song) {
