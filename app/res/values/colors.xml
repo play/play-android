@@ -14,7 +14,7 @@
     <color name="starred">#DC35E6</color>
     <color name="shadow_text_light">#FFFFFF</color>
     <color name="shadow_text_dark">#000000</color>
-    <color name="list_divider_top">#DEDEDE</color>
-    <color name="list_divider_bottom">#F5F5F5</color>
+    <color name="list_divider_top">#D4D4D4</color>
+    <color name="list_divider_bottom">#F9F9F9</color>
 
 </resources>
