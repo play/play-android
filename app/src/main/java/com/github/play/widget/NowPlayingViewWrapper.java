@@ -18,8 +18,6 @@ package com.github.play.widget;
 import android.view.View;
 import android.widget.TextView;
 
-import com.github.play.R.color;
-import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
