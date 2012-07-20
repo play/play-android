@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/background_light"
@@ -6,59 +6,42 @@
     android:orientation="horizontal"
     android:padding="10dp" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingRight="15dp" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/check_border"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tv_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:includeFontPadding="false"
-                android:text="@string/symbol_check"
-                android:textColor="@color/text_bright"
-                android:textSize="24sp"
-                android:visibility="invisible" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fl_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/iv_art"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/art_border"
-            android:contentDescription="@string/album_art" />
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/check_border" >
 
         <TextView
-            android:id="@+id/tv_star"
-            android:layout_width="match_parent"
+            android:id="@+id/tv_check"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="2dp"
-            android:text="@string/symbol_star"
-            android:textColor="@color/unstarred"
-            android:textSize="24sp" />
-    </LinearLayout>
+            android:includeFontPadding="false"
+            android:text="@string/symbol_check"
+            android:textColor="@color/text_bright"
+            android:textSize="24dp"
+            android:visibility="invisible" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/iv_art"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@id/fl_check"
+        android:background="@drawable/art_border"
+        android:contentDescription="@string/album_art"
+        android:src="@drawable/queued_cd" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/iv_art"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingLeft="10dp" >
@@ -76,4 +59,4 @@
             style="@style/queue_album" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
