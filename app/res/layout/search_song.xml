@@ -29,7 +29,7 @@
     <ImageView
         android:id="@+id/iv_art"
         android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_height="51dp"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/fl_check"
