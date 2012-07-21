@@ -5,7 +5,7 @@
     <color name="background_dark_start">#515252</color>
     <color name="background_light">#EDEDED</color>
     <color name="background_dark">#D2D2D2</color>
-    <color name="art_border">#CCCCCC</color>
+    <color name="check_border">#CCCCCC</color>
     <color name="text">#000000</color>
     <color name="text_cursor">#AAAAAA</color>
     <color name="text_light">#FFFFFF</color>

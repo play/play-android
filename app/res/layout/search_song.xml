@@ -33,7 +33,6 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/fl_check"
-        android:background="@drawable/art_border"
         android:contentDescription="@string/album_art"
         android:src="@drawable/queued_cd" />
 
