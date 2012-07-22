@@ -65,10 +65,13 @@ public class StatusService extends Service {
 	 *
 	 * @param context
 	 * @param applicationKey
+	 * @param sendNotification
 	 */
-	public static void start(final Context context, final String applicationKey) {
+	public static void start(final Context context,
+			final String applicationKey, final boolean sendNotification) {
 		Intent intent = new Intent(ACTION);
 		intent.putExtra(EXTRA_KEY, applicationKey);
+		intent.putExtra(EXTRA_NOTIFY, sendNotification);
 		context.startService(intent);
 	}
 
@@ -87,6 +90,8 @@ public class StatusService extends Service {
 	private static final String ACTION = "com.github.play.action.STATUS";
 
 	private static final String EXTRA_KEY = "applicationKey";
+
+	private static final String EXTRA_NOTIFY = "notify";
 
 	private static final String TAG = "StatusService";
 
@@ -148,6 +153,8 @@ public class StatusService extends Service {
 
 	private String applicationKey;
 
+	private boolean sendNotification;
+
 	private Song playing;
 
 	private Song[] queued = new Song[0];
@@ -185,6 +192,7 @@ public class StatusService extends Service {
 				destroyPusher(pusher);
 				createPusher(intentKey);
 			}
+			sendNotification = intent.getBooleanExtra(EXTRA_NOTIFY, false);
 		}
 
 		return super.onStartCommand(intent, flags, startId);
@@ -216,6 +224,9 @@ public class StatusService extends Service {
 
 	@SuppressWarnings("deprecation")
 	private void updateNotification() {
+		if (!sendNotification)
+			return;
+
 		Context context = getApplicationContext();
 		PendingIntent intent = PendingIntent.getActivity(context, 0,
 				new Intent(context, PlayActivity.class), FLAG_UPDATE_CURRENT);
