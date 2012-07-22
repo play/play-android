@@ -22,8 +22,6 @@ import static android.speech.RecognizerIntent.EXTRA_MAX_RESULTS;
 import static android.speech.RecognizerIntent.EXTRA_PROMPT;
 import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.github.play.app.MusicStreamService.EXTRA_STREAMING;
 import static com.github.play.app.StatusService.EXTRA_UPDATE;
 import android.app.AlertDialog.Builder;
@@ -44,6 +42,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.R.layout;
@@ -319,10 +318,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		playListAdapter.update(-1, nowPlayingView, playing);
 		playListAdapter.setItems(queued);
 
-		if (loadingView.getVisibility() == VISIBLE)
-			loadingView.setVisibility(GONE);
-		if (listView.getVisibility() == GONE)
-			listView.setVisibility(VISIBLE);
+		ViewUtils.setGone(loadingView, true);
+		ViewUtils.setGone(listView, false);
 	}
 
 	private void refreshSongs() {
@@ -330,10 +327,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 			return;
 
 		if (queueEmpty) {
-			if (loadingView.getVisibility() == GONE)
-				loadingView.setVisibility(VISIBLE);
-			if (listView.getVisibility() == VISIBLE)
-				listView.setVisibility(GONE);
+			ViewUtils.setGone(loadingView, false);
+			ViewUtils.setGone(listView, true);
 		}
 
 		new FetchStatusTask(playService, this).execute();
@@ -409,8 +404,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	public void onError(IOException e) {
 		Log.d(TAG, "Play server exception", e);
 
-		if (loadingView.getVisibility() == VISIBLE)
-			loadingView.setVisibility(GONE);
+		ViewUtils.setGone(loadingView, true);
 
 		Toaster.showLong(this, string.error_contacting_play_server,
 				e.getMessage());
