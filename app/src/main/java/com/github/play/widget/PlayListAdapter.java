@@ -15,10 +15,10 @@
  */
 package com.github.play.widget;
 
-import android.view.LayoutInflater;
+import android.content.Context;
 import android.view.View;
-import android.widget.TextView;
 
+import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -28,60 +28,44 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * List adapter for songs
  */
-public class PlayListAdapter extends ItemListAdapter<Song> {
-
-	/**
-	 * Wrapper for a song view
-	 */
-	protected static class SongViewWrapper extends ViewWrapper<Song> {
-
-		private final TextView artistText;
-
-		private final TextView songText;
-
-		private final TextView albumText;
-
-		private final SongArtWrapper albumArt;
-
-		/**
-		 * @param view
-		 * @param service
-		 */
-		public SongViewWrapper(View view, AtomicReference<PlayService> service) {
-			artistText = (TextView) view.findViewById(id.tv_artist);
-			songText = (TextView) view.findViewById(id.tv_song);
-			albumText = (TextView) view.findViewById(id.tv_album);
-			albumArt = new SongArtWrapper(view.findViewById(id.iv_art), service);
-		}
-
-		public void update(Song song) {
-			artistText.setText(song.artist);
-			songText.setText(song.name);
-			albumText.setText(song.album);
-
-			albumArt.update(song);
-		}
-	}
+public class PlayListAdapter extends SingleTypeAdapter<Song> {
 
 	/**
 	 * Play service reference
 	 */
 	protected final AtomicReference<PlayService> service;
 
+	private final SongArtWrapper albumArt;
+
 	/**
+	 * @param context
 	 * @param viewId
-	 * @param inflater
 	 * @param service
 	 */
-	public PlayListAdapter(int viewId, LayoutInflater inflater,
+	public PlayListAdapter(Context context, int viewId,
 			AtomicReference<PlayService> service) {
-		super(viewId, inflater);
+		super(context, viewId);
 
 		this.service = service;
+		albumArt = new SongArtWrapper(context, service);
 	}
 
 	@Override
-	protected ViewWrapper<Song> createItemView(View view) {
-		return new SongViewWrapper(view, service);
+	protected int[] getChildViewIds() {
+		return new int[] { id.tv_artist, id.tv_song, id.tv_album, id.iv_art };
+	}
+
+	@Override
+	public View initialize(View view) {
+		return super.initialize(view);
+	}
+
+	@Override
+	public void update(int position, View view, Song song) {
+		setText(view, id.tv_artist, song.artist);
+		setText(view, id.tv_song, song.name);
+		setText(view, id.tv_album, song.album);
+
+		albumArt.update(imageView(view, id.iv_art), song);
 	}
 }

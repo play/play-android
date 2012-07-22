@@ -15,11 +15,10 @@
  */
 package com.github.play.widget;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import android.view.LayoutInflater;
+import android.content.Context;
 import android.view.View;
 
+import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -53,42 +52,26 @@ public class SearchListAdapter extends PlayListAdapter {
 		}
 	}
 
-	private static class SearchSongViewWrapper extends SongViewWrapper {
-
-		private final View selectedText;
-
-		/**
-		 * @param view
-		 * @param service
-		 */
-		public SearchSongViewWrapper(View view,
-				AtomicReference<PlayService> service) {
-			super(view, service);
-
-			selectedText = view.findViewById(id.tv_check);
-		}
-
-		@Override
-		public void update(Song song) {
-			super.update(song);
-
-			int visibility = ((SearchSong) song).selected ? VISIBLE : INVISIBLE;
-			selectedText.setVisibility(visibility);
-		}
-	}
-
 	/**
+	 * @param context
 	 * @param viewId
-	 * @param inflater
 	 * @param service
 	 */
-	public SearchListAdapter(int viewId, LayoutInflater inflater,
+	public SearchListAdapter(final Context context, int viewId,
 			AtomicReference<PlayService> service) {
-		super(viewId, inflater, service);
+		super(context, viewId, service);
 	}
 
 	@Override
-	protected ViewWrapper<Song> createItemView(View view) {
-		return new SearchSongViewWrapper(view, service);
+	protected int[] getChildViewIds() {
+		return join(super.getChildViewIds(), id.tv_check);
+	}
+
+	@Override
+	public void update(int position, View view, Song song) {
+		super.update(position, view, song);
+
+		ViewUtils.setInvisible(view(view, id.tv_check),
+				!((SearchSong) song).selected);
 	}
 }

@@ -85,8 +85,7 @@ public class SearchActivity extends SherlockActivity implements
 		listView = (ListView) findViewById(android.R.id.list);
 		listView.setOnItemClickListener(this);
 		listView.setOnItemLongClickListener(this);
-		adapter = new SearchListAdapter(layout.search_song,
-				getLayoutInflater(), service);
+		adapter = new SearchListAdapter(this, layout.search_song, service);
 		listView.setAdapter(adapter);
 
 		ActionBar actionBar = getSupportActionBar();

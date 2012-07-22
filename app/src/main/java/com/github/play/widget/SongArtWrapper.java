@@ -18,6 +18,8 @@ package com.github.play.widget;
 import static android.graphics.Bitmap.CompressFormat.PNG;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static com.github.kevinsawicki.http.HttpRequest.CHARSET_UTF8;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
@@ -26,13 +28,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
-import com.github.play.widget.ItemListAdapter.ViewWrapper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * View wrapper to load and display art for a {@link Song}
  */
-public class SongArtWrapper extends ViewWrapper<Song> {
+public class SongArtWrapper {
 
 	private static final String TAG = "SongArtWrapper";
 
@@ -145,8 +145,6 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 	private final File artFolder;
 
-	private final ImageView artView;
-
 	private final AtomicReference<PlayService> service;
 
 	private final int maxSize;
@@ -156,21 +154,19 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 	/**
 	 * Create view wrapper to display art for a {@link Song}
 	 *
-	 * @param view
+	 * @param context
 	 * @param service
 	 */
-	public SongArtWrapper(final View view,
+	public SongArtWrapper(Context context,
 			final AtomicReference<PlayService> service) {
-		artView = (ImageView) view;
-		artFolder = new File(view.getContext().getCacheDir(), "art");
+		artFolder = new File(context.getCacheDir(), "art");
 		if (!artFolder.exists())
 			artFolder.mkdirs();
 		this.service = service;
-		maxSize = Math.round(view.getContext().getResources()
-				.getDisplayMetrics().density
+		Resources resources = context.getResources();
+		maxSize = Math.round(resources.getDisplayMetrics().density
 				* MAX_SIZE_DP + 0.5F);
-		transparent = view.getResources().getDrawable(
-				android.R.color.transparent);
+		transparent = resources.getDrawable(android.R.color.transparent);
 	}
 
 	/**
@@ -248,7 +244,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		}
 	}
 
-	private void update(final ImageView view, final Drawable art) {
+	private void updateDrawable(final ImageView view, final Drawable art) {
 		view.setTag(null);
 		LayerDrawable layers = (LayerDrawable) view.getDrawable();
 		if (layers != null)
@@ -259,15 +255,21 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 		view.invalidate();
 	}
 
-	public void update(final Song song) {
+	/**
+	 * Update view with art for song album
+	 *
+	 * @param artView
+	 * @param song
+	 */
+	public void update(final ImageView artView, final Song song) {
 		if (song == null) {
-			update(artView, null);
+			updateDrawable(artView, null);
 			return;
 		}
 
 		Drawable cachedBitmap = getCachedArt(song);
 		if (cachedBitmap != null) {
-			update(artView, cachedBitmap);
+			updateDrawable(artView, cachedBitmap);
 			return;
 		}
 
@@ -302,7 +304,7 @@ public class SongArtWrapper extends ViewWrapper<Song> {
 
 					public void run() {
 						if (song.id.equals(artView.getTag()))
-							update(artView, imageDrawable);
+							updateDrawable(artView, imageDrawable);
 					}
 				});
 			}

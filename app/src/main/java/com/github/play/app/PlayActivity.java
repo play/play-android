@@ -63,7 +63,6 @@ import com.github.play.core.StarSongTask;
 import com.github.play.core.StatusUpdate;
 import com.github.play.core.StreamingInfo;
 import com.github.play.core.UnstarSongTask;
-import com.github.play.widget.NowPlayingViewWrapper;
 import com.github.play.widget.PlayListAdapter;
 import com.github.play.widget.Toaster;
 
@@ -97,7 +96,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 	private final AtomicReference<PlayService> playService = new AtomicReference<PlayService>();
 
-	private NowPlayingViewWrapper nowPlayingItemView;
+	private View nowPlayingView;
 
 	private PlayListAdapter playListAdapter;
 
@@ -195,19 +194,17 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		loadingView = findViewById(id.ll_loading);
 
+		playListAdapter = new PlayListAdapter(this, layout.queued, playService);
+
 		listView = (ListView) findViewById(android.R.id.list);
 		listView.setOnItemLongClickListener(dequeueListener);
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View nowPlayingView = inflater.inflate(layout.now_playing, null);
+		nowPlayingView = inflater.inflate(layout.now_playing, null);
 		nowPlayingView.setLongClickable(true);
+		playListAdapter.initialize(nowPlayingView);
 		listView.addHeaderView(nowPlayingView, null, false);
-		nowPlayingItemView = new NowPlayingViewWrapper(nowPlayingView,
-				playService);
-
-		playListAdapter = new PlayListAdapter(layout.queued,
-				getLayoutInflater(), playService);
 		listView.setAdapter(playListAdapter);
 
 		if (savedInstanceState != null)
@@ -319,7 +316,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 	private void updateSongs(final Song playing, final Song[] queued) {
 		queueEmpty = playing == null && (queued == null || queued.length == 0);
 
-		nowPlayingItemView.update(playing);
+		playListAdapter.update(-1, nowPlayingView, playing);
 		playListAdapter.setItems(queued);
 
 		if (loadingView.getVisibility() == VISIBLE)
