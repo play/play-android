@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -88,8 +89,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	private static final String TAG = "PlayActivity";
 
 	private static final String STREAMING_INFO = "streamingInfo";
-
-	private static final Object PLAYING_SONG = new Object();
 
 	private static final int REQUEST_SETTINGS = 1;
 
@@ -198,8 +197,14 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		LayoutInflater inflater = getLayoutInflater();
 
 		nowPlayingView = inflater.inflate(layout.now_playing, null);
+		nowPlayingView.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				onItemClick(listView, nowPlayingView, 0, -1);
+			}
+		});
 		playListAdapter.initialize(nowPlayingView);
-		listView.addHeaderView(nowPlayingView, PLAYING_SONG, true);
+		listView.addHeaderView(nowPlayingView, null, false);
 		listView.setAdapter(playListAdapter);
 
 		if (savedInstanceState != null)
