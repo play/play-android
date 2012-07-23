@@ -61,11 +61,16 @@ public class PlayListAdapter extends SingleTypeAdapter<Song> {
 	}
 
 	@Override
-	public void update(int position, View view, Song song) {
-		setText(view, id.tv_artist, song.artist);
-		setText(view, id.tv_song, song.name);
-		setText(view, id.tv_album, song.album);
+	public void update(int position, View view, Song item) {
+		super.update(position, view, item);
+	}
 
-		albumArt.update(imageView(view, id.iv_art), song);
+	@Override
+	public void update(int position, Song song) {
+		setText(id.tv_artist, song.artist);
+		setText(id.tv_song, song.name);
+		setText(id.tv_album, song.album);
+
+		albumArt.update(imageView(id.iv_art), song);
 	}
 }
