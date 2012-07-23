@@ -36,12 +36,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.kevinsawicki.wishlist.LightDialog;
+import com.github.kevinsawicki.wishlist.ViewFinder;
 import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.drawable;
 import com.github.play.R.id;
@@ -63,6 +65,7 @@ import com.github.play.core.StatusUpdate;
 import com.github.play.core.StreamingInfo;
 import com.github.play.core.UnstarSongTask;
 import com.github.play.widget.PlayListAdapter;
+import com.github.play.widget.SongArtWrapper;
 import com.github.play.widget.Toaster;
 
 import java.io.IOException;
@@ -74,7 +77,8 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Activity to view what is playing and listen to music
  */
-public class PlayActivity extends SherlockActivity implements SongCallback {
+public class PlayActivity extends SherlockActivity implements SongCallback,
+		OnItemClickListener {
 
 	/**
 	 * Action for broadcasting that the queue has been updated
@@ -154,21 +158,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		}
 	};
 
-	private final OnItemLongClickListener dequeueListener = new OnItemLongClickListener() {
-
-		public boolean onItemLongClick(AdapterView<?> parent, View view,
-				int position, long id) {
-			final Song song;
-			if (position == 0)
-				song = nowPlaying;
-			else
-				song = (Song) parent.getItemAtPosition(position);
-			if (song != null)
-				dequeueSong(song);
-			return true;
-		}
-	};
-
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -202,7 +191,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		playListAdapter = new PlayListAdapter(this, layout.queued, playService);
 
 		listView = (ListView) findViewById(android.R.id.list);
-		listView.setOnItemLongClickListener(dequeueListener);
+		listView.setOnItemClickListener(this);
 
 		LayoutInflater inflater = getLayoutInflater();
 
@@ -488,36 +477,20 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 		if (!isReady())
 			return;
 
-		final Builder builder = new Builder(this);
-		builder.setCancelable(true);
-		builder.setTitle(string.title_confirm_remove);
-		builder.setMessage(MessageFormat.format(
-				getString(string.message_confirm_remove), song.name));
-		builder.setNegativeButton(android.R.string.no, null);
-		builder.setPositiveButton(android.R.string.yes,
-				new DialogInterface.OnClickListener() {
+		Toaster.showShort(PlayActivity.this, string.removing_song, song.name);
+		new DequeueSongTask(playService) {
 
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						Toaster.showShort(PlayActivity.this,
-								string.removing_song, song.name);
-						new DequeueSongTask(playService) {
+			@Override
+			protected void onPostExecute(IOException result) {
+				super.onPostExecute(result);
 
-							@Override
-							protected void onPostExecute(IOException result) {
-								super.onPostExecute(result);
-
-								if (result != null)
-									Toaster.showShort(PlayActivity.this,
-											string.removing_song_failed,
-											song.name);
-								else
-									refreshSongs();
-							}
-						}.execute(song);
-					}
-				});
-		builder.show();
+				if (result != null)
+					Toaster.showShort(PlayActivity.this,
+							string.removing_song_failed, song.name);
+				else
+					refreshSongs();
+			}
+		}.execute(song);
 	}
 
 	private void playStars() {
@@ -612,5 +585,48 @@ public class PlayActivity extends SherlockActivity implements SongCallback {
 
 		}.execute(subject);
 
+	}
+
+	public void onItemClick(AdapterView<?> listView, View view, int position,
+			long itemId) {
+		final Song song;
+		if (position == 0)
+			song = nowPlaying;
+		else
+			song = (Song) listView.getItemAtPosition(position);
+		if (song == null)
+			return;
+
+		final LightDialog dialog = LightDialog.create(this);
+		View dialogView = getLayoutInflater().inflate(layout.song_dialog, null);
+		ViewFinder finder = new ViewFinder(dialogView);
+		finder.setText(id.tv_album, song.album);
+		finder.setText(id.tv_artist, song.artist);
+		finder.setText(id.tv_song, song.name);
+		if (song.starred)
+			finder.setText(id.tv_star, string.unstar_this_song);
+		else
+			finder.setText(id.tv_star, string.star_this_song);
+		finder.onClick(id.tv_star, new Runnable() {
+
+			public void run() {
+				dialog.dismiss();
+				if (song.starred)
+					unstarSong(song);
+				else
+					starSong(song);
+			}
+		});
+		finder.onClick(id.tv_remove, new Runnable() {
+
+			public void run() {
+				dialog.dismiss();
+				dequeueSong(song);
+			}
+		});
+		new SongArtWrapper(this, playService).update(
+				finder.imageView(id.iv_art), song);
+		dialog.setView(dialogView);
+		dialog.show();
 	}
 }

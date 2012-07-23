@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <include layout="@layout/queued" />
+
+    <include layout="@layout/divider" />
+
+    <TextView
+        android:id="@+id/tv_star"
+        style="@style/dialog_option_text"
+        android:padding="10dp" />
+
+    <include layout="@layout/divider" />
+
+    <TextView
+        android:id="@+id/tv_remove"
+        style="@style/dialog_option_text"
+        android:text="@string/remove_from_queue" />
+
+</LinearLayout>
