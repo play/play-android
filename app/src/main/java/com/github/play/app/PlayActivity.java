@@ -297,10 +297,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	}
 
 	public void onUpdate(final Song playing, final Song[] queued) {
-		nowPlaying = playing;
 		runOnUiThread(new Runnable() {
 
 			public void run() {
+				nowPlaying = playing;
 				updateSongs(playing, queued);
 			}
 		});
