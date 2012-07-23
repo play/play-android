@@ -18,7 +18,6 @@ package com.github.play.app;
 import static android.app.SearchManager.QUERY;
 import static android.content.Intent.ACTION_SEARCH;
 import static com.github.play.app.PlayActivity.ACTION_QUEUE;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.kevinsawicki.wishlist.LightDialog;
 import com.github.play.R.id;
 import com.github.play.R.menu;
 import com.github.play.R.string;
@@ -117,13 +117,11 @@ public class SearchActivity extends SongViewActivity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		final Song song = (Song) parent.getItemAtPosition(position);
-		final Builder builder = new Builder(this);
-		builder.setCancelable(true);
-		builder.setTitle(string.title_play_album);
-		builder.setMessage(MessageFormat.format(
-				getString(string.message_play_album), song.album));
-		builder.setNegativeButton(android.R.string.no, null);
-		builder.setPositiveButton(android.R.string.yes,
+		LightDialog dialog = LightDialog.create(this, string.title_play_album,
+				MessageFormat.format(getString(string.message_play_album),
+						song.album));
+		dialog.setNegativeButton(android.R.string.no, null);
+		dialog.setPositiveButton(android.R.string.yes,
 				new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
@@ -169,7 +167,7 @@ public class SearchActivity extends SongViewActivity implements
 						}.execute();
 					}
 				});
-		builder.show();
+		dialog.show();
 		return true;
 	}
 }
