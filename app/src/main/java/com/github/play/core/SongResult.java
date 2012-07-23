@@ -26,7 +26,7 @@ public class SongResult {
 	/**
 	 * Songs
 	 */
-	public final Song[] queued;
+	public final Song[] songs;
 
 	/**
 	 * Failure exception
@@ -39,7 +39,7 @@ public class SongResult {
 	 * @param songs
 	 */
 	public SongResult(final Song[] songs) {
-		queued = songs;
+		this.songs = songs;
 		exception = null;
 	}
 
@@ -49,7 +49,7 @@ public class SongResult {
 	 * @param error
 	 */
 	public SongResult(final IOException error) {
-		queued = null;
+		songs = null;
 		exception = error;
 	}
 }

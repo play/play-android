@@ -506,11 +506,11 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 				String message;
 				if (result.exception != null)
 					message = getString(string.queueing_stars_failed);
-				else if (result.queued.length > 1)
+				else if (result.songs.length > 1)
 					message = MessageFormat.format(
 							getString(string.multiple_songs_queued),
-							result.queued.length);
-				else if (result.queued.length == 1)
+							result.songs.length);
+				else if (result.songs.length == 1)
 					message = getString(string.single_song_queued);
 				else
 					message = getString(string.no_songs_found);
@@ -569,11 +569,11 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 				if (result.exception != null)
 					message = MessageFormat.format(
 							getString(string.queueing_subject_failed), subject);
-				else if (result.queued.length > 1)
+				else if (result.songs.length > 1)
 					message = MessageFormat.format(
 							getString(string.multiple_songs_queued),
-							result.queued.length);
-				else if (result.queued.length == 1)
+							result.songs.length);
+				else if (result.songs.length == 1)
 					message = getString(string.single_song_queued);
 				else
 					message = getString(string.no_songs_found);

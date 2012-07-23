@@ -127,9 +127,9 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	 */
 	protected void displaySongs(final SongResult result) {
 		if (result.exception == null) {
-			SearchSong[] searchSongs = new SearchSong[result.queued.length];
+			SearchSong[] searchSongs = new SearchSong[result.songs.length];
 			for (int i = 0; i < searchSongs.length; i++)
-				searchSongs[i] = new SearchSong(result.queued[i]);
+				searchSongs[i] = new SearchSong(result.songs[i]);
 			adapter.setItems(searchSongs);
 		} else
 			Toaster.showLong(SongViewActivity.this, string.search_failed);
