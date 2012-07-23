@@ -89,6 +89,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 	private static final String STREAMING_INFO = "streamingInfo";
 
+	private static final Object PLAYING_SONG = new Object();
+
 	private static final int REQUEST_SETTINGS = 1;
 
 	private static final int REQUEST_SPEECH = 2;
@@ -196,9 +198,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		LayoutInflater inflater = getLayoutInflater();
 
 		nowPlayingView = inflater.inflate(layout.now_playing, null);
-		nowPlayingView.setLongClickable(true);
 		playListAdapter.initialize(nowPlayingView);
-		listView.addHeaderView(nowPlayingView, null, false);
+		listView.addHeaderView(nowPlayingView, PLAYING_SONG, true);
 		listView.setAdapter(playListAdapter);
 
 		if (savedInstanceState != null)
@@ -589,6 +590,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 	public void onItemClick(AdapterView<?> listView, View view, int position,
 			long itemId) {
+		Log.d("TEST", "Item clicked: " + position);
 		final Song song;
 		if (position == 0)
 			song = nowPlaying;
