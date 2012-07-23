@@ -75,7 +75,6 @@
     </style>
 
     <style name="dialog_option_text" parent="shadow_text">
-        <item name="android:background">@drawable/queued_background</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textColor">#595959</item>
         <item name="android:shadowColor">#F7F7F7</item>

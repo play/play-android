@@ -603,11 +603,14 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		finder.setText(id.tv_album, song.album);
 		finder.setText(id.tv_artist, song.artist);
 		finder.setText(id.tv_song, song.name);
-		if (song.starred)
+		if (song.starred) {
 			finder.setText(id.tv_star, string.unstar_this_song);
-		else
+			finder.setDrawable(id.iv_star_icon, drawable.action_unstar);
+		} else {
 			finder.setText(id.tv_star, string.star_this_song);
-		finder.onClick(id.tv_star, new Runnable() {
+			finder.setDrawable(id.iv_star_icon, drawable.action_star);
+		}
+		finder.onClick(id.rl_star_area, new Runnable() {
 
 			public void run() {
 				dialog.dismiss();
@@ -617,7 +620,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 					starSong(song);
 			}
 		});
-		finder.onClick(id.tv_remove, new Runnable() {
+		finder.onClick(id.rl_remove_area, new Runnable() {
 
 			public void run() {
 				dialog.dismiss();
