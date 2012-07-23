@@ -18,43 +18,15 @@ package com.github.play.core;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.github.play.core.SearchTask.SearchResult;
-
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Task for search for songs
  */
-public class SearchTask extends AsyncTask<String, Void, SearchResult> {
+public class SearchTask extends AsyncTask<String, Void, SongResult> {
 
 	private static final String TAG = "SearchTask";
-
-	/**
-	 * Result of task
-	 */
-	public static class SearchResult {
-
-		/**
-		 * Matching songs
-		 */
-		public final Song[] songs;
-
-		/**
-		 * Failure exception
-		 */
-		public final IOException exception;
-
-		private SearchResult(Song[] songs) {
-			this.songs = songs;
-			exception = null;
-		}
-
-		private SearchResult(IOException exception) {
-			songs = null;
-			this.exception = exception;
-		}
-	}
 
 	private final AtomicReference<PlayService> service;
 
@@ -68,16 +40,16 @@ public class SearchTask extends AsyncTask<String, Void, SearchResult> {
 	}
 
 	@Override
-	protected SearchResult doInBackground(String... params) {
+	protected SongResult doInBackground(String... params) {
 		try {
-			return new SearchResult(service.get().search(params[0]));
+			return new SongResult(service.get().search(params[0]));
 		} catch (IOException e) {
-			return new SearchResult(e);
+			return new SongResult(e);
 		}
 	}
 
 	@Override
-	protected void onPostExecute(SearchResult result) {
+	protected void onPostExecute(SongResult result) {
 		super.onPostExecute(result);
 
 		if (result.exception != null)

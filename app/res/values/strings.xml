@@ -58,5 +58,7 @@
     <string name="remove_from_queue">Remove from queue</string>
     <string name="star_this_song">Star this song</string>
     <string name="unstar_this_song">Unstar this song</string>
+    <string name="view_songs_on_this_album">View songs on this album</string>
+    <string name="view_songs_by_this_artist">View songs by this artist</string>
 
 </resources>

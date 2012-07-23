@@ -55,4 +55,20 @@
             android:text="@string/remove_from_queue" />
     </RelativeLayout>
 
+    <include layout="@layout/divider" />
+
+    <TextView
+        android:id="@+id/tv_view_album"
+        style="@style/dialog_option_text"
+        android:background="@drawable/queued_background"
+        android:text="@string/view_songs_on_this_album" />
+
+    <include layout="@layout/divider" />
+
+    <TextView
+        android:id="@+id/tv_view_artist"
+        style="@style/dialog_option_text"
+        android:background="@drawable/queued_background"
+        android:text="@string/view_songs_by_this_artist" />
+
 </LinearLayout>

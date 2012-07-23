@@ -320,11 +320,25 @@ public class PlayService {
 	 * @return non-null but possibly empty array of songs
 	 * @throws IOException
 	 */
-
 	public Song[] getSongs(final String artist, final String album)
 			throws IOException {
 		try {
 			return getSongs(ok(get("artist/" + artist + "/album/" + album)));
+		} catch (HttpRequestException e) {
+			throw e.getCause();
+		}
+	}
+
+	/**
+	 * Get all songs by artist
+	 *
+	 * @param artist
+	 * @return non-null but possibly empty array of songs
+	 * @throws IOException
+	 */
+	public Song[] getSongs(final String artist) throws IOException {
+		try {
+			return getSongs(ok(get("artist/" + artist)));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}

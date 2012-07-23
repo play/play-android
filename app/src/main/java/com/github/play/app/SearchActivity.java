@@ -17,10 +17,6 @@ package com.github.play.app;
 
 import static android.app.SearchManager.QUERY;
 import static android.content.Intent.ACTION_SEARCH;
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
-import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.github.play.app.PlayActivity.ACTION_QUEUE;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -29,151 +25,59 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ListView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.play.R.id;
-import com.github.play.R.layout;
 import com.github.play.R.menu;
 import com.github.play.R.string;
-import com.github.play.core.PlayPreferences;
-import com.github.play.core.PlayService;
 import com.github.play.core.QueueSongsTask;
 import com.github.play.core.SearchTask;
 import com.github.play.core.Song;
-import com.github.play.widget.SearchListAdapter;
-import com.github.play.widget.SearchListAdapter.SearchSong;
+import com.github.play.core.SongResult;
 import com.github.play.widget.Toaster;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Activity to search for songs and add them to the queue
  */
-public class SearchActivity extends SherlockActivity implements
-		OnItemClickListener, OnItemLongClickListener {
-
-	private final AtomicReference<PlayService> service = new AtomicReference<PlayService>();
-
-	private MenuItem addItem;
-
-	private final Set<String> songs = new HashSet<String>();
-
-	private ListView listView;
-
-	private View loadingView;
-
-	private SearchListAdapter adapter;
+public class SearchActivity extends SongViewActivity implements
+		OnItemLongClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	}
 
-		setContentView(layout.search);
-
-		loadingView = findViewById(id.ll_loading);
-
-		listView = (ListView) findViewById(android.R.id.list);
-		listView.setOnItemClickListener(this);
-		listView.setOnItemLongClickListener(this);
-		adapter = new SearchListAdapter(this, layout.search_song, service);
-		listView.setAdapter(adapter);
-
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle(string.search);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-
-		PlayPreferences settings = new PlayPreferences(this);
-		service.set(new PlayService(settings.getUrl(), settings.getToken()));
-
+	@Override
+	protected void refreshSongs() {
 		search(getIntent());
+
+		listView.setOnItemClickListener(this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu optionsMenu) {
 		getSupportMenuInflater().inflate(menu.search, optionsMenu);
-		addItem = optionsMenu.findItem(id.m_add);
-		return true;
-	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		showAddItem(!songs.isEmpty());
-		return true;
+		return super.onCreateOptionsMenu(optionsMenu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			Intent intent = new Intent(this, PlayActivity.class);
-			intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intent);
-			return true;
 		case id.m_search:
 			onSearchRequested();
-			return true;
-		case id.m_add:
-			queueSelected();
 			return true;
 		case id.m_clear:
 			SearchSuggestionsProvider.clear(this);
 			return true;
-		case id.m_refresh:
-			search(getIntent());
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	private void showAddItem(final boolean show) {
-		if (addItem != null)
-			addItem.setVisible(show);
-	}
-
-	private void queueSelected() {
-		if (songs.isEmpty())
-			return;
-
-		showAddItem(false);
-
-		String[] ids = songs.toArray(new String[songs.size()]);
-
-		String message;
-		if (ids.length > 1)
-			message = MessageFormat.format(
-					getString(string.adding_songs_to_queue), ids.length);
-		else
-			message = getString(string.adding_song_to_queue);
-		Toaster.showShort(SearchActivity.this, message);
-
-		new QueueSongsTask(service) {
-
-			@Override
-			protected void onPostExecute(IOException result) {
-				super.onPostExecute(result);
-
-				if (result != null) {
-					Toaster.showLong(SearchActivity.this,
-							string.queueing_failed);
-					showAddItem(true);
-				} else {
-					sendBroadcast(new Intent(ACTION_QUEUE));
-					setResult(RESULT_OK);
-					finish();
-				}
-			}
-		}.execute(ids);
 	}
 
 	@Override
@@ -196,52 +100,18 @@ public class SearchActivity extends SherlockActivity implements
 
 		SearchSuggestionsProvider.add(this, query);
 
-		loadingView.setVisibility(VISIBLE);
-		listView.setVisibility(GONE);
+		showLoading(true);
 
 		new SearchTask(service) {
 
 			@Override
-			protected void onPostExecute(SearchResult result) {
+			protected void onPostExecute(SongResult result) {
 				super.onPostExecute(result);
 
-				if (result.exception == null) {
-					SearchSong[] searchSongs = new SearchSong[result.songs.length];
-					for (int i = 0; i < searchSongs.length; i++)
-						searchSongs[i] = new SearchSong(result.songs[i]);
-					adapter.setItems(searchSongs);
-				} else
-					Toaster.showLong(SearchActivity.this, string.search_failed);
-
-				loadingView.setVisibility(GONE);
-				listView.setVisibility(VISIBLE);
+				displaySongs(result);
+				showLoading(false);
 			}
 		}.execute(query);
-	}
-
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long itemId) {
-		SearchSong song = (SearchSong) parent.getItemAtPosition(position);
-		song.selected = !song.selected;
-
-		if (song.selected)
-			songs.add(song.id);
-		else
-			songs.remove(song.id);
-
-		String title;
-		if (songs.size() > 1)
-			title = MessageFormat.format(getString(string.multiple_selected),
-					songs.size());
-		else if (songs.size() == 1)
-			title = getString(string.single_selected);
-		else
-			title = getString(string.search);
-		getSupportActionBar().setTitle(title);
-
-		showAddItem(!songs.isEmpty());
-
-		adapter.update(position, view, song);
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view,

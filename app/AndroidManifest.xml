@@ -47,6 +47,14 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+        <activity
+            android:name=".app.ViewArtistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/search" />
+        <activity
+            android:name=".app.ViewAlbumActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/search" />
 
         <provider
             android:name=".app.SearchSuggestionsProvider"

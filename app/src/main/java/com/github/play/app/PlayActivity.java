@@ -627,6 +627,22 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 				dequeueSong(song);
 			}
 		});
+		finder.onClick(id.tv_view_album, new Runnable() {
+
+			public void run() {
+				dialog.dismiss();
+				startActivity(ViewAlbumActivity.createIntent(
+						getApplicationContext(), song));
+			}
+		});
+		finder.onClick(id.tv_view_artist, new Runnable() {
+
+			public void run() {
+				dialog.dismiss();
+				startActivity(ViewArtistActivity.createIntent(
+						getApplicationContext(), song));
+			}
+		});
 		new SongArtWrapper(this, playService).update(
 				finder.imageView(id.iv_art), song);
 		dialog.setView(dialogView);
