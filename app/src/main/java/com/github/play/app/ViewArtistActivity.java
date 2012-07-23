@@ -52,10 +52,10 @@ public class ViewArtistActivity extends SongViewActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
 		song = (Song) getIntent().getSerializableExtra(EXTRA_SONG);
 		getSupportActionBar().setSubtitle(song.artist);
+
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override
