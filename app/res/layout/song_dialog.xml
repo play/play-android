@@ -1,74 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content" >
 
-    <include layout="@layout/queued" />
-
-    <include layout="@layout/divider" />
-
-    <RelativeLayout
-        android:id="@+id/rl_star_area"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/queued_background"
-        android:paddingLeft="10dp" >
+        android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/iv_star_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
+        <include layout="@layout/queued" />
+
+        <include layout="@layout/divider" />
+
+        <RelativeLayout
+            android:id="@+id/rl_star_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/queued_background"
+            android:paddingLeft="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_star_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true" />
+
+            <TextView
+                android:id="@+id/tv_star"
+                style="@style/dialog_option_text"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_star_icon"
+                android:padding="10dp" />
+        </RelativeLayout>
+
+        <include layout="@layout/divider" />
+
+        <RelativeLayout
+            android:id="@+id/rl_remove_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/queued_background"
+            android:paddingLeft="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_remove_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/action_remove" />
+
+            <TextView
+                android:id="@+id/tv_remove"
+                style="@style/dialog_option_text"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_remove_icon"
+                android:text="@string/remove_from_queue" />
+        </RelativeLayout>
+
+        <include layout="@layout/divider" />
 
         <TextView
-            android:id="@+id/tv_star"
+            android:id="@+id/tv_view_album"
             style="@style/dialog_option_text"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/iv_star_icon"
-            android:padding="10dp" />
-    </RelativeLayout>
+            android:background="@drawable/queued_background"
+            android:text="@string/view_songs_on_this_album" />
 
-    <include layout="@layout/divider" />
-
-    <RelativeLayout
-        android:id="@+id/rl_remove_area"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/queued_background"
-        android:paddingLeft="10dp" >
-
-        <ImageView
-            android:id="@+id/iv_remove_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/action_remove" />
+        <include layout="@layout/divider" />
 
         <TextView
-            android:id="@+id/tv_remove"
+            android:id="@+id/tv_view_artist"
             style="@style/dialog_option_text"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/iv_remove_icon"
-            android:text="@string/remove_from_queue" />
-    </RelativeLayout>
+            android:background="@drawable/queued_background"
+            android:text="@string/view_songs_by_this_artist" />
+    </LinearLayout>
 
-    <include layout="@layout/divider" />
-
-    <TextView
-        android:id="@+id/tv_view_album"
-        style="@style/dialog_option_text"
-        android:background="@drawable/queued_background"
-        android:text="@string/view_songs_on_this_album" />
-
-    <include layout="@layout/divider" />
-
-    <TextView
-        android:id="@+id/tv_view_artist"
-        style="@style/dialog_option_text"
-        android:background="@drawable/queued_background"
-        android:text="@string/view_songs_by_this_artist" />
-
-</LinearLayout>
+</ScrollView>
