@@ -15,7 +15,7 @@
  */
 package com.github.play.widget;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 
 import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
@@ -38,16 +38,16 @@ public class PlayListAdapter extends SingleTypeAdapter<Song> {
 	private final SongArtWrapper albumArt;
 
 	/**
-	 * @param context
+	 * @param activity
 	 * @param viewId
 	 * @param service
 	 */
-	public PlayListAdapter(Context context, int viewId,
+	public PlayListAdapter(Activity activity, int viewId,
 			AtomicReference<PlayService> service) {
-		super(context, viewId);
+		super(activity, viewId);
 
 		this.service = service;
-		albumArt = new SongArtWrapper(context, service);
+		albumArt = new SongArtWrapper(activity, service);
 	}
 
 	@Override

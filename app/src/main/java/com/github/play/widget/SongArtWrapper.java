@@ -18,7 +18,7 @@ package com.github.play.widget;
 import static android.graphics.Bitmap.CompressFormat.PNG;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static com.github.kevinsawicki.http.HttpRequest.CHARSET_UTF8;
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -151,19 +151,22 @@ public class SongArtWrapper {
 
 	private final Drawable transparent;
 
+	private final Activity activity;
+
 	/**
 	 * Create view wrapper to display art for a {@link Song}
 	 *
-	 * @param context
+	 * @param activity
 	 * @param service
 	 */
-	public SongArtWrapper(Context context,
+	public SongArtWrapper(Activity activity,
 			final AtomicReference<PlayService> service) {
-		artFolder = new File(context.getCacheDir(), "art");
+		this.activity = activity;
+		artFolder = new File(activity.getCacheDir(), "art");
 		if (!artFolder.exists())
 			artFolder.mkdirs();
 		this.service = service;
-		Resources resources = context.getResources();
+		Resources resources = activity.getResources();
 		maxSize = Math.round(resources.getDisplayMetrics().density
 				* MAX_SIZE_DP + 0.5F);
 		transparent = resources.getDrawable(android.R.color.transparent);
@@ -300,7 +303,7 @@ public class SongArtWrapper {
 				}
 
 				final Drawable imageDrawable = image;
-				artView.post(new Runnable() {
+				activity.runOnUiThread(new Runnable() {
 
 					public void run() {
 						if (song.id.equals(artView.getTag()))

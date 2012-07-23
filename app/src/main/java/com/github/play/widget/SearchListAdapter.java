@@ -15,7 +15,7 @@
  */
 package com.github.play.widget;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 
 import com.github.kevinsawicki.wishlist.ViewUtils;
@@ -53,13 +53,13 @@ public class SearchListAdapter extends PlayListAdapter {
 	}
 
 	/**
-	 * @param context
+	 * @param activity
 	 * @param viewId
 	 * @param service
 	 */
-	public SearchListAdapter(final Context context, int viewId,
+	public SearchListAdapter(final Activity activity, int viewId,
 			AtomicReference<PlayService> service) {
-		super(context, viewId, service);
+		super(activity, viewId, service);
 	}
 
 	@Override
