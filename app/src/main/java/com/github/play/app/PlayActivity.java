@@ -590,7 +590,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 	public void onItemClick(AdapterView<?> listView, View view, int position,
 			long itemId) {
-		Log.d("TEST", "Item clicked: " + position);
 		final Song song;
 		if (position == 0)
 			song = nowPlaying;
