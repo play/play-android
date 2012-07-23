@@ -241,7 +241,7 @@ public class SearchActivity extends SherlockActivity implements
 
 		showAddItem(!songs.isEmpty());
 
-		adapter.notifyDataSetChanged();
+		adapter.update(position, view, song);
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
