@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.actionbarsherlock.view.Menu;
+import com.github.play.R.menu;
 import com.github.play.core.Song;
 import com.github.play.core.SongResult;
 
@@ -54,6 +56,13 @@ public class ViewAlbumActivity extends SongViewActivity {
 
 		song = (Song) getIntent().getSerializableExtra(EXTRA_SONG);
 		getSupportActionBar().setSubtitle(song.album);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu optionsMenu) {
+		getSupportMenuInflater().inflate(menu.songs, optionsMenu);
+
+		return super.onCreateOptionsMenu(optionsMenu);
 	}
 
 	@Override
