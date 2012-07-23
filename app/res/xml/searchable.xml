@@ -3,4 +3,5 @@
     android:hint="@string/search_music"
     android:label="@string/app_name"
     android:searchSuggestAuthority="com.github.play.search.suggest"
-    android:searchSuggestSelection=" ?" />
+    android:searchSuggestSelection=" ?"
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
