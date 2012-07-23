@@ -50,13 +50,13 @@ public class SearchActivity extends SongViewActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		listView.setOnItemLongClickListener(this);
 	}
 
 	@Override
 	protected void refreshSongs() {
 		search(getIntent());
-
-		listView.setOnItemClickListener(this);
 	}
 
 	@Override
