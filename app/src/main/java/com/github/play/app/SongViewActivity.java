@@ -36,6 +36,7 @@ import com.github.play.R.string;
 import com.github.play.core.PlayPreferences;
 import com.github.play.core.PlayService;
 import com.github.play.core.QueueSongsTask;
+import com.github.play.core.Song;
 import com.github.play.core.SongResult;
 import com.github.play.widget.SearchListAdapter;
 import com.github.play.widget.SearchListAdapter.SearchSong;
@@ -151,9 +152,26 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		case id.m_add:
 			queueSelectedSongs();
 			return true;
+		case id.m_select_all:
+			selectAllSongs();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	/**
+	 * Select all songs
+	 */
+	protected void selectAllSongs() {
+		for (int i = 0; i < adapter.getCount(); i++) {
+			Song song = adapter.getItem(i);
+			songs.add(song.id);
+			((SearchSong) song).selected = true;
+		}
+		adapter.notifyDataSetChanged();
+		updateTitle();
+		showAddItem(!songs.isEmpty());
 	}
 
 	/**
@@ -204,6 +222,18 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		}.execute(ids);
 	}
 
+	private void updateTitle() {
+		String title;
+		if (songs.size() > 1)
+			title = MessageFormat.format(getString(string.multiple_selected),
+					songs.size());
+		else if (songs.size() == 1)
+			title = getString(string.single_selected);
+		else
+			title = getString(string.search);
+		getSupportActionBar().setTitle(title);
+	}
+
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long itemId) {
 		SearchSong song = (SearchSong) parent.getItemAtPosition(position);
@@ -214,18 +244,8 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		else
 			songs.remove(song.id);
 
-		String title;
-		if (songs.size() > 1)
-			title = MessageFormat.format(getString(string.multiple_selected),
-					songs.size());
-		else if (songs.size() == 1)
-			title = getString(string.single_selected);
-		else
-			title = getString(string.search);
-		getSupportActionBar().setTitle(title);
-
+		updateTitle();
 		showAddItem(!songs.isEmpty());
-
 		adapter.update(position, view, song);
 	}
 }

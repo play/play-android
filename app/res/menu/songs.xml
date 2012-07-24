@@ -13,5 +13,10 @@
         android:showAsAction="never"
         android:title="@string/search_again">
     </item>
+    <item
+        android:id="@+id/m_select_all"
+        android:showAsAction="never"
+        android:title="@string/select_all">
+    </item>
 
 </menu>
