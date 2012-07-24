@@ -32,6 +32,8 @@ import com.actionbarsherlock.R.id;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.kevinsawicki.wishlist.EditTextUtils;
+import com.github.kevinsawicki.wishlist.EditTextUtils.BooleanRunnable;
 import com.github.kevinsawicki.wishlist.Toaster;
 import com.github.play.R.layout;
 import com.github.play.R.menu;
@@ -75,11 +77,11 @@ public class SettingsActivity extends SherlockActivity {
 			urlText.setText(url);
 
 		TextView tokenLink = (TextView) findViewById(id.tv_token_link);
-		SpannableString tokenText = new SpannableString(
+		SpannableString tokenLinkText = new SpannableString(
 				getString(string.get_token));
-		tokenText.setSpan(new UnderlineSpan(), 0, tokenText.length(),
+		tokenLinkText.setSpan(new UnderlineSpan(), 0, tokenText.length(),
 				SPAN_EXCLUSIVE_EXCLUSIVE);
-		tokenLink.setText(tokenText);
+		tokenLink.setText(tokenLinkText);
 		tokenLink.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -107,6 +109,15 @@ public class SettingsActivity extends SherlockActivity {
 							string.enter_play_server_url);
 			}
 		});
+
+		EditTextUtils.onDone(tokenText, new BooleanRunnable() {
+
+			public boolean run() {
+				saveSettings();
+				return true;
+			}
+		});
+
 	}
 
 	@Override
@@ -115,33 +126,39 @@ public class SettingsActivity extends SherlockActivity {
 		return true;
 	}
 
+	private void saveSettings() {
+		String token = tokenText.getText().toString().trim();
+		if (TextUtils.isEmpty(token))
+			return;
+		String url = urlText.getText().toString().trim();
+		if (TextUtils.isEmpty(url))
+			return;
+
+		if (!url.startsWith(PREFIX_HTTP) & !url.startsWith(PREFIX_HTTPS))
+			url = PREFIX_HTTPS + url;
+
+		try {
+			new URI(url);
+		} catch (URISyntaxException e) {
+			Toaster.showLong(this, string.enter_play_server_url);
+			return;
+		}
+
+		boolean changed = !token.equals(settings.getToken())
+				|| !url.equals(settings.getUrl());
+		if (changed) {
+			settings.setToken(token).setUrl(url);
+			setResult(RESULT_OK);
+		} else
+			setResult(RESULT_CANCELED);
+		finish();
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case id.m_save:
-			String token = tokenText.getText().toString().trim();
-			String url = urlText.getText().toString().trim();
-			if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(url)) {
-				if (!url.startsWith(PREFIX_HTTP)
-						& !url.startsWith(PREFIX_HTTPS))
-					url = PREFIX_HTTPS + url;
-
-				try {
-					new URI(url);
-				} catch (URISyntaxException e) {
-					Toaster.showLong(this, string.enter_play_server_url);
-					return true;
-				}
-
-				boolean changed = !token.equals(settings.getToken())
-						|| !url.equals(settings.getUrl());
-				if (changed) {
-					settings.setToken(token).setUrl(url);
-					setResult(RESULT_OK);
-				} else
-					setResult(RESULT_CANCELED);
-				finish();
-			}
+			saveSettings();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
