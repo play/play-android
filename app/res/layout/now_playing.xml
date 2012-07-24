@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/iv_art"
-            android:layout_width="60dp"
-            android:layout_height="51dp"
+            android:layout_width="80dp"
+            android:layout_height="76dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/album_art"
