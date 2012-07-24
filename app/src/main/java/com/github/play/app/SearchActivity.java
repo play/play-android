@@ -29,6 +29,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.kevinsawicki.wishlist.LightDialog;
+import com.github.kevinsawicki.wishlist.Toaster;
 import com.github.play.R.id;
 import com.github.play.R.menu;
 import com.github.play.R.string;
@@ -36,7 +37,6 @@ import com.github.play.core.QueueSongsTask;
 import com.github.play.core.SearchTask;
 import com.github.play.core.Song;
 import com.github.play.core.SongResult;
-import com.github.play.widget.Toaster;
 
 import java.io.IOException;
 import java.text.MessageFormat;

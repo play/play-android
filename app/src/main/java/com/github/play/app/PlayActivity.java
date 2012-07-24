@@ -44,6 +44,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.kevinsawicki.wishlist.LightDialog;
+import com.github.kevinsawicki.wishlist.Toaster;
 import com.github.kevinsawicki.wishlist.ViewFinder;
 import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.drawable;
@@ -67,7 +68,6 @@ import com.github.play.core.StreamingInfo;
 import com.github.play.core.UnstarSongTask;
 import com.github.play.widget.PlayListAdapter;
 import com.github.play.widget.SongArtWrapper;
-import com.github.play.widget.Toaster;
 
 import java.io.IOException;
 import java.text.MessageFormat;

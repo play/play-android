@@ -32,11 +32,11 @@ import com.actionbarsherlock.R.id;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.kevinsawicki.wishlist.Toaster;
 import com.github.play.R.layout;
 import com.github.play.R.menu;
 import com.github.play.R.string;
 import com.github.play.core.PlayPreferences;
-import com.github.play.widget.Toaster;
 
 import java.net.URI;
 import java.net.URISyntaxException;

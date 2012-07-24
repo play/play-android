@@ -29,6 +29,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.kevinsawicki.wishlist.Toaster;
 import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.id;
 import com.github.play.R.layout;
@@ -40,7 +41,6 @@ import com.github.play.core.Song;
 import com.github.play.core.SongResult;
 import com.github.play.widget.SearchListAdapter;
 import com.github.play.widget.SearchListAdapter.SearchSong;
-import com.github.play.widget.Toaster;
 
 import java.io.IOException;
 import java.text.MessageFormat;
