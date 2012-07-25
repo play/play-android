@@ -83,4 +83,12 @@
         <item name="android:padding">12dp</item>
     </style>
 
+    <style name="list_view" parent="global">
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:divider">@drawable/list_divider</item>
+        <item name="android:dividerHeight">2dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
 </resources>
