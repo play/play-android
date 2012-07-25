@@ -62,9 +62,19 @@ public class SongArtWrapper {
 
 	private static final int MAX_RECENT = 50;
 
-	private static final int MAX_SIZE_DP = 60;
+	private static final int MAX_SIZE_DP = 80;
 
 	private static final MessageDigest SHA1_DIGEST;
+
+	private static final String ART_FOLDER = "art";
+
+	/**
+	 * Version of art to display
+	 * <p>
+	 * This counter should be incremented when {@link #MAX_SIZE_DP} changes or
+	 * if old art should be cleared and re-downloaded
+	 */
+	private static final int ART_VERSION = 1;
 
 	static {
 		MessageDigest digest;
@@ -153,6 +163,8 @@ public class SongArtWrapper {
 
 	private final Activity activity;
 
+	private boolean oldArtDeleted;
+
 	/**
 	 * Create view wrapper to display art for a {@link Song}
 	 *
@@ -162,7 +174,7 @@ public class SongArtWrapper {
 	public SongArtWrapper(Activity activity,
 			final AtomicReference<PlayService> service) {
 		this.activity = activity;
-		artFolder = new File(activity.getCacheDir(), "art");
+		artFolder = new File(activity.getCacheDir(), ART_FOLDER + ART_VERSION);
 		if (!artFolder.exists())
 			artFolder.mkdirs();
 		this.service = service;
@@ -259,6 +271,39 @@ public class SongArtWrapper {
 	}
 
 	/**
+	 * Delete file or directory include child files
+	 *
+	 * @param file
+	 */
+	private void delete(final File file) {
+		if (!file.exists())
+			return;
+
+		if (file.isDirectory()) {
+			Log.d(TAG, "Deleting art directory: " + file.getName());
+			File[] children = file.listFiles();
+			if (children != null)
+				for (File child : children)
+					delete(child);
+		}
+		file.delete();
+	}
+
+	/**
+	 * Delete art in old folders
+	 */
+	private void deleteOldArt() {
+		if (oldArtDeleted)
+			return;
+
+		File root = artFolder.getParentFile();
+		delete(new File(root, ART_FOLDER));
+		for (int i = 0; i < ART_VERSION; i++)
+			delete(new File(root, ART_FOLDER + i));
+		oldArtDeleted = true;
+	}
+
+	/**
 	 * Update view with art for song album
 	 *
 	 * @param artView
@@ -282,6 +327,8 @@ public class SongArtWrapper {
 		EXECUTORS.execute(new Runnable() {
 
 			public void run() {
+				deleteOldArt();
+
 				Drawable image = getCachedArt(song);
 
 				if (image == null) {
