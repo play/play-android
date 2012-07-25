@@ -33,7 +33,6 @@ import android.content.IntentFilter;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -194,17 +193,15 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		listView = (ListView) findViewById(android.R.id.list);
 		listView.setOnItemClickListener(this);
 
-		LayoutInflater inflater = getLayoutInflater();
-
-		nowPlayingView = inflater.inflate(layout.now_playing, null);
+		nowPlayingView = findViewById(id.ll_now_playing);
+		ViewUtils.setGone(nowPlayingView, true);
 		nowPlayingView.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				onItemClick(listView, nowPlayingView, 0, -1);
+				showSongDialog(nowPlaying);
 			}
 		});
 		playListAdapter.initialize(nowPlayingView);
-		listView.addHeaderView(nowPlayingView, null, false);
 		listView.setAdapter(playListAdapter);
 
 		if (savedInstanceState != null)
@@ -312,24 +309,27 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		});
 	}
 
+	private void showLoading(final boolean loading) {
+		ViewUtils.setGone(loadingView, !loading);
+		ViewUtils.setGone(nowPlayingView, loading);
+		ViewUtils.setGone(listView, loading);
+	}
+
 	private void updateSongs(final Song playing, final Song[] queued) {
 		queueEmpty = playing == null && (queued == null || queued.length == 0);
 
 		playListAdapter.update(-1, nowPlayingView, playing);
 		playListAdapter.setItems(queued);
 
-		ViewUtils.setGone(loadingView, true);
-		ViewUtils.setGone(listView, false);
+		showLoading(false);
 	}
 
 	private void refreshSongs() {
 		if (!isReady())
 			return;
 
-		if (queueEmpty) {
-			ViewUtils.setGone(loadingView, false);
-			ViewUtils.setGone(listView, true);
-		}
+		if (queueEmpty)
+			showLoading(true);
 
 		new FetchStatusTask(playService, this).execute();
 	}
@@ -593,13 +593,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 	}
 
-	public void onItemClick(AdapterView<?> listView, View view, int position,
-			long itemId) {
-		final Song song;
-		if (position == 0)
-			song = nowPlaying;
-		else
-			song = (Song) listView.getItemAtPosition(position);
+	private void showSongDialog(final Song song) {
 		if (song == null)
 			return;
 
@@ -653,5 +647,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 				finder.imageView(id.iv_art), song);
 		dialog.setView(dialogView);
 		dialog.show();
+	}
+
+	public void onItemClick(AdapterView<?> listView, View view, int position,
+			long itemId) {
+		showSongDialog((Song) listView.getItemAtPosition(position));
 	}
 }
