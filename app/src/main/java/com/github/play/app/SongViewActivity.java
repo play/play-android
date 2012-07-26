@@ -25,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -85,8 +84,7 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		adapter = new SearchListAdapter(this, layout.search_song, service);
 		listView.setAdapter(adapter);
 
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		PlayPreferences settings = new PlayPreferences(this);
 		service.set(new PlayService(settings.getUrl(), settings.getToken()));
