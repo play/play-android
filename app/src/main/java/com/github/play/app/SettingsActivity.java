@@ -16,6 +16,8 @@
 package com.github.play.app;
 
 import static android.content.Intent.ACTION_VIEW;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static android.graphics.Paint.UNDERLINE_TEXT_FLAG;
 import android.content.Intent;
 import android.net.Uri;
@@ -61,6 +63,7 @@ public class SettingsActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(layout.settings);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		settings = new PlayPreferences(this);
 
@@ -152,6 +155,11 @@ public class SettingsActivity extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent intent = new Intent(this, PlayActivity.class);
+			intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(intent);
+			return true;
 		case id.m_save:
 			saveSettings();
 			return true;
