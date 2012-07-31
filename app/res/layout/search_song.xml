@@ -3,7 +3,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/queued_background"
     android:baselineAligned="false"
-    android:orientation="horizontal"
     android:padding="10dp" >
 
     <FrameLayout
