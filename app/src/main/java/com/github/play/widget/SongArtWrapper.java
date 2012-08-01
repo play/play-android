@@ -321,7 +321,7 @@ public class SongArtWrapper {
 			return;
 		}
 
-		update(artView, null);
+		updateDrawable(artView, null);
 		artView.setTag(song.id);
 
 		EXECUTORS.execute(new Runnable() {
