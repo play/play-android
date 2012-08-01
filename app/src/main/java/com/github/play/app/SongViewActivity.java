@@ -26,12 +26,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.ActionMode.Callback;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.kevinsawicki.wishlist.Toaster;
 import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.id;
 import com.github.play.R.layout;
+import com.github.play.R.menu;
 import com.github.play.R.string;
 import com.github.play.core.PlayPreferences;
 import com.github.play.core.PlayService;
@@ -57,8 +60,6 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	 */
 	protected final AtomicReference<PlayService> service = new AtomicReference<PlayService>();
 
-	private MenuItem addItem;
-
 	/**
 	 * List view
 	 */
@@ -67,6 +68,46 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	private View loadingView;
 
 	private SearchListAdapter adapter;
+
+	private ActionMode actionMode;
+
+	private Callback selectionModeCallback = new Callback() {
+
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			String title;
+			int count = adapter.getSelectedCount();
+			if (count > 0)
+				title = MessageFormat.format(
+						getString(string.multiple_selected), count);
+			else if (count == 1)
+				title = getString(string.single_selected);
+			else
+				title = getString(string.search);
+			mode.setTitle(title);
+			return false;
+		}
+
+		public void onDestroyActionMode(ActionMode mode) {
+			actionMode = null;
+			unselectAllSongs();
+		}
+
+		public boolean onCreateActionMode(ActionMode mode, Menu actionMenu) {
+			mode.getMenuInflater().inflate(menu.add, actionMenu);
+			return true;
+		}
+
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+			case id.m_add:
+				queueSelectedSongs();
+				mode.finish();
+				return true;
+			default:
+				return false;
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,18 +128,6 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		service.set(new PlayService(settings.getUrl(), settings.getToken()));
 
 		refreshSongs();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu optionsMenu) {
-		addItem = optionsMenu.findItem(id.m_add);
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		updateAddItem();
-		return true;
 	}
 
 	/**
@@ -141,9 +170,6 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		case id.m_refresh:
 			refreshSongs();
 			return true;
-		case id.m_add:
-			queueSelectedSongs();
-			return true;
 		case id.m_select_all:
 			selectAllSongs();
 			return true;
@@ -160,25 +186,17 @@ public abstract class SongViewActivity extends SherlockActivity implements
 			adapter.setSelected(i, true);
 
 		adapter.notifyDataSetChanged();
-		updateTitle();
-		updateAddItem();
+		startSelectionMode();
 	}
 
 	/**
-	 * Show/hide add menu item
-	 *
-	 * @param show
+	 * Select all songs
 	 */
-	protected void showAddItem(final boolean show) {
-		if (addItem != null)
-			addItem.setVisible(show);
-	}
+	protected void unselectAllSongs() {
+		for (int i = 0; i < adapter.getCount(); i++)
+			adapter.setSelected(i, false);
 
-	/**
-	 * Show/hide add menu item
-	 */
-	protected void updateAddItem() {
-		showAddItem(adapter.getSelectedCount() > 0);
+		adapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -187,8 +205,6 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	protected void queueSelectedSongs() {
 		if (adapter.getSelectedCount() < 1)
 			return;
-
-		showAddItem(false);
 
 		final Song[] albums = adapter.getSelectedAlbums();
 		final Song[] songs = adapter.getSelectedSongs();
@@ -230,11 +246,10 @@ public abstract class SongViewActivity extends SherlockActivity implements
 			protected void onPostExecute(IOException result) {
 				super.onPostExecute(result);
 
-				if (result != null) {
+				if (result != null)
 					Toaster.showLong(SongViewActivity.this,
 							string.queueing_failed);
-					showAddItem(true);
-				} else {
+				else {
 					sendBroadcast(new Intent(ACTION_QUEUE));
 					setResult(RESULT_OK);
 					finish();
@@ -243,24 +258,17 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		}.execute(songs);
 	}
 
-	private void updateTitle() {
-		String title;
-		int count = adapter.getSelectedCount();
-		if (count > 0)
-			title = MessageFormat.format(getString(string.multiple_selected),
-					count);
-		else if (count == 1)
-			title = getString(string.single_selected);
+	private void startSelectionMode() {
+		if (actionMode != null)
+			actionMode.invalidate();
 		else
-			title = getString(string.search);
-		getSupportActionBar().setTitle(title);
+			actionMode = startActionMode(selectionModeCallback);
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long itemId) {
 		adapter.toggleSelection(position);
-		updateTitle();
-		showAddItem(adapter.getSelectedCount() > 0);
 		adapter.update(position, view, parent.getItemAtPosition(position));
+		startSelectionMode();
 	}
 }
