@@ -44,15 +44,11 @@
         android:paddingLeft="10dp" >
 
         <TextView
-            android:id="@+id/tv_artist"
-            style="@style/queue_artist" />
-
-        <TextView
-            android:id="@+id/tv_song"
+            android:id="@+id/tv_album"
             style="@style/queue_song" />
 
         <TextView
-            android:id="@+id/tv_album"
+            android:id="@+id/tv_artist"
             style="@style/queue_album" />
     </LinearLayout>
 

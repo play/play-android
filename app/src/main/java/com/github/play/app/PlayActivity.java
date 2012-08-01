@@ -318,7 +318,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	private void updateSongs(final Song playing, final Song[] queued) {
 		queueEmpty = playing == null && (queued == null || queued.length == 0);
 
-		playListAdapter.update(-1, nowPlayingView, playing);
+		playListAdapter.updatePlaying(nowPlayingView, playing);
 		playListAdapter.setItems(queued);
 
 		showLoading(false);
@@ -644,7 +644,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 			}
 		});
 		new SongArtWrapper(this, playService).update(
-				finder.imageView(id.iv_art), song);
+				finder.imageView(id.iv_art), drawable.queued_cd, song);
 		dialog.setView(dialogView);
 		dialog.show();
 	}

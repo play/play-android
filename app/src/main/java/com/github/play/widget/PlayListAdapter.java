@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.view.View;
 
 import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
+import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.core.PlayService;
 import com.github.play.core.Song;
@@ -29,11 +30,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * List adapter for songs
  */
 public class PlayListAdapter extends SingleTypeAdapter<Song> {
-
-	/**
-	 * Play service reference
-	 */
-	protected final AtomicReference<PlayService> service;
 
 	private final SongArtWrapper albumArt;
 
@@ -46,7 +42,6 @@ public class PlayListAdapter extends SingleTypeAdapter<Song> {
 			AtomicReference<PlayService> service) {
 		super(activity, viewId);
 
-		this.service = service;
 		albumArt = new SongArtWrapper(activity, service);
 	}
 
@@ -60,17 +55,26 @@ public class PlayListAdapter extends SingleTypeAdapter<Song> {
 		return super.initialize(view);
 	}
 
-	@Override
-	public void update(int position, View view, Song item) {
-		super.update(position, view, item);
+	/**
+	 * Update view for as currently playing song
+	 *
+	 * @param view
+	 * @param song
+	 */
+	public void updatePlaying(final View view, final Song song) {
+		setText(view, id.tv_artist, song.artist);
+		setText(view, id.tv_song, song.name);
+		setText(view, id.tv_album, song.album);
+
+		albumArt.update(imageView(view, id.iv_art), drawable.playing_cd, song);
 	}
 
 	@Override
-	public void update(int position, Song song) {
+	protected void update(int position, Song song) {
 		setText(id.tv_artist, song.artist);
 		setText(id.tv_song, song.name);
 		setText(id.tv_album, song.album);
 
-		albumArt.update(imageView(id.iv_art), song);
+		albumArt.update(imageView(id.iv_art), drawable.queued_cd, song);
 	}
 }

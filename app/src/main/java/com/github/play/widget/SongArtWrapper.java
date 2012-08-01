@@ -19,6 +19,7 @@ import static android.graphics.Bitmap.CompressFormat.PNG;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static com.github.kevinsawicki.http.HttpRequest.CHARSET_UTF8;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +29,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
+import android.util.SparseArray;
 import android.widget.ImageView;
 
 import com.github.play.R.id;
@@ -86,15 +88,11 @@ public class SongArtWrapper {
 		SHA1_DIGEST = digest;
 	}
 
-	private static final Map<String, Drawable> RECENT_ART = new LinkedHashMap<String, Drawable>(
-			MAX_RECENT, 1.0F) {
+	private static final SparseArray<Map<String, Drawable>> RECENT_ART = new SparseArray<Map<String, Drawable>>(
+			2);
 
-		private static final long serialVersionUID = -3434208982358063608L;
-
-		protected boolean removeEldestEntry(Map.Entry<String, Drawable> eldest) {
-			return size() >= MAX_RECENT;
-		}
-	};
+	private static final SparseArray<Drawable> EMPTY_ART = new SparseArray<Drawable>(
+			2);
 
 	private static String digest(Song song) {
 		if (SHA1_DIGEST == null)
@@ -102,7 +100,7 @@ public class SongArtWrapper {
 
 		byte[] value;
 		try {
-			value = (song.artist + '#' + song.album).getBytes(CHARSET_UTF8);
+			value = song.getAlbumId().getBytes(CHARSET_UTF8);
 		} catch (UnsupportedEncodingException e) {
 			return null;
 		}
@@ -122,24 +120,54 @@ public class SongArtWrapper {
 		return hashed;
 	}
 
-	private static Drawable getCachedArt(final Song song) {
+	private static Map<String, Drawable> createCacheMap() {
+		return new LinkedHashMap<String, Drawable>(MAX_RECENT, 1.0F) {
+
+			private static final long serialVersionUID = -3434208982358063608L;
+
+			@Override
+			protected boolean removeEldestEntry(
+					Map.Entry<String, Drawable> eldest) {
+				return size() >= MAX_RECENT;
+			}
+		};
+	}
+
+	private static Drawable getCachedArt(final int drawable, final Song song) {
 		final String digest = digest(song);
 		if (digest != null)
 			synchronized (RECENT_ART) {
-				return RECENT_ART.get(digest);
+				Map<String, Drawable> cache = RECENT_ART.get(drawable);
+				return cache != null ? cache.get(digest) : null;
 			}
 		else
 			return null;
 	}
 
-	private static void putCachedArt(final Song song, final Drawable bitmap) {
+	private static Drawable getEmptyArt(final int drawable,
+			final Context context) {
+		Drawable cached = EMPTY_ART.get(drawable);
+		if (cached == null) {
+			cached = context.getResources().getDrawable(drawable);
+			EMPTY_ART.put(drawable, cached);
+		}
+		return cached;
+	}
+
+	private static void putCachedArt(final int drawable, final Song song,
+			final Drawable bitmap) {
 		if (bitmap == null)
 			return;
 
 		final String digest = digest(song);
 		if (digest != null)
 			synchronized (RECENT_ART) {
-				RECENT_ART.put(digest, bitmap);
+				Map<String, Drawable> cache = RECENT_ART.get(drawable);
+				if (cache == null) {
+					cache = createCacheMap();
+					RECENT_ART.put(drawable, cache);
+				}
+				cache.put(digest, bitmap);
 			}
 	}
 
@@ -158,8 +186,6 @@ public class SongArtWrapper {
 	private final AtomicReference<PlayService> service;
 
 	private final int maxSize;
-
-	private final Drawable transparent;
 
 	private final Activity activity;
 
@@ -181,7 +207,6 @@ public class SongArtWrapper {
 		Resources resources = activity.getResources();
 		maxSize = Math.round(resources.getDisplayMetrics().density
 				* MAX_SIZE_DP + 0.5F);
-		transparent = resources.getDrawable(android.R.color.transparent);
 	}
 
 	/**
@@ -261,13 +286,7 @@ public class SongArtWrapper {
 
 	private void updateDrawable(final ImageView view, final Drawable art) {
 		view.setTag(null);
-		LayerDrawable layers = (LayerDrawable) view.getDrawable();
-		if (layers != null)
-			if (art != null)
-				layers.setDrawableByLayerId(id.i_album_art, art);
-			else
-				layers.setDrawableByLayerId(id.i_album_art, transparent);
-		view.invalidate();
+		view.setImageDrawable(art);
 	}
 
 	/**
@@ -307,29 +326,46 @@ public class SongArtWrapper {
 	 * Update view with art for song album
 	 *
 	 * @param artView
+	 * @param drawable
+	 *            a layer drawable with an album art layer
 	 * @param song
 	 */
-	public void update(final ImageView artView, final Song song) {
+	public void update(final ImageView artView, final int drawable,
+			final Song song) {
+		update(artView, drawable, song, song);
+	}
+
+	/**
+	 * Update view with art for song album
+	 *
+	 * @param artView
+	 * @param drawable
+	 *            a layer drawable with an album art layer
+	 * @param song
+	 * @param tag
+	 */
+	public void update(final ImageView artView, final int drawable,
+			final Song song, final Object tag) {
 		if (song == null) {
-			updateDrawable(artView, null);
+			updateDrawable(artView, getEmptyArt(drawable, activity));
 			return;
 		}
 
-		Drawable cachedBitmap = getCachedArt(song);
+		Drawable cachedBitmap = getCachedArt(drawable, song);
 		if (cachedBitmap != null) {
 			updateDrawable(artView, cachedBitmap);
 			return;
 		}
 
-		updateDrawable(artView, null);
-		artView.setTag(song.id);
+		updateDrawable(artView, getEmptyArt(drawable, activity));
+		artView.setTag(tag);
 
 		EXECUTORS.execute(new Runnable() {
 
 			public void run() {
 				deleteOldArt();
 
-				Drawable image = getCachedArt(song);
+				Drawable image = getCachedArt(drawable, song);
 
 				if (image == null) {
 					File artFile = getArtFile(song);
@@ -345,7 +381,11 @@ public class SongArtWrapper {
 					if (bitmap != null) {
 						image = new BitmapDrawable(artView.getResources(),
 								bitmap);
-						putCachedArt(song, image);
+						LayerDrawable layers = (LayerDrawable) activity
+								.getResources().getDrawable(drawable);
+						layers.setDrawableByLayerId(id.i_album_art, image);
+						putCachedArt(drawable, song, layers);
+						image = layers;
 					}
 				}
 
@@ -353,8 +393,12 @@ public class SongArtWrapper {
 				activity.runOnUiThread(new Runnable() {
 
 					public void run() {
-						if (song.id.equals(artView.getTag()))
-							updateDrawable(artView, imageDrawable);
+						if (tag.equals(artView.getTag()))
+							if (imageDrawable != null)
+								updateDrawable(artView, imageDrawable);
+							else
+								updateDrawable(artView,
+										getEmptyArt(drawable, activity));
 					}
 				});
 			}

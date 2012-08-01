@@ -15,7 +15,11 @@
  */
 package com.github.play.core;
 
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+
 import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Result class for a task that results in an {@link IOException} or an array of
@@ -34,6 +38,11 @@ public class SongResult {
 	public final IOException exception;
 
 	/**
+	 * Albums
+	 */
+	public final Song[] albums;
+
+	/**
 	 * Create result with songs
 	 *
 	 * @param songs
@@ -41,6 +50,12 @@ public class SongResult {
 	public SongResult(final Song[] songs) {
 		this.songs = songs;
 		exception = null;
+
+		final Map<String, Song> albums = new TreeMap<String, Song>(
+				CASE_INSENSITIVE_ORDER);
+		for (Song song : songs)
+			albums.put(song.getAlbumId(), song);
+		this.albums = albums.values().toArray(new Song[albums.size()]);
 	}
 
 	/**
@@ -50,6 +65,7 @@ public class SongResult {
 	 */
 	public SongResult(final IOException error) {
 		songs = null;
+		albums = null;
 		exception = error;
 	}
 }

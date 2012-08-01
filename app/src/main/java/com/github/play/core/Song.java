@@ -72,6 +72,15 @@ public class Song implements Serializable {
 		return id != null ? id.hashCode() : null;
 	}
 
+	/**
+	 * Get unique album id
+	 *
+	 * @return id
+	 */
+	public String getAlbumId() {
+		return artist + '#' + album;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (id == null)

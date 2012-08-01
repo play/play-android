@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Task to add one or more songs to the queue
  */
-public class QueueSongsTask extends AsyncTask<String, Void, IOException> {
+public class QueueSongsTask extends AsyncTask<Song, Void, IOException> {
 
 	private static final String TAG = "QueueSongsTask";
 
@@ -40,10 +40,10 @@ public class QueueSongsTask extends AsyncTask<String, Void, IOException> {
 	}
 
 	@Override
-	protected IOException doInBackground(String... params) {
-		for (String id : params)
+	protected IOException doInBackground(Song... params) {
+		for (Song song : params)
 			try {
-				service.get().queue(id);
+				service.get().queue(song.id);
 			} catch (IOException e) {
 				return e;
 			}

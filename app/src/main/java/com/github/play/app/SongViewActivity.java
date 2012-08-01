@@ -39,11 +39,10 @@ import com.github.play.core.QueueSongsTask;
 import com.github.play.core.Song;
 import com.github.play.core.SongResult;
 import com.github.play.widget.SearchListAdapter;
-import com.github.play.widget.SearchListAdapter.SearchSong;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -59,8 +58,6 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	protected final AtomicReference<PlayService> service = new AtomicReference<PlayService>();
 
 	private MenuItem addItem;
-
-	private final Set<String> songs = new HashSet<String>();
 
 	/**
 	 * List view
@@ -81,7 +78,7 @@ public abstract class SongViewActivity extends SherlockActivity implements
 
 		listView = (ListView) findViewById(android.R.id.list);
 		listView.setOnItemClickListener(this);
-		adapter = new SearchListAdapter(this, layout.search_song, service);
+		adapter = new SearchListAdapter(this, service);
 		listView.setAdapter(adapter);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,7 +97,7 @@ public abstract class SongViewActivity extends SherlockActivity implements
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		showAddItem(!songs.isEmpty());
+		updateAddItem();
 		return true;
 	}
 
@@ -125,12 +122,9 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	 * @param result
 	 */
 	protected void displaySongs(final SongResult result) {
-		if (result.exception == null) {
-			SearchSong[] searchSongs = new SearchSong[result.songs.length];
-			for (int i = 0; i < searchSongs.length; i++)
-				searchSongs[i] = new SearchSong(result.songs[i]);
-			adapter.setItems(searchSongs);
-		} else
+		if (result.exception == null)
+			adapter.setSongs(result);
+		else
 			Toaster.showLong(SongViewActivity.this, string.search_failed);
 
 		showLoading(false);
@@ -162,14 +156,12 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	 * Select all songs
 	 */
 	protected void selectAllSongs() {
-		for (int i = 0; i < adapter.getCount(); i++) {
-			Song song = adapter.getItem(i);
-			songs.add(song.id);
-			((SearchSong) song).selected = true;
-		}
+		for (int i = 0; i < adapter.getCount(); i++)
+			adapter.setSelected(i, true);
+
 		adapter.notifyDataSetChanged();
 		updateTitle();
-		showAddItem(!songs.isEmpty());
+		updateAddItem();
 	}
 
 	/**
@@ -183,25 +175,56 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	}
 
 	/**
+	 * Show/hide add menu item
+	 */
+	protected void updateAddItem() {
+		showAddItem(adapter.getSelectedCount() > 0);
+	}
+
+	/**
 	 * Add selected songs to the queue and finish this activity when complete
 	 */
 	protected void queueSelectedSongs() {
-		if (songs.isEmpty())
+		if (adapter.getSelectedCount() < 1)
 			return;
 
 		showAddItem(false);
 
-		String[] ids = songs.toArray(new String[songs.size()]);
+		final Song[] albums = adapter.getSelectedAlbums();
+		final Song[] songs = adapter.getSelectedSongs();
 
 		String message;
-		if (ids.length > 1)
+		if (songs.length > 1 || albums.length != 0)
 			message = MessageFormat.format(
-					getString(string.adding_songs_to_queue), ids.length);
+					getString(string.adding_songs_to_queue), songs.length);
 		else
 			message = getString(string.adding_song_to_queue);
 		Toaster.showShort(SongViewActivity.this, message);
 
 		new QueueSongsTask(service) {
+
+			@Override
+			protected IOException doInBackground(Song... params) {
+				if (albums.length > 0) {
+					Set<Song> albumSongs = new LinkedHashSet<Song>();
+					for (Song album : albums)
+						try {
+							for (Song song : service.get().getSongs(
+									album.artist, album.album))
+								albumSongs.add(song);
+						} catch (IOException e) {
+							return e;
+						}
+					if (!albumSongs.isEmpty()) {
+						for (Song song : params)
+							albumSongs.add(song);
+						params = albumSongs
+								.toArray(new Song[albumSongs.size()]);
+					}
+				}
+
+				return super.doInBackground(params);
+			}
 
 			@Override
 			protected void onPostExecute(IOException result) {
@@ -217,15 +240,16 @@ public abstract class SongViewActivity extends SherlockActivity implements
 					finish();
 				}
 			}
-		}.execute(ids);
+		}.execute(songs);
 	}
 
 	private void updateTitle() {
 		String title;
-		if (songs.size() > 1)
+		int count = adapter.getSelectedCount();
+		if (count > 0)
 			title = MessageFormat.format(getString(string.multiple_selected),
-					songs.size());
-		else if (songs.size() == 1)
+					count);
+		else if (count == 1)
 			title = getString(string.single_selected);
 		else
 			title = getString(string.search);
@@ -234,16 +258,9 @@ public abstract class SongViewActivity extends SherlockActivity implements
 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long itemId) {
-		SearchSong song = (SearchSong) parent.getItemAtPosition(position);
-		song.selected = !song.selected;
-
-		if (song.selected)
-			songs.add(song.id);
-		else
-			songs.remove(song.id);
-
+		adapter.toggleSelection(position);
 		updateTitle();
-		showAddItem(!songs.isEmpty());
-		adapter.update(position, view, song);
+		showAddItem(adapter.getSelectedCount() > 0);
+		adapter.update(position, view, parent.getItemAtPosition(position));
 	}
 }

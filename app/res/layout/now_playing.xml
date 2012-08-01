@@ -18,8 +18,7 @@
             android:layout_height="76dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/album_art"
-            android:src="@drawable/playing_cd" />
+            android:contentDescription="@string/album_art" />
 
         <LinearLayout
             android:layout_width="match_parent"
