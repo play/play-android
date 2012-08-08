@@ -74,17 +74,18 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	private Callback selectionModeCallback = new Callback() {
 
 		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			String title;
 			int count = adapter.getSelectedCount();
-			if (count > 0)
-				title = MessageFormat.format(
-						getString(string.multiple_selected), count);
-			else if (count == 1)
-				title = getString(string.single_selected);
-			else
-				title = getString(string.search);
-			mode.setTitle(title);
-			return false;
+			if (count > 0) {
+				mode.setTitle(MessageFormat.format(
+						getString(string.multiple_selected), count));
+				return false;
+			} else if (count == 1) {
+				mode.setTitle(string.single_selected);
+				return false;
+			} else {
+				mode.finish();
+				return true;
+			}
 		}
 
 		public void onDestroyActionMode(ActionMode mode) {
@@ -267,8 +268,9 @@ public abstract class SongViewActivity extends SherlockActivity implements
 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long itemId) {
-		adapter.toggleSelection(position);
-		adapter.update(position, view, parent.getItemAtPosition(position));
-		startSelectionMode();
+		if (adapter.toggleSelection(position)) {
+			adapter.update(position, view, parent.getItemAtPosition(position));
+			startSelectionMode();
+		}
 	}
 }

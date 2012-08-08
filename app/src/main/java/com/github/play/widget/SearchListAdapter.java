@@ -88,9 +88,9 @@ public class SearchListAdapter extends MultiTypeAdapter {
 	 * Toggle selected of item at given position
 	 *
 	 * @param position
-	 * @return this adapter
+	 * @return true if song or album was selected, false otherwise
 	 */
-	public SearchListAdapter toggleSelection(final int position) {
+	public boolean toggleSelection(final int position) {
 		return setSelected(position, !selected.get(position, false));
 	}
 
@@ -99,17 +99,17 @@ public class SearchListAdapter extends MultiTypeAdapter {
 	 *
 	 * @param position
 	 * @param selected
-	 * @return this adapter
+	 * @return true if song or album was selected, false otherwise
 	 */
-	public SearchListAdapter setSelected(final int position,
-			final boolean selected) {
+	public boolean setSelected(final int position, final boolean selected) {
 		int type = getItemViewType(position);
-		if (type == TYPE_SONG || type == TYPE_ALBUM)
+		boolean validType = type == TYPE_SONG || type == TYPE_ALBUM;
+		if (validType)
 			if (selected)
 				this.selected.put(position, true);
 			else
 				this.selected.delete(position);
-		return this;
+		return validType;
 	}
 
 	@Override
