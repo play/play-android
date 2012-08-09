@@ -17,7 +17,11 @@ package com.github.play.app;
 
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN;
 import android.app.Notification;
+import android.app.Notification.BigTextStyle;
+import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -30,12 +34,10 @@ import android.util.Log;
 import com.emorym.android_pusher.Pusher;
 import com.emorym.android_pusher.PusherCallback;
 import com.github.play.R.drawable;
-import com.github.play.R.string;
 import com.github.play.core.Song;
 import com.github.play.core.SongPusher;
 import com.github.play.core.StatusUpdate;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -117,8 +119,6 @@ public class StatusService extends Service {
 
 	private final Executor backgroundThread = Executors.newFixedThreadPool(1);
 
-	private Notification notification;
-
 	private final PusherCallback callback = new PusherCallback() {
 
 		public void onEvent(JSONObject eventData) {
@@ -130,7 +130,7 @@ public class StatusService extends Service {
 			if (upcomingSongs == null)
 				return;
 
-			playing = parseSong(nowPlaying);
+			Song playing = parseSong(nowPlaying);
 
 			List<Song> parsedSongs = new ArrayList<Song>(upcomingSongs.length());
 			for (int i = 0; i < upcomingSongs.length(); i++) {
@@ -139,13 +139,13 @@ public class StatusService extends Service {
 					continue;
 				parsedSongs.add(parseSong(song));
 			}
-			queued = parsedSongs.toArray(new Song[parsedSongs.size()]);
+			Song[] queued = parsedSongs.toArray(new Song[parsedSongs.size()]);
 
 			Intent intent = new Intent(UPDATE);
 			intent.putExtra(EXTRA_UPDATE, new StatusUpdate(playing, queued));
 			sendBroadcast(intent);
 
-			updateNotification();
+			updateNotification(playing);
 		}
 	};
 
@@ -155,9 +155,7 @@ public class StatusService extends Service {
 
 	private boolean sendNotification;
 
-	private Song playing;
-
-	private Song[] queued = new Song[0];
+	private boolean notificationSent;
 
 	@Override
 	public IBinder onBind(final Intent intent) {
@@ -222,8 +220,48 @@ public class StatusService extends Service {
 		this.pusher = pusher;
 	}
 
+	private CharSequence getTickerText(final Song song) {
+		StringBuilder text = new StringBuilder();
+		text.append(song.name);
+		if (!TextUtils.isEmpty(song.artist))
+			text.append(" by ").append(song.artist);
+		return text;
+	}
+
+	private CharSequence getContentText(final Song song) {
+		StringBuilder text = new StringBuilder();
+		text.append(song.name);
+		if (!TextUtils.isEmpty(song.album))
+			text.append(" from ").append(song.album);
+		return text;
+	}
+
+	private Notification createBigNotification(final Context context,
+			final Song song, final PendingIntent intent) {
+		Builder builder = new Builder(context);
+		builder.setOngoing(true);
+		builder.setSmallIcon(drawable.notification);
+		builder.setTicker(getTickerText(song));
+		builder.setContentTitle(song.artist);
+		CharSequence contextText = getContentText(song);
+		builder.setContentText(contextText);
+		builder.setContentIntent(intent);
+		return new BigTextStyle(builder).bigText(contextText).build();
+	}
+
 	@SuppressWarnings("deprecation")
-	private void updateNotification() {
+	private Notification createNotification(final Context context,
+			final Song song, final PendingIntent intent) {
+		Notification notification = new Notification();
+		notification.icon = drawable.notification;
+		notification.flags |= FLAG_ONGOING_EVENT;
+		notification.tickerText = getTickerText(song);
+		notification.setLatestEventInfo(context, song.artist,
+				getContentText(song), intent);
+		return notification;
+	}
+
+	private void updateNotification(Song song) {
 		if (!sendNotification)
 			return;
 
@@ -231,25 +269,18 @@ public class StatusService extends Service {
 		PendingIntent intent = PendingIntent.getActivity(context, 0,
 				new Intent(context, PlayActivity.class), FLAG_UPDATE_CURRENT);
 
-		boolean startForeground = false;
-		if (notification == null) {
-			notification = new Notification();
-			notification.icon = drawable.notification;
-			notification.flags |= FLAG_ONGOING_EVENT;
-			startForeground = true;
-		}
-
-		notification.tickerText = MessageFormat.format(
-				getString(string.notification_ticker), playing.name,
-				playing.artist);
-		notification.setLatestEventInfo(context, playing.name, MessageFormat
-				.format(getString(string.notification_content), playing.artist,
-						playing.album), intent);
-
-		if (startForeground)
-			startForeground(1, notification);
+		Notification notification;
+		if (SDK_INT >= JELLY_BEAN)
+			notification = createBigNotification(context, song, intent);
 		else
+			notification = createNotification(context, song, intent);
+
+		if (notificationSent)
 			((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
 					.notify(1, notification);
+		else {
+			notificationSent = true;
+			startForeground(1, notification);
+		}
 	}
 }
