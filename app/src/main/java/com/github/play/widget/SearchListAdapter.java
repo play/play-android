@@ -77,6 +77,7 @@ public class SearchListAdapter extends MultiTypeAdapter {
 	 */
 	public SearchListAdapter setSongs(final SongResult result) {
 		this.result = result;
+		clear();
 		addItem(TYPE_ALBUM_HEADER, TYPE_ALBUM_HEADER);
 		addItems(TYPE_ALBUM, result.albums);
 		addItem(TYPE_SONG_HEADER, TYPE_SONG_HEADER);
