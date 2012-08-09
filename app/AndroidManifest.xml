@@ -58,7 +58,8 @@
 
         <provider
             android:name=".app.SearchSuggestionsProvider"
-            android:authorities="com.github.play.search.suggest" />
+            android:authorities="com.github.play.search.suggest"
+            android:exported="false" />
 
         <service
             android:name=".app.MusicStreamService"
