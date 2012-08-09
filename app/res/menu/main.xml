@@ -6,34 +6,29 @@
         android:enabled="false"
         android:icon="@drawable/action_play"
         android:showAsAction="ifRoom"
-        android:title="@string/play">
-    </item>
+        android:title="@string/play"/>
     <item
         android:id="@+id/m_search"
         android:enabled="false"
         android:icon="@drawable/action_search"
         android:showAsAction="ifRoom"
-        android:title="@string/search">
-    </item>
+        android:title="@string/search"/>
     <item
         android:id="@+id/m_play_stars"
         android:enabled="false"
         android:icon="@drawable/menu_stars"
         android:showAsAction="never"
-        android:title="@string/play_stars">
-    </item>
+        android:title="@string/play_stars"/>
     <item
         android:id="@+id/m_refresh"
         android:enabled="false"
         android:icon="@drawable/menu_refresh"
         android:showAsAction="never"
-        android:title="@string/refresh">
-    </item>
+        android:title="@string/refresh"/>
     <item
         android:id="@+id/m_settings"
         android:icon="@drawable/menu_settings"
         android:showAsAction="never"
-        android:title="@string/settings">
-    </item>
+        android:title="@string/settings"/>
 
 </menu>

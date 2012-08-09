@@ -5,7 +5,6 @@
         android:id="@+id/m_add"
         android:icon="@drawable/action_add"
         android:showAsAction="ifRoom"
-        android:title="@string/add_to_queue">
-    </item>
+        android:title="@string/add_to_queue"/>
 
 </menu>
