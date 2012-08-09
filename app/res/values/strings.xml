@@ -47,6 +47,6 @@
     <string name="unstar_this_song">Unstar this song</string>
     <string name="view_songs_on_this_album">View songs on this album</string>
     <string name="view_songs_by_this_artist">View songs by this artist</string>
-    <string name="select_all">Select All</string>
+    <string name="select_all">Select all</string>
 
 </resources>
