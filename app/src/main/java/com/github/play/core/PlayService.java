@@ -15,6 +15,8 @@
  */
 package com.github.play.core;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.FROYO;
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -38,6 +40,12 @@ public class PlayService {
 	private static class SongWrapper {
 
 		private Song[] songs;
+	}
+
+	static {
+		// Disable http.keepAlive on Froyo and below
+		if (SDK_INT <= FROYO)
+			HttpRequest.keepAlive(false);
 	}
 
 	private final Gson gson = new GsonBuilder().setFieldNamingPolicy(
