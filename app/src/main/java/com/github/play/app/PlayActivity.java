@@ -15,22 +15,12 @@
  */
 package com.github.play.app;
 
-import static android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH;
-import static android.speech.RecognizerIntent.EXTRA_CALLING_PACKAGE;
-import static android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL;
-import static android.speech.RecognizerIntent.EXTRA_MAX_RESULTS;
-import static android.speech.RecognizerIntent.EXTRA_PROMPT;
-import static android.speech.RecognizerIntent.EXTRA_RESULTS;
-import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 import static com.github.play.app.MusicStreamService.EXTRA_STREAMING;
 import static com.github.play.app.StatusService.EXTRA_UPDATE;
-import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,7 +47,6 @@ import com.github.play.core.FetchStatusTask;
 import com.github.play.core.PlayPreferences;
 import com.github.play.core.PlayService;
 import com.github.play.core.QueueStarsTask;
-import com.github.play.core.QueueSubjectTask;
 import com.github.play.core.Song;
 import com.github.play.core.SongCallback;
 import com.github.play.core.SongResult;
@@ -70,8 +59,6 @@ import com.github.play.widget.SongArtWrapper;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -91,8 +78,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 	private static final int REQUEST_SETTINGS = 1;
 
-	private static final int REQUEST_SPEECH = 2;
-
 	private ListView listView;
 
 	private View loadingView;
@@ -108,8 +93,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	private boolean queueEmpty = true;
 
 	private MenuItem playItem;
-
-	private MenuItem speakItem;
 
 	private MenuItem refreshItem;
 
@@ -278,8 +261,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	private void setMenuItemsEnabled(final boolean enabled) {
 		if (playItem != null)
 			playItem.setEnabled(enabled && streamingInfo != null);
-		if (speakItem != null)
-			speakItem.setEnabled(enabled);
 		if (refreshItem != null)
 			refreshItem.setEnabled(enabled);
 		if (searchItem != null)
@@ -358,9 +339,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 			startActivityForResult(new Intent(this, SettingsActivity.class),
 					REQUEST_SETTINGS);
 			return true;
-		case id.m_speak:
-			promptForSpeech();
-			return true;
 		case id.m_search:
 			onSearchRequested();
 			return true;
@@ -381,22 +359,11 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		updatePlayMenuItem();
 
 		refreshItem = optionsMenu.findItem(id.m_refresh);
-		speakItem = optionsMenu.findItem(id.m_speak);
 		searchItem = optionsMenu.findItem(id.m_search);
 		playStarsItem = optionsMenu.findItem(id.m_play_stars);
 
 		if (isReady())
 			setMenuItemsEnabled(true);
-
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		List<ResolveInfo> activities = getPackageManager()
-				.queryIntentActivities(new Intent(ACTION_RECOGNIZE_SPEECH), 0);
-		if (activities.isEmpty())
-			menu.removeItem(id.m_speak);
 
 		return true;
 	}
@@ -420,17 +387,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 				streamingInfo = null;
 				load();
 			}
-			return;
-		}
-
-		if (requestCode == REQUEST_SPEECH && resultCode == RESULT_OK
-				&& data != null) {
-			ArrayList<String> results = data
-					.getStringArrayListExtra(EXTRA_RESULTS);
-			if (!results.isEmpty())
-				selectSubject(results);
-			else
-				Toaster.showShort(this, string.speech_not_recognized);
 			return;
 		}
 
@@ -526,71 +482,6 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 				refreshSongs();
 			}
 		}.execute();
-	}
-
-	private void promptForSpeech() {
-		if (!isReady())
-			return;
-
-		Intent intent = new Intent(ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(EXTRA_CALLING_PACKAGE, getClass().getPackage()
-				.getName());
-		intent.putExtra(EXTRA_PROMPT, getString(string.speech_prompt));
-		intent.putExtra(EXTRA_LANGUAGE_MODEL, LANGUAGE_MODEL_FREE_FORM);
-		intent.putExtra(EXTRA_MAX_RESULTS, 5);
-
-		startActivityForResult(intent, REQUEST_SPEECH);
-	}
-
-	private void selectSubject(List<String> results) {
-		Builder builder = new Builder(this);
-		builder.setCancelable(true);
-		final String[] subjects = results.toArray(new String[results.size()]);
-		builder.setSingleChoiceItems(
-				results.toArray(new String[results.size()]), -1,
-				new DialogInterface.OnClickListener() {
-
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						queueSubject(subjects[which]);
-					}
-				});
-		builder.setNegativeButton(android.R.string.no, null);
-		builder.show();
-	}
-
-	private void queueSubject(final String subject) {
-		if (!isReady())
-			return;
-
-		Toaster.showShort(this, string.adding_subject_to_the_queue, subject);
-
-		new QueueSubjectTask(playService) {
-
-			@Override
-			protected void onPostExecute(SongResult result) {
-				super.onPostExecute(result);
-
-				String message;
-				if (result.exception != null)
-					message = MessageFormat.format(
-							getString(string.queueing_subject_failed), subject);
-				else if (result.songs.length > 1)
-					message = MessageFormat.format(
-							getString(string.multiple_songs_queued),
-							result.songs.length);
-				else if (result.songs.length == 1)
-					message = getString(string.single_song_queued);
-				else
-					message = getString(string.no_songs_found);
-
-				Toaster.showShort(PlayActivity.this, message);
-
-				refreshSongs();
-			}
-
-		}.execute(subject);
-
 	}
 
 	private void showSongDialog(final Song song) {
