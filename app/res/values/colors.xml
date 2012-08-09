@@ -10,10 +10,7 @@
     <color name="text_cursor">#A6A6A6</color>
     <color name="text_light">#FFFFFF</color>
     <color name="text_bright">#EA36F5</color>
-    <color name="unstarred">#CCCCCC</color>
-    <color name="starred">#DC35E6</color>
     <color name="shadow_text_light">#FFFFFF</color>
-    <color name="shadow_text_dark">#000000</color>
     <color name="list_divider_top">#D4D4D4</color>
     <color name="list_divider_bottom">#F9F9F9</color>
     <color name="edit_text_background">#F8F8F8</color>
