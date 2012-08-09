@@ -2,9 +2,6 @@
 <resources>
 
     <string name="app_name">Play</string>
-    <string name="up_next">Up Next</string>
-    <string name="by">by</string>
-    <string name="from">from</string>
     <string name="album_art">Album Art</string>
     <string name="play_server_url">Play Server URL</string>
     <string name="play_token">Play Token</string>
@@ -13,7 +10,6 @@
     <string name="error_contacting_play_server">Error contacting play server: {0}</string>
     <string name="notification_ticker">{0} by {1}</string>
     <string name="notification_content">{0} from {1}</string>
-    <string name="symbol_star">\u2605</string>
     <string name="unstarring_song">Unstarring \'\'{0}\'\'</string>
     <string name="starring_song">Starring \'\'{0}\'\'</string>
     <string name="starring_failed">Starring \'\'{0}\'\' failed</string>
@@ -23,9 +19,6 @@
     <string name="removing_song">Removing \'\'{0}\'\'</string>
     <string name="removing_song_failed">Removing \'\'{0}\'\' failed</string>
     <string name="queueing_subject_failed">Queueing \'\'{0}\'\' failed</string>
-    <string name="message_confirm_remove">Are you sure you want to remove \'\'{0}\'\' from the queue?</string>
-    <string name="title_confirm_remove">Remove Song</string>
-    <string name="adding_subject_to_the_queue">Adding \'\'{0}\'\' to the queue</string>
     <string name="multiple_songs_queued">{0} songs added to the queue</string>
     <string name="single_song_queued">1 song added to the queue</string>
     <string name="no_songs_found">No songs found</string>
@@ -46,9 +39,6 @@
     <string name="hint_url">play.example.com</string>
     <string name="queueing_stars_failed">Failed to add starred songs to the queue</string>
     <string name="play_stars">Play Favorites</string>
-    <string name="title_play_album">Play Entire Album</string>
-    <string name="message_play_album">Do you want to add all songs from \'\'{0}\'\' to the queue?</string>
-    <string name="album_added_to_queue">Added \'\'{0}\'\' to the queue</string>
     <string name="enter_play_server_url">Enter a valid Play Server URL</string>
     <string name="get_token">Get Token</string>
     <string name="settings">Settings</string>
