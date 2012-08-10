@@ -27,6 +27,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,6 +38,7 @@ import com.github.play.R.drawable;
 import com.github.play.core.Song;
 import com.github.play.core.SongPusher;
 import com.github.play.core.StatusUpdate;
+import com.github.play.widget.SongArtWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -243,6 +245,7 @@ public class StatusService extends Service {
 		builder.setSmallIcon(drawable.notification);
 		builder.setTicker(getTickerText(song));
 		builder.setContentTitle(song.artist);
+		builder.setLargeIcon(SongArtWrapper.getCachedArt(context, song));
 		CharSequence contextText = getContentText(song);
 		builder.setContentText(contextText);
 		builder.setContentIntent(intent);

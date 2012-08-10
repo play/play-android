@@ -56,6 +56,28 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class SongArtWrapper {
 
+	/**
+	 * Get cached art for song
+	 *
+	 * @param context
+	 * @param song
+	 * @return art or null if not available locally
+	 */
+	public static Bitmap getCachedArt(final Context context, final Song song) {
+		File file = getArtFile(getArtDirectory(context), song);
+		if (!isValid(file))
+			return null;
+
+		Options options = new Options();
+		options.inDither = false;
+		options.inPreferredConfig = ARGB_8888;
+		Bitmap decoded = BitmapFactory.decodeFile(file.getAbsolutePath(),
+				options);
+		if (decoded == null)
+			Log.d(TAG, "Decoding " + file.getName() + " failed");
+		return decoded;
+	}
+
 	private static final String TAG = "SongArtWrapper";
 
 	private static final int DIGEST_LENGTH = 40;
@@ -181,6 +203,41 @@ public class SongArtWrapper {
 		return new Point(options.outWidth, options.outHeight);
 	}
 
+	/**
+	 * Get art file for song
+	 *
+	 * @param parent
+	 * @param song
+	 * @return file
+	 */
+	protected static File getArtFile(final File parent, final Song song) {
+		return new File(parent, digest(song) + ".png");
+	}
+
+	/**
+	 * Get art directory
+	 *
+	 * @param context
+	 * @return directory for storing song art
+	 */
+	protected static File getArtDirectory(Context context) {
+		File artFolder = new File(context.getCacheDir(), ART_FOLDER
+				+ ART_VERSION);
+		if (!artFolder.exists())
+			artFolder.mkdirs();
+		return artFolder;
+	}
+
+	/**
+	 * Is file non-null, existent and non-empty?
+	 *
+	 * @param file
+	 * @return true if valid, false otherwise
+	 */
+	protected static boolean isValid(final File file) {
+		return file != null && file.exists() && file.length() > 0;
+	}
+
 	private final File artFolder;
 
 	private final AtomicReference<PlayService> service;
@@ -200,33 +257,11 @@ public class SongArtWrapper {
 	public SongArtWrapper(Activity activity,
 			final AtomicReference<PlayService> service) {
 		this.activity = activity;
-		artFolder = new File(activity.getCacheDir(), ART_FOLDER + ART_VERSION);
-		if (!artFolder.exists())
-			artFolder.mkdirs();
+		artFolder = getArtDirectory(activity);
 		this.service = service;
 		Resources resources = activity.getResources();
 		maxSize = Math.round(resources.getDisplayMetrics().density
 				* MAX_SIZE_DP + 0.5F);
-	}
-
-	/**
-	 * Get art file for song
-	 *
-	 * @param song
-	 * @return file
-	 */
-	protected File getArtFile(final Song song) {
-		return new File(artFolder, digest(song) + ".png");
-	}
-
-	/**
-	 * Is file non-null, existent and non-empty?
-	 *
-	 * @param file
-	 * @return true if valid, false otherwise
-	 */
-	protected boolean isValid(final File file) {
-		return file != null && file.exists() && file.length() > 0;
 	}
 
 	/**
@@ -368,7 +403,7 @@ public class SongArtWrapper {
 				Drawable image = getCachedArt(drawable, song);
 
 				if (image == null) {
-					File artFile = getArtFile(song);
+					File artFile = getArtFile(artFolder, song);
 					Bitmap bitmap = null;
 					if (isValid(artFile))
 						bitmap = decode(artFile);
