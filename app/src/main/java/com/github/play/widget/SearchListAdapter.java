@@ -235,4 +235,10 @@ public class SearchListAdapter extends MultiTypeAdapter {
 			return;
 		}
 	}
+
+	@Override
+	public boolean isEnabled(final int position) {
+		final int type = getItemViewType(position);
+		return TYPE_ALBUM_HEADER != type && TYPE_SONG_HEADER != type;
+	}
 }
