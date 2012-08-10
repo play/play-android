@@ -489,6 +489,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 			return;
 
 		final LightDialog dialog = LightDialog.create(this);
+		dialog.setCancelable(true);
+		dialog.setCanceledOnTouchOutside(true);
 		View dialogView = getLayoutInflater().inflate(layout.song_dialog, null);
 		ViewFinder finder = new ViewFinder(dialogView);
 		finder.setText(id.tv_album, song.album);
