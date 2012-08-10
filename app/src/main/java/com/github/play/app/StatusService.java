@@ -18,6 +18,7 @@ package com.github.play.app;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.HONEYCOMB;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN;
 import android.app.Notification;
 import android.app.Notification.BigTextStyle;
@@ -27,7 +28,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -259,6 +259,8 @@ public class StatusService extends Service {
 		notification.icon = drawable.notification;
 		notification.flags |= FLAG_ONGOING_EVENT;
 		notification.tickerText = getTickerText(song);
+		if (SDK_INT >= HONEYCOMB)
+			notification.largeIcon = SongArtWrapper.getCachedArt(context, song);
 		notification.setLatestEventInfo(context, song.artist,
 				getContentText(song), intent);
 		return notification;
