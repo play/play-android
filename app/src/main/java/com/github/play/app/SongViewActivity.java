@@ -20,6 +20,7 @@ import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static com.github.play.app.PlayActivity.ACTION_QUEUE;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -54,6 +55,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public abstract class SongViewActivity extends SherlockActivity implements
 		OnItemClickListener {
+
+	private static final String TAG = "SongViewActivity";
 
 	/**
 	 * Play service reference
@@ -154,8 +157,10 @@ public abstract class SongViewActivity extends SherlockActivity implements
 	protected void displaySongs(final SongResult result) {
 		if (result.exception == null)
 			adapter.setSongs(result);
-		else
+		else {
+			Log.d(TAG, "Searching songs failed", result.exception);
 			Toaster.showLong(SongViewActivity.this, string.search_failed);
+		}
 
 		showLoading(false);
 	}
