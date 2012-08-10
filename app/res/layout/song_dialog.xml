@@ -61,19 +61,52 @@
 
         <include layout="@layout/divider" />
 
-        <TextView
-            android:id="@+id/tv_view_album"
-            style="@style/dialog_option_text"
+        <RelativeLayout
+            android:id="@+id/rl_search_album_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/queued_background"
-            android:text="@string/view_songs_on_this_album" />
+            android:paddingLeft="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_search_album_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/dialog_search" />
+
+            <TextView
+                style="@style/dialog_option_text"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_search_album_icon"
+                android:text="@string/view_songs_on_this_album" />
+        </RelativeLayout>
 
         <include layout="@layout/divider" />
 
-        <TextView
-            android:id="@+id/tv_view_artist"
-            style="@style/dialog_option_text"
+        <RelativeLayout
+            android:id="@+id/rl_search_artist_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/queued_background"
-            android:text="@string/view_songs_by_this_artist" />
+            android:paddingLeft="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_search_artist_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/dialog_search" />
+
+            <TextView
+                style="@style/dialog_option_text"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_search_artist_icon"
+                android:background="@drawable/queued_background"
+                android:text="@string/view_songs_by_this_artist" />
+        </RelativeLayout>
     </LinearLayout>
 
 </ScrollView>

@@ -520,7 +520,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 				dequeueSong(song);
 			}
 		});
-		finder.onClick(id.tv_view_album, new Runnable() {
+		finder.onClick(id.rl_search_album_area, new Runnable() {
 
 			public void run() {
 				dialog.dismiss();
@@ -528,7 +528,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 						getApplicationContext(), song));
 			}
 		});
-		finder.onClick(id.tv_view_artist, new Runnable() {
+		finder.onClick(id.rl_search_artist_area, new Runnable() {
 
 			public void run() {
 				dialog.dismiss();
