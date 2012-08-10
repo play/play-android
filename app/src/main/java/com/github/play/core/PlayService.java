@@ -17,6 +17,7 @@ package com.github.play.core;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.FROYO;
+import static com.github.kevinsawicki.http.HttpRequest.CHARSET_UTF8;
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -28,7 +29,9 @@ import com.google.gson.JsonParseException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 
 /**
  * Service class to make requests to the Play API
@@ -46,6 +49,15 @@ public class PlayService {
 		// Disable http.keepAlive on Froyo and below
 		if (SDK_INT <= FROYO)
 			HttpRequest.keepAlive(false);
+	}
+
+	private static String encode(final String raw) {
+		try {
+			String encoded = URLEncoder.encode(raw, CHARSET_UTF8);
+			return encoded.replace("+", "%20");
+		} catch (UnsupportedEncodingException e) {
+			return raw;
+		}
 	}
 
 	private final Gson gson = new GsonBuilder().setFieldNamingPolicy(
@@ -132,8 +144,7 @@ public class PlayService {
 	 * @return request
 	 */
 	protected HttpRequest get(final String url) {
-		String encoded = HttpRequest.encode(baseUrl + url);
-		return HttpRequest.get(encoded).authorization(token);
+		return HttpRequest.get(baseUrl + url).authorization(token);
 	}
 
 	/**
@@ -312,9 +323,9 @@ public class PlayService {
 	 * @return non-null but possibly empty array of queued songs
 	 * @throws IOException
 	 */
-	public Song[] search(String query) throws IOException {
+	public Song[] search(final String query) throws IOException {
 		try {
-			return getSongs(ok(get("search?q=" + query)));
+			return getSongs(ok(get("search?q=" + encode(query))));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -331,7 +342,8 @@ public class PlayService {
 	public Song[] getSongs(final String artist, final String album)
 			throws IOException {
 		try {
-			return getSongs(ok(get("artist/" + artist + "/album/" + album)));
+			return getSongs(ok(get("artist/" + encode(artist) + "/album/"
+					+ encode(album))));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
@@ -346,7 +358,7 @@ public class PlayService {
 	 */
 	public Song[] getSongs(final String artist) throws IOException {
 		try {
-			return getSongs(ok(get("artist/" + artist)));
+			return getSongs(ok(get("artist/" + encode(artist))));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
