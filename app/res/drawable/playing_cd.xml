@@ -5,7 +5,7 @@
         android:bottom="1px"
         android:drawable="@android:color/transparent"
         android:left="18px"
-        android:right="30px"
+        android:right="22px"
         android:top="1px"/>
     <item>
         <bitmap android:src="@drawable/cd_playing" />
