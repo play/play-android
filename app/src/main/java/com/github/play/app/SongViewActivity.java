@@ -210,13 +210,7 @@ public abstract class SongViewActivity extends SherlockActivity implements
 		final Song[] albums = adapter.getSelectedAlbums();
 		final Song[] songs = adapter.getSelectedSongs();
 
-		String message;
-		if (songs.length > 1 || albums.length != 0)
-			message = MessageFormat.format(
-					getString(string.adding_songs_to_queue), songs.length);
-		else
-			message = getString(string.adding_song_to_queue);
-		Toaster.showShort(SongViewActivity.this, message);
+		Toaster.showShort(SongViewActivity.this, string.adding_to_queue);
 
 		new QueueSongsTask(service) {
 
