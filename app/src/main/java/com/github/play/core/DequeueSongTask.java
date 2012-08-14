@@ -40,13 +40,14 @@ public class DequeueSongTask extends AsyncTask<Song, Void, IOException> {
 	}
 
 	@Override
-	protected IOException doInBackground(Song... params) {
-		try {
-			service.get().dequeue(params[0]);
-			return null;
-		} catch (IOException e) {
-			return e;
-		}
+	protected IOException doInBackground(Song... songs) {
+		for (Song song : songs)
+			try {
+				service.get().dequeue(song);
+			} catch (IOException e) {
+				return e;
+			}
+		return null;
 	}
 
 	@Override
