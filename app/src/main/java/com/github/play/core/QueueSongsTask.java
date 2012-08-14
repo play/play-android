@@ -43,7 +43,7 @@ public class QueueSongsTask extends AsyncTask<Song, Void, IOException> {
 	protected IOException doInBackground(Song... params) {
 		for (Song song : params)
 			try {
-				service.get().queue(song.id);
+				service.get().queue(song);
 			} catch (IOException e) {
 				return e;
 			}

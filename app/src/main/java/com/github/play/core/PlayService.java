@@ -276,12 +276,12 @@ public class PlayService {
 	/**
 	 * Add the given song to the queue
 	 *
-	 * @param songId
+	 * @param song
 	 * @throws IOException
 	 */
-	public void queue(String songId) throws IOException {
+	public void queue(Song song) throws IOException {
 		try {
-			ok(post("queue?id=" + songId));
+			ok(post("queue?id=" + song.id));
 		} catch (HttpRequestException e) {
 			throw e.getCause();
 		}
