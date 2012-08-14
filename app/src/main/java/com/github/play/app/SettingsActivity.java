@@ -35,6 +35,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.kevinsawicki.wishlist.EditTextUtils;
 import com.github.kevinsawicki.wishlist.EditTextUtils.BooleanRunnable;
 import com.github.kevinsawicki.wishlist.Toaster;
+import com.github.kevinsawicki.wishlist.ViewFinder;
 import com.github.play.R.layout;
 import com.github.play.R.menu;
 import com.github.play.R.string;
@@ -67,17 +68,18 @@ public class SettingsActivity extends SherlockActivity {
 
 		settings = new PlayPreferences(this);
 
-		tokenText = (EditText) findViewById(id.et_token);
+		ViewFinder finder = new ViewFinder(this);
+		tokenText = finder.find(id.et_token);
 		String token = settings.getToken();
 		if (token != null)
 			tokenText.setText(token);
 
-		urlText = (EditText) findViewById(id.et_url);
+		urlText = finder.find(id.et_url);
 		String url = settings.getUrl();
 		if (url != null)
 			urlText.setText(url);
 
-		TextView tokenLink = (TextView) findViewById(id.tv_token_link);
+		TextView tokenLink = finder.find(id.tv_token_link);
 		tokenLink
 				.setPaintFlags(UNDERLINE_TEXT_FLAG | tokenLink.getPaintFlags());
 		tokenLink.setOnClickListener(new OnClickListener() {

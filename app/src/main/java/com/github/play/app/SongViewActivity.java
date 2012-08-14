@@ -32,6 +32,7 @@ import com.actionbarsherlock.view.ActionMode.Callback;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.kevinsawicki.wishlist.Toaster;
+import com.github.kevinsawicki.wishlist.ViewFinder;
 import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.id;
 import com.github.play.R.layout;
@@ -119,9 +120,10 @@ public abstract class SongViewActivity extends SherlockActivity implements
 
 		setContentView(layout.search);
 
-		loadingView = findViewById(id.ll_loading);
+		ViewFinder finder = new ViewFinder(this);
+		loadingView = finder.find(id.ll_loading);
 
-		listView = (ListView) findViewById(android.R.id.list);
+		listView = finder.find(android.R.id.list);
 		listView.setOnItemClickListener(this);
 		adapter = new SearchListAdapter(this, service);
 		listView.setAdapter(adapter);

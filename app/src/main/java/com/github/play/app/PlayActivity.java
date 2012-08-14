@@ -169,14 +169,16 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 		setContentView(layout.main);
 
-		loadingView = findViewById(id.ll_loading);
+		ViewFinder finder = new ViewFinder(this);
+
+		loadingView = finder.find(id.ll_loading);
 
 		playListAdapter = new PlayListAdapter(this, layout.queued, playService);
 
-		listView = (ListView) findViewById(android.R.id.list);
+		listView = finder.find(android.R.id.list);
 		listView.setOnItemClickListener(this);
 
-		nowPlayingView = findViewById(id.ll_now_playing);
+		nowPlayingView = finder.find(id.ll_now_playing);
 		ViewUtils.setGone(nowPlayingView, true);
 		nowPlayingView.setOnClickListener(new OnClickListener() {
 
