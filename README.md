@@ -8,11 +8,17 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 ## Dependencies
 
-* [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
-* [http-request](https://github.com/kevinsawicki/http-request)
-* [android-pusher](https://github.com/kevinsawicki/android_pusher)
-* [wishlist](https://github.com/kevinsawicki/wishlist)
-* [gson](http://code.google.com/p/google-gson/)
+  * [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
+  * [http-request](https://github.com/kevinsawicki/http-request)
+  * [android-pusher](https://github.com/kevinsawicki/android_pusher)
+  * [wishlist](https://github.com/kevinsawicki/wishlist)
+  * [gson](http://code.google.com/p/google-gson/)
+
+## Building
+
+  * Install the `4.1_r1` Android SDK via the [maven-android-sdk-deployer](https://github.com/mosabua/maven-android-sdk-deployer#how-to-use)
+  * `cd` to the `app` folder
+  * Run `mvn clean package` to build the app
 
 ## License
 
