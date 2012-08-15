@@ -10,7 +10,8 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 * [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
 * [http-request](https://github.com/kevinsawicki/http-request)
-* [android_pusher](https://github.com/kevinsawicki/android_pusher)
+* [android-pusher](https://github.com/kevinsawicki/android_pusher)
+* [wishlist](https://github.com/kevinsawicki/wishlist)
 * [gson](http://code.google.com/p/google-gson/)
 
 ## License
