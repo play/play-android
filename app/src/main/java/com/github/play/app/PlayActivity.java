@@ -540,7 +540,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		});
 		new SongArtWrapper(this, playService).update(
 				finder.imageView(id.iv_art), drawable.queued_cd, song);
-		dialog.setView(dialogView);
+		dialog.setView(dialogView, 0, 0, 0, 0);
 		dialog.show();
 	}
 
