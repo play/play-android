@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -145,7 +146,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (streaming && hasSettings())
+		if (streaming && hasSettings() && hasStreamingInfo())
 			StatusService.start(getApplicationContext(),
 					streamingInfo.pusherKey, true);
 		else
@@ -160,7 +161,8 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putSerializable(STREAMING_INFO, streamingInfo);
+		if (hasStreamingInfo())
+			outState.putSerializable(STREAMING_INFO, streamingInfo);
 	}
 
 	@Override
@@ -225,7 +227,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	}
 
 	private void startStream() {
-		if (!hasSettings() || streamingInfo == null)
+		if (!hasSettings() || !hasStreamingInfo())
 			return;
 
 		Log.d(TAG, "Starting stream");
@@ -239,7 +241,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	}
 
 	private void load() {
-		if (streamingInfo == null && hasSettings())
+		if (!hasStreamingInfo() && hasSettings())
 			new FetchSettingsTask(playService) {
 
 				protected void onPostExecute(PlaySettings result) {
@@ -262,7 +264,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 	private void setMenuItemsEnabled(final boolean enabled) {
 		if (playItem != null)
-			playItem.setEnabled(enabled && streamingInfo != null);
+			playItem.setEnabled(enabled && hasStreamingInfo());
 		if (refreshItem != null)
 			refreshItem.setEnabled(enabled);
 		if (searchItem != null)
@@ -318,7 +320,15 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	}
 
 	private boolean hasSettings() {
-		return settings.getUrl() != null && settings.getToken() != null;
+		final PlayPreferences settings = this.settings;
+		return settings != null && settings.getUrl() != null
+				&& settings.getToken() != null;
+	}
+
+	private boolean hasStreamingInfo() {
+		final StreamingInfo info = streamingInfo;
+		return info != null && !TextUtils.isEmpty(info.pusherKey)
+				&& !TextUtils.isEmpty(info.streamUrl);
 	}
 
 	private boolean isReady() {
