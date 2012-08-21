@@ -13,7 +13,7 @@
     <string name="starring_failed">Starring \'\'{0}\'\' failed</string>
     <string name="unstarring_failed">Unstarring \'\'{0}\'\' failed</string>
     <string name="refresh">Refresh</string>
-    <string name="save_settings">Save Settings</string>
+    <string name="save">Save</string>
     <string name="removing_song">Removing \'\'{0}\'\'</string>
     <string name="removing_song_failed">Removing \'\'{0}\'\' failed</string>
     <string name="multiple_songs_queued">{0} songs added to the queue</string>
