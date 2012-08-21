@@ -19,6 +19,7 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static com.github.play.app.PlayActivity.ACTION_QUEUE;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -120,8 +121,15 @@ public abstract class SongViewActivity extends SherlockActivity implements
 
 		setContentView(layout.search);
 
-		ViewFinder finder = new ViewFinder(this);
+		final ViewFinder finder = new ViewFinder(this);
 		loadingView = finder.find(id.ll_loading);
+		loadingView.post(new Runnable() {
+
+			public void run() {
+				((AnimationDrawable) finder.find(id.v_loading).getBackground())
+						.start();
+			}
+		});
 
 		listView = finder.find(android.R.id.list);
 		listView.setOnItemClickListener(this);

@@ -21,6 +21,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -168,9 +169,16 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 		setContentView(layout.main);
 
-		ViewFinder finder = new ViewFinder(this);
+		final ViewFinder finder = new ViewFinder(this);
 
 		loadingView = finder.find(id.ll_loading);
+		loadingView.post(new Runnable() {
+
+			public void run() {
+				((AnimationDrawable) finder.find(id.v_loading).getBackground())
+						.start();
+			}
+		});
 
 		playListAdapter = new PlayListAdapter(this, layout.queued, playService);
 
