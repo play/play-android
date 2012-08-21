@@ -4,7 +4,7 @@
     <item
         android:id="@+id/m_add"
         android:icon="@drawable/action_add"
-        android:showAsAction="ifRoom"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/add_to_queue"/>
 
 </menu>
