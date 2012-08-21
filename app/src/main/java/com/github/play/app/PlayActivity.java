@@ -146,10 +146,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (streaming && hasSettings() && hasStreamingInfo())
-			StatusService.start(getApplicationContext(),
-					streamingInfo.pusherKey, true);
-		else
+		if (!streaming)
 			StatusService.stop(getApplicationContext());
 
 		unregisterReceiver(updateReceiver);
@@ -236,6 +233,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 		Context context = getApplicationContext();
 		MusicStreamService.start(context, streamingInfo.streamUrl);
+		StatusService.start(context, streamingInfo.pusherKey, true, nowPlaying);
 
 		refreshSongs();
 	}
@@ -257,7 +255,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 			setMenuItemsEnabled(true);
 			Context context = getApplicationContext();
 			MusicStreamService.start(context);
-			StatusService.start(context, streamingInfo.pusherKey, false);
+			StatusService.start(context, streamingInfo.pusherKey, nowPlaying);
 			refreshSongs();
 		}
 	}
@@ -281,7 +279,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 		setStreaming(false);
 
-		MusicStreamService.stop(getApplicationContext());
+		Context context = getApplicationContext();
+		MusicStreamService.stop(context);
+		StatusService
+				.start(context, streamingInfo.pusherKey, false, nowPlaying);
 	}
 
 	public void onUpdate(final Song playing, final Song[] queued) {

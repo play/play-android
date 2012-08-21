@@ -69,13 +69,31 @@ public class StatusService extends Service {
 	 *
 	 * @param context
 	 * @param applicationKey
-	 * @param sendNotification
+	 * @param nowPlaying
 	 */
 	public static void start(final Context context,
-			final String applicationKey, final boolean sendNotification) {
+			final String applicationKey, final Song nowPlaying) {
+		Intent intent = new Intent(ACTION);
+		intent.putExtra(EXTRA_KEY, applicationKey);
+		intent.putExtra(EXTRA_SONG, nowPlaying);
+		context.startService(intent);
+	}
+
+	/**
+	 * Start service with application key
+	 *
+	 * @param context
+	 * @param applicationKey
+	 * @param sendNotification
+	 * @param nowPlaying
+	 */
+	public static void start(final Context context,
+			final String applicationKey, final boolean sendNotification,
+			final Song nowPlaying) {
 		Intent intent = new Intent(ACTION);
 		intent.putExtra(EXTRA_KEY, applicationKey);
 		intent.putExtra(EXTRA_NOTIFY, sendNotification);
+		intent.putExtra(EXTRA_SONG, nowPlaying);
 		context.startService(intent);
 	}
 
@@ -96,6 +114,8 @@ public class StatusService extends Service {
 	private static final String EXTRA_KEY = "applicationKey";
 
 	private static final String EXTRA_NOTIFY = "notify";
+
+	private static final String EXTRA_SONG = "song";
 
 	private static final String TAG = "StatusService";
 
@@ -191,7 +211,15 @@ public class StatusService extends Service {
 				destroyPusher(pusher);
 				createPusher(intentKey);
 			}
-			sendNotification = intent.getBooleanExtra(EXTRA_NOTIFY, false);
+
+			boolean updateNotification = intent.hasExtra(EXTRA_NOTIFY);
+			if (updateNotification)
+				sendNotification = intent.getBooleanExtra(EXTRA_NOTIFY, false);
+			Song song = (Song) intent.getSerializableExtra(EXTRA_SONG);
+			if (updateNotification && !sendNotification) {
+				clearNotification();
+			} else if (song != null)
+				updateNotification(song);
 		}
 
 		return super.onStartCommand(intent, flags, startId);
@@ -265,6 +293,17 @@ public class StatusService extends Service {
 		return notification;
 	}
 
+	private NotificationManager getNotificationManager() {
+		return (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+	}
+
+	private void clearNotification() {
+		if (notificationSent) {
+			stopForeground(true);
+			notificationSent = false;
+		}
+	}
+
 	private void updateNotification(Song song) {
 		if (!sendNotification)
 			return;
@@ -280,8 +319,7 @@ public class StatusService extends Service {
 			notification = createNotification(context, song, intent);
 
 		if (notificationSent)
-			((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
-					.notify(1, notification);
+			getNotificationManager().notify(1, notification);
 		else {
 			notificationSent = true;
 			startForeground(1, notification);
