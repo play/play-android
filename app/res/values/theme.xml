@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Play" parent="@style/Theme.Sherlock">
         <item name="actionBarStyle">@style/Theme.Play.ActionBar</item>
         <item name="android:actionBarStyle">@style/Theme.Play.ActionBar</item>
         <item name="android:windowBackground">@color/background_light</item>
+        <item name="actionModeStyle">@style/Theme.Play.ActionBar</item>
+        <item name="android:actionModeStyle">@style/Theme.Play.ActionBar</item>
     </style>
 
     <style name="Theme.Play.ActionBar" parent="Widget.Sherlock.ActionBar.Solid">
