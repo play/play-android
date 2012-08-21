@@ -16,7 +16,6 @@
     <string name="save_settings">Save Settings</string>
     <string name="removing_song">Removing \'\'{0}\'\'</string>
     <string name="removing_song_failed">Removing \'\'{0}\'\' failed</string>
-    <string name="queueing_subject_failed">Queueing \'\'{0}\'\' failed</string>
     <string name="multiple_songs_queued">{0} songs added to the queue</string>
     <string name="single_song_queued">1 song added to the queue</string>
     <string name="no_songs_found">No songs found</string>
@@ -30,7 +29,6 @@
     <string name="search_failed">Searching songs failed</string>
     <string name="multiple_selected">{0} selected</string>
     <string name="single_selected">1 selected</string>
-    <string name="now_playing">Now Playing</string>
     <string name="hint_token">abc123</string>
     <string name="hint_url">play.example.com</string>
     <string name="queueing_stars_failed">Failed to add starred songs to the queue</string>
