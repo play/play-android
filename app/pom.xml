@@ -93,13 +93,6 @@
       <type>apklib</type>
     </dependency>
 
-    <dependency>
-      <groupId>com.actionbarsherlock</groupId>
-      <artifactId>library</artifactId>
-      <version>4.1.0</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
 
   <build>
