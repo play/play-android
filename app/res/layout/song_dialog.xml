@@ -22,6 +22,7 @@
             <ImageView
                 android:id="@+id/iv_star_icon"
                 android:layout_width="36dp"
+                android:contentDescription="@string/starred_status"
                 android:layout_height="36dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true" />
@@ -49,6 +50,7 @@
                 android:layout_height="36dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:contentDescription="@string/remove_from_queue"
                 android:src="@drawable/action_remove" />
 
             <TextView
@@ -74,6 +76,7 @@
                 android:layout_height="36dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:contentDescription="@string/view_songs_on_this_album"
                 android:src="@drawable/dialog_search_album" />
 
             <TextView
@@ -98,6 +101,7 @@
                 android:layout_height="36dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:contentDescription="@string/view_songs_by_this_artist"
                 android:src="@drawable/dialog_search_artist" />
 
             <TextView
