@@ -30,7 +30,6 @@
     <string name="search_failed">Searching songs failed</string>
     <string name="multiple_selected">{0} selected</string>
     <string name="single_selected">1 selected</string>
-    <string name="symbol_check">\u2714</string>
     <string name="now_playing">Now Playing</string>
     <string name="hint_token">abc123</string>
     <string name="hint_url">play.example.com</string>
