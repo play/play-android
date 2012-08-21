@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_token"
             android:imeOptions="actionDone"
-            android:inputType="text|textNoSuggestions" />
+            android:inputType="text|textNoSuggestions|textVisiblePassword" />
     </LinearLayout>
 
 </ScrollView>
