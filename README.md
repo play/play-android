@@ -28,11 +28,15 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 ### View what's playing and what's up next
 
-![](http://img.skitch.com/20120429-rq3sgm8fbbbxwisep7rbsedj6h.png)
+![](http://f.cl.ly/items/110W2r1B0k2a040w2e1j/Dashboard.png)
 
 ### Search for songs and add them to the queue
 
-![](http://img.skitch.com/20120429-p11jeqaiym321m46cynjqt622y.png)
+![](http://f.cl.ly/items/122q0O162Y0a3Y3m1I3h/song_search.png)
+
+### Song Actions. Star, Remove, View Album, View Artist
+
+![](http://f.cl.ly/items/0w2W2n3K3I2P2F1q3e1m/Song_actions.png)
 
 ### Notification bar showing what's currently playing
 
