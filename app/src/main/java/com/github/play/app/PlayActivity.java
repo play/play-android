@@ -239,7 +239,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 	}
 
 	private void load() {
-		if (!hasStreamingInfo() && hasSettings())
+		if (!hasSettings())
+			return;
+
+		if (!hasStreamingInfo())
 			new FetchSettingsTask(playService) {
 
 				protected void onPostExecute(PlaySettings result) {
@@ -281,8 +284,9 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 		Context context = getApplicationContext();
 		MusicStreamService.stop(context);
-		StatusService
-				.start(context, streamingInfo.pusherKey, false, nowPlaying);
+		if (hasStreamingInfo())
+			StatusService.start(context, streamingInfo.pusherKey, false,
+					nowPlaying);
 	}
 
 	public void onUpdate(final Song playing, final Song[] queued) {
