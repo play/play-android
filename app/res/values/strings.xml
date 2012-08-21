@@ -21,10 +21,10 @@
     <string name="single_song_queued">1 song added to the queue</string>
     <string name="no_songs_found">No songs found</string>
     <string name="search">Search</string>
-    <string name="search_music">Search Music</string>
-    <string name="clear_history">Clear History</string>
+    <string name="search_music">Search music</string>
+    <string name="clear_history">Clear history</string>
     <string name="search_again">Search again</string>
-    <string name="add_to_queue">Add To Queue</string>
+    <string name="add_to_queue">Add to queue</string>
     <string name="queueing_failed">Adding to queue failed</string>
     <string name="adding_to_queue">Adding to the queue</string>
     <string name="search_failed">Searching songs failed</string>
@@ -34,7 +34,7 @@
     <string name="hint_token">abc123</string>
     <string name="hint_url">play.example.com</string>
     <string name="queueing_stars_failed">Failed to add starred songs to the queue</string>
-    <string name="play_stars">Play Favorites</string>
+    <string name="play_stars">Play favorites</string>
     <string name="enter_play_server_url">Enter a valid Play Server URL</string>
     <string name="get_token">Get Token</string>
     <string name="settings">Settings</string>
