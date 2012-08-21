@@ -23,7 +23,7 @@
     <string name="search">Search</string>
     <string name="search_music">Search Music</string>
     <string name="clear_history">Clear History</string>
-    <string name="search_again">Search Again</string>
+    <string name="search_again">Search again</string>
     <string name="add_to_queue">Add To Queue</string>
     <string name="queueing_failed">Adding to queue failed</string>
     <string name="adding_to_queue">Adding to the queue</string>
