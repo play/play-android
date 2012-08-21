@@ -40,4 +40,4 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 ### Notification bar showing what's currently playing
 
-![](http://img.skitch.com/20120429-gaxfmpua8bmjn69qhbabhsy9nb.png)
+![](http://f.cl.ly/items/1s0E0s1p2R1K1I0t2I1u/unnamed.jpeg)
