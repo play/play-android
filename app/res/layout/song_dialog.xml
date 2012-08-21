@@ -74,7 +74,7 @@
                 android:layout_height="36dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/dialog_search" />
+                android:src="@drawable/dialog_search_album" />
 
             <TextView
                 style="@style/dialog_option_text"
@@ -98,7 +98,7 @@
                 android:layout_height="36dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/dialog_search" />
+                android:src="@drawable/dialog_search_artist" />
 
             <TextView
                 style="@style/dialog_option_text"
