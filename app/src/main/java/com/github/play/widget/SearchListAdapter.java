@@ -20,7 +20,6 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 
 import com.github.kevinsawicki.wishlist.MultiTypeAdapter;
-import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.play.R.drawable;
 import com.github.play.R.id;
 import com.github.play.R.layout;
@@ -180,10 +179,10 @@ public class SearchListAdapter extends MultiTypeAdapter {
 			return new int[] { id.tv_label, id.tv_count };
 		case TYPE_ALBUM:
 			return new int[] { id.tv_artist, id.tv_album, id.iv_art,
-					id.tv_check };
+					id.iv_check };
 		case TYPE_SONG:
 			return new int[] { id.tv_artist, id.tv_song, id.tv_album,
-					id.iv_art, id.tv_check };
+					id.iv_art, id.iv_check };
 		default:
 			return null;
 		}
@@ -211,8 +210,12 @@ public class SearchListAdapter extends MultiTypeAdapter {
 			return;
 		case TYPE_ALBUM:
 			Song album = (Song) item;
-			ViewUtils.setInvisible(view(view, id.tv_check),
-					!selected.get(position));
+			if (selected.get(position))
+				imageView(id.iv_check).setImageResource(
+						drawable.selection_checked);
+			else
+				imageView(id.iv_check).setImageResource(
+						drawable.selection_unchecked);
 			setText(id.tv_artist, album.artist);
 			setText(id.tv_album, album.album);
 
@@ -225,8 +228,12 @@ public class SearchListAdapter extends MultiTypeAdapter {
 			return;
 		case TYPE_SONG:
 			Song song = (Song) item;
-			ViewUtils.setInvisible(view(view, id.tv_check),
-					!selected.get(position));
+			if (selected.get(position))
+				imageView(id.iv_check).setImageResource(
+						drawable.selection_checked);
+			else
+				imageView(id.iv_check).setImageResource(
+						drawable.selection_unchecked);
 			setText(id.tv_artist, song.artist);
 			setText(id.tv_song, song.name);
 			setText(id.tv_album, song.album);

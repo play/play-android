@@ -6,25 +6,14 @@
     android:baselineAligned="false"
     android:padding="10dp" >
 
-    <FrameLayout
-        android:id="@+id/fl_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/iv_check"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/check_border" >
-
-        <TextView
-            android:id="@+id/tv_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:text="@string/symbol_check"
-            android:textColor="@color/text_bright"
-            android:textSize="24dp"
-            android:visibility="invisible" />
-    </FrameLayout>
+        android:layout_marginRight="10dp"
+        android:src="@drawable/selection_unchecked" />
 
     <ImageView
         android:id="@+id/iv_art"
@@ -32,7 +21,7 @@
         android:layout_height="51dp"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_toRightOf="@id/fl_check"
+        android:layout_toRightOf="@id/iv_check"
         android:contentDescription="@string/album_art" />
 
     <LinearLayout
