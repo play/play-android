@@ -184,7 +184,6 @@ public class StatusService extends Service {
 	@Override
 	public int onStartCommand(final Intent intent, final int flags,
 			final int startId) {
-
 		if (intent != null) {
 			String intentKey = intent.getStringExtra(EXTRA_KEY);
 			if (!TextUtils.isEmpty(intentKey)
