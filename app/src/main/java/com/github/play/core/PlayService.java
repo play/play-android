@@ -38,6 +38,8 @@ import java.net.URLEncoder;
  */
 public class PlayService {
 
+	private static final String USER_AGENT = "PlayAndroid/2.0";
+
 	private static final Song[] EMPTY_SONGS = new Song[0];
 
 	private static class SongWrapper {
@@ -144,7 +146,8 @@ public class PlayService {
 	 * @return request
 	 */
 	protected HttpRequest get(final String url) {
-		return HttpRequest.get(baseUrl + url).authorization(token);
+		return HttpRequest.get(baseUrl + url).authorization(token)
+				.userAgent(USER_AGENT);
 	}
 
 	/**
@@ -155,7 +158,8 @@ public class PlayService {
 	 */
 	protected HttpRequest post(final String url) {
 		String encoded = HttpRequest.encode(baseUrl + url);
-		return HttpRequest.post(encoded).authorization(token);
+		return HttpRequest.post(encoded).authorization(token)
+				.userAgent(USER_AGENT);
 	}
 
 	/**
@@ -166,7 +170,8 @@ public class PlayService {
 	 */
 	protected HttpRequest delete(final String url) {
 		String encoded = HttpRequest.encode(baseUrl + url);
-		return HttpRequest.delete(encoded).authorization(token);
+		return HttpRequest.delete(encoded).authorization(token)
+				.userAgent(USER_AGENT);
 	}
 
 	/**
