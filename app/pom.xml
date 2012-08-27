@@ -22,7 +22,7 @@
   <url>http://github.com/play/play-android</url>
 
   <scm>
-    <url>https://github.com/play/wishlist</url>
+    <url>https://github.com/play/play-android</url>
     <connection>scm:git:git://github.com/play/play-android.git</connection>
     <developerConnection>scm:git:git@github.com:play/play-android.git</developerConnection>
   </scm>
