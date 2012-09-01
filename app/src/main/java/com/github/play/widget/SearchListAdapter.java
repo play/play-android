@@ -192,7 +192,7 @@ public class SearchListAdapter extends MultiTypeAdapter {
 	 * @param item
 	 */
 	public void update(final int position, final View view, final Object item) {
-		childViews = getChildren(view);
+		setCurrentView(view);
 		update(position, item, getItemViewType(position));
 	}
 
