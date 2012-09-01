@@ -62,17 +62,17 @@ public class PlayListAdapter extends SingleTypeAdapter<Song> {
 	 * @param song
 	 */
 	public void updatePlaying(final View view, final Song song) {
+		setCurrentView(view);
 		if (song != null) {
-			setText(view, 0, song.artist);
-			setText(view, 1, song.name);
-			setText(view, 2, song.album);
-			albumArt.update(imageView(view, 3), drawable.playing_cd, song);
+			setText(0, song.artist);
+			setText(1, song.name);
+			setText(2, song.album);
 		} else {
-			setText(view, 0, null);
-			setText(view, 1, null);
-			setText(view, 2, null);
-			albumArt.update(imageView(view, 3), drawable.playing_cd, null);
+			setText(0, null);
+			setText(1, null);
+			setText(2, null);
 		}
+		albumArt.update(imageView(3), drawable.playing_cd, song);
 	}
 
 	@Override
