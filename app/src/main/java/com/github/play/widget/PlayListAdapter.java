@@ -63,26 +63,24 @@ public class PlayListAdapter extends SingleTypeAdapter<Song> {
 	 */
 	public void updatePlaying(final View view, final Song song) {
 		if (song != null) {
-			setText(view, id.tv_artist, song.artist);
-			setText(view, id.tv_song, song.name);
-			setText(view, id.tv_album, song.album);
-			albumArt.update(imageView(view, id.iv_art), drawable.playing_cd,
-					song);
+			setText(view, 0, song.artist);
+			setText(view, 1, song.name);
+			setText(view, 2, song.album);
+			albumArt.update(imageView(view, 3), drawable.playing_cd, song);
 		} else {
-			setText(view, id.tv_artist, null);
-			setText(view, id.tv_song, null);
-			setText(view, id.tv_album, null);
-			albumArt.update(imageView(view, id.iv_art), drawable.playing_cd,
-					null);
+			setText(view, 0, null);
+			setText(view, 1, null);
+			setText(view, 2, null);
+			albumArt.update(imageView(view, 3), drawable.playing_cd, null);
 		}
 	}
 
 	@Override
 	protected void update(int position, Song song) {
-		setText(id.tv_artist, song.artist);
-		setText(id.tv_song, song.name);
-		setText(id.tv_album, song.album);
+		setText(0, song.artist);
+		setText(1, song.name);
+		setText(2, song.album);
 
-		albumArt.update(imageView(id.iv_art), drawable.queued_cd, song);
+		albumArt.update(imageView(3), drawable.queued_cd, song);
 	}
 }

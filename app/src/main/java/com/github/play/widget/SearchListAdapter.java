@@ -27,7 +27,6 @@ import com.github.play.core.PlayService;
 import com.github.play.core.Song;
 import com.github.play.core.SongResult;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,9 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * List adapter for searched songs
  */
 public class SearchListAdapter extends MultiTypeAdapter {
-
-	private static final NumberFormat FORMAT = NumberFormat
-			.getIntegerInstance();
 
 	private static final int TYPE_ALBUM_HEADER = 0;
 
@@ -196,7 +192,7 @@ public class SearchListAdapter extends MultiTypeAdapter {
 	 * @param item
 	 */
 	public void update(final int position, final View view, final Object item) {
-		this.view = view;
+		childViews = getChildren(view);
 		update(position, item, getItemViewType(position));
 	}
 
@@ -204,41 +200,36 @@ public class SearchListAdapter extends MultiTypeAdapter {
 	protected void update(final int position, final Object item, final int type) {
 		switch (type) {
 		case TYPE_ALBUM_HEADER:
-			setText(id.tv_label, "Albums");
-			setText(id.tv_count,
-					'(' + FORMAT.format(result.albums.length) + ')');
+			setText(0, "Albums");
+			setText(1, '(' + FORMAT_INT.format(result.albums.length) + ')');
 			return;
 		case TYPE_ALBUM:
 			Song album = (Song) item;
 			if (selected.get(position))
-				imageView(id.iv_check).setImageResource(
-						drawable.selection_checked);
+				imageView(3).setImageResource(drawable.selection_checked);
 			else
-				imageView(id.iv_check).setImageResource(
-						drawable.selection_unchecked);
-			setText(id.tv_artist, album.artist);
-			setText(id.tv_album, album.album);
+				imageView(3).setImageResource(drawable.selection_unchecked);
+			setText(0, album.artist);
+			setText(1, album.album);
 
-			albumArt.update(imageView(id.iv_art), drawable.queued_cd, album,
+			albumArt.update(imageView(2), drawable.queued_cd, album,
 					album.getAlbumId());
 			return;
 		case TYPE_SONG_HEADER:
-			setText(id.tv_label, "Songs");
-			setText(id.tv_count, '(' + FORMAT.format(result.songs.length) + ')');
+			setText(0, "Songs");
+			setText(1, '(' + FORMAT_INT.format(result.songs.length) + ')');
 			return;
 		case TYPE_SONG:
 			Song song = (Song) item;
 			if (selected.get(position))
-				imageView(id.iv_check).setImageResource(
-						drawable.selection_checked);
+				imageView(4).setImageResource(drawable.selection_checked);
 			else
-				imageView(id.iv_check).setImageResource(
-						drawable.selection_unchecked);
-			setText(id.tv_artist, song.artist);
-			setText(id.tv_song, song.name);
-			setText(id.tv_album, song.album);
+				imageView(4).setImageResource(drawable.selection_unchecked);
+			setText(0, song.artist);
+			setText(1, song.name);
+			setText(2, song.album);
 
-			albumArt.update(imageView(id.iv_art), drawable.queued_cd, song);
+			albumArt.update(imageView(3), drawable.queued_cd, song);
 			return;
 		}
 	}
