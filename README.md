@@ -16,7 +16,6 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 ## Building
 
-  * Install the `4.1_r1` Android SDK via the [maven-android-sdk-deployer](https://github.com/mosabua/maven-android-sdk-deployer#how-to-use)
   * `cd` to the `app` folder
   * Run `mvn clean package` to build the app
 
