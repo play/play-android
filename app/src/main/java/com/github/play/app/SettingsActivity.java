@@ -28,7 +28,6 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.actionbarsherlock.R.id;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -36,6 +35,7 @@ import com.github.kevinsawicki.wishlist.EditTextUtils;
 import com.github.kevinsawicki.wishlist.EditTextUtils.BooleanRunnable;
 import com.github.kevinsawicki.wishlist.Toaster;
 import com.github.kevinsawicki.wishlist.ViewFinder;
+import com.github.play.R.id;
 import com.github.play.R.layout;
 import com.github.play.R.menu;
 import com.github.play.R.string;
