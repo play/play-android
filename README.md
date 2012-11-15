@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/play/play-android.png)](https://travis-ci.org/play/play-android)
 
-
 Streams music to your Android device from a [play](https://github.com/play/play) server.
 
 <a href="https://play.google.com/store/apps/details?id=com.github.play">
