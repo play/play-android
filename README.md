@@ -18,8 +18,11 @@ Streams music to your Android device from a [play](https://github.com/play/play)
 
 ## Building
 
-  * `cd` to the `app` folder
-  * Run `mvn clean package` to build the app
+From the root of the repository:
+
+```
+$ mvn clean package
+```
 
 ## License
 
