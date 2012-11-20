@@ -15,6 +15,7 @@
  */
 package com.github.play.widget;
 
+import static com.github.kevinsawicki.wishlist.ViewUpdater.FORMAT_INT;
 import android.app.Activity;
 import android.util.SparseBooleanArray;
 import android.view.View;
