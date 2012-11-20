@@ -8,7 +8,53 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <include layout="@layout/queued" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/queued_background"
+            android:padding="10dp" >
+        
+            <ImageView
+                android:id="@+id/iv_art"
+                android:layout_width="55dp"
+                android:layout_height="51dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/album_art" />
+        
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_art"
+                android:orientation="vertical"
+                android:paddingLeft="10dp" >
+        
+                <TextView
+                    android:id="@+id/tv_artist"
+                    style="@style/queue_artist" />
+        
+                <TextView
+                    android:id="@+id/tv_song"
+                    style="@style/queue_song" />
+        
+                <TextView
+                    android:id="@+id/tv_album"
+                    style="@style/queue_album" />
+                
+                <TextView
+                    android:id="@+id/tv_duration"
+                    style="@style/queue_album" />
+            </LinearLayout>
+        
+        </RelativeLayout>
+        
+        <TextView
+            android:id="@+id/tv_soon"
+            style="@style/queue_album"
+            android:background="@drawable/queued_background"
+            android:paddingBottom="10dp" 
+            android:paddingLeft="10dp" />
 
         <include layout="@layout/divider" />
 

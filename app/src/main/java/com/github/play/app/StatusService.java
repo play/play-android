@@ -136,7 +136,8 @@ public class StatusService extends Service {
 		if (name == null)
 			name = "";
 
-		return new Song(id, name, artist, album, object.optBoolean("starred"));
+		return new Song(id, name, artist, album, object.optBoolean("starred"),
+				object.optDouble("duration"));
 	}
 
 	private final Executor backgroundThread = Executors.newFixedThreadPool(1);

@@ -190,7 +190,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		nowPlayingView.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				showSongDialog(nowPlaying);
+				showSongDialog(nowPlaying, 0);
 			}
 		});
 		playListAdapter.initialize(nowPlayingView);
@@ -509,7 +509,7 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		}.execute();
 	}
 
-	private void showSongDialog(final Song song) {
+	private void showSongDialog(final Song song, final double previousTime) {
 		if (song == null)
 			return;
 
@@ -521,6 +521,35 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 		finder.setText(id.tv_album, song.album);
 		finder.setText(id.tv_artist, song.artist);
 		finder.setText(id.tv_song, song.name);
+
+		long minutes = Math.round(song.duration / 60);
+		long seconds = Math.round(song.duration / 60);
+		if (seconds > 10)
+			finder.setText(id.tv_duration, "Time: " + minutes + ':' + seconds);
+		else if (seconds > 1)
+			finder.setText(id.tv_duration, "Time: " + minutes + ":0" + seconds);
+		else
+			finder.setText(id.tv_duration, "Time: " + minutes + ":00");
+
+		long backlog = Math.round(previousTime / 60);
+		if (backlog > 60) {
+			backlog = Math.round((float) backlog / 60);
+			if (backlog > 1)
+				finder.setText(id.tv_soon, new StringBuilder(
+						"This song will be playing in about ").append(backlog)
+						.append(" hours"));
+			else
+				finder.setText(id.tv_soon, new StringBuilder(
+						"This song will be playing in about 1 hour"));
+		} else if (backlog > 1)
+			finder.setText(id.tv_soon, new StringBuilder(
+					"This song will be playing in about ").append(backlog)
+					.append(" minutes"));
+		else if (backlog == 1)
+			finder.setText(id.tv_soon, "This song will be playing in about ");
+		else
+			ViewUtils.setGone(finder.find(id.tv_soon), true);
+
 		if (song.starred) {
 			finder.setText(id.tv_star, string.unstar_this_song);
 			finder.setDrawable(id.iv_star_icon, drawable.action_unstar);
@@ -569,6 +598,10 @@ public class PlayActivity extends SherlockActivity implements SongCallback,
 
 	public void onItemClick(AdapterView<?> listView, View view, int position,
 			long itemId) {
-		showSongDialog((Song) listView.getItemAtPosition(position));
+		double previousTime = 0;
+		for (int i = 0; i < position; i++)
+			previousTime += ((Song) listView.getItemAtPosition(i)).duration;
+		showSongDialog((Song) listView.getItemAtPosition(position),
+				previousTime);
 	}
 }

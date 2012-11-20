@@ -50,6 +50,11 @@ public class Song implements Serializable {
 	public final boolean starred;
 
 	/**
+	 * Duration
+	 */
+	public final double duration;
+
+	/**
 	 * Create song
 	 *
 	 * @param id
@@ -57,14 +62,16 @@ public class Song implements Serializable {
 	 * @param artist
 	 * @param album
 	 * @param starred
+	 * @param duration
 	 */
 	public Song(final String id, final String name, final String artist,
-			final String album, final boolean starred) {
+			final String album, final boolean starred, final double duration) {
 		this.id = id;
 		this.name = name;
 		this.artist = artist;
 		this.album = album;
 		this.starred = starred;
+		this.duration = duration;
 	}
 
 	@Override
