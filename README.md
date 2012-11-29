@@ -1,10 +1,7 @@
-# Play Android Application [![Build Status](https://travis-ci.org/play/play-android.png)](https://travis-ci.org/play/play-android)
+# Play Android App [![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.github.play) [![Build Status](https://travis-ci.org/play/play-android.png)](https://travis-ci.org/play/play-android)
 
-Streams music to your Android device from a [play](https://github.com/play/play) server.
-
-<a href="https://play.google.com/store/apps/details?id=com.github.play">
-  <img src="http://www.android.com/images/brand/android_app_on_play_large.png">
-</a>
+Stream music and control the queue of a [play](https://github.com/play/play)
+server from your Android device.
 
 ## Dependencies
 
